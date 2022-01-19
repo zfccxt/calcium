@@ -1,5 +1,3 @@
 #pragma once
 
-namespace cl {
-
-}
+#include "instance.hpp"

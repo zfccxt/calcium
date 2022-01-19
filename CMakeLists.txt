@@ -1,10 +1,16 @@
 cmake_minimum_required(VERSION 3.21)
 project(calcium)
 
-set(CALCIUM_FILES src/calcium.hpp src/backend.hpp)
+set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/instance.hpp src/instance.cpp)
 source_group("src" FILES ${CALCIUM_FILES})
 
-add_library(${PROJECT_NAME} ${CALCIUM_FILES})
+set(OPENGL_FILES src/opengl/opengl_instance.hpp src/opengl/opengl_instance.cpp)
+source_group("src/opengl" FILES ${OPENGL_FILES})
+
+set(VULKAN_FILES src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp)
+source_group("src/vulkan" FILES ${VULKAN_FILES})
+
+add_library(${PROJECT_NAME} ${CALCIUM_FILES} ${OPENGL_FILES} ${VULKAN_FILES})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src)
