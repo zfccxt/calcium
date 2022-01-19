@@ -20,3 +20,6 @@ if (PROJECT_IS_TOP_LEVEL)
     set_property(TARGET calcium_test PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   endif()
 endif()
+
+add_subdirectory(depend/glfw)
+target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
