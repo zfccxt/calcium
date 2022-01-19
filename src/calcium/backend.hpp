@@ -2,7 +2,7 @@
 
 namespace cl {
 
-enum class RenderAPI : char {
+enum class Backend : char {
   kOpenGL, kVulkan, kUndefined
 };
 

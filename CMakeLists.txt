@@ -1,7 +1,7 @@
 cmake_minimum_required(VERSION 3.21)
 project(calcium)
 
-set(CALCIUM_FILES src/calcium/calcium.hpp src/calcium/render_api.hpp)
+set(CALCIUM_FILES src/calcium/calcium.hpp src/calcium/backend.hpp)
 source_group("calcium" FILES ${CALCIUM_FILES})
 
 add_library(${PROJECT_NAME} ${CALCIUM_FILES})
