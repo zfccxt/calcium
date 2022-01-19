@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Calcium {
+namespace cl {
 
 enum class RenderAPI : char {
   kOpenGL, kVulkan, kUndefined
