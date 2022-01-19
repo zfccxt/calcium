@@ -1,8 +1,8 @@
 cmake_minimum_required(VERSION 3.21)
 project(calcium)
 
-set(CALCIUM_FILES src/calcium/calcium.hpp src/calcium/backend.hpp)
-source_group("calcium" FILES ${CALCIUM_FILES})
+set(CALCIUM_FILES src/calcium.hpp src/backend.hpp)
+source_group("src" FILES ${CALCIUM_FILES})
 
 add_library(${PROJECT_NAME} ${CALCIUM_FILES})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

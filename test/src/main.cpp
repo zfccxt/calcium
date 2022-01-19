@@ -1,4 +1,4 @@
-#include <calcium/calcium.hpp>
+#include <calcium.hpp>
 
 int main() {
 
