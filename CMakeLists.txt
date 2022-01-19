@@ -8,6 +8,7 @@ add_library(${PROJECT_NAME} ${CALCIUM_FILES})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
 
 target_include_directories(${PROJECT_NAME} PUBLIC src)
+set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(test)
 if (PROJECT_IS_TOP_LEVEL)
