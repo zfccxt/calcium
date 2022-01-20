@@ -7,8 +7,11 @@ source_group("src" FILES ${CALCIUM_FILES})
 set(OPENGL_FILES src/opengl/opengl_instance.hpp src/opengl/opengl_instance.cpp)
 source_group("src/opengl" FILES ${OPENGL_FILES})
 
-set(VULKAN_FILES src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp)
-source_group("src/vulkan" FILES ${VULKAN_FILES})
+find_package(Vulkan)
+if (Vulkan_FOUND)
+  set(VULKAN_FILES src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp)
+  source_group("src/vulkan" FILES ${VULKAN_FILES})
+endif()
 
 add_library(${PROJECT_NAME} ${CALCIUM_FILES} ${OPENGL_FILES} ${VULKAN_FILES})
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)
@@ -30,3 +33,9 @@ endif()
 
 add_subdirectory(depend/glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+
+if(Vulkan_FOUND)
+  target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARY})
+  target_include_directories(${PROJECT_NAME} PRIVATE ${Vulkan_INCLUDE_DIR})
+  target_compile_definitions(${PROJECT_NAME} PUBLIC CALCIUM_VULKAN_SDK_FOUND=1)
+endif()
