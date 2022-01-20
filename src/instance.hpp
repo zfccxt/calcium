@@ -10,6 +10,8 @@ namespace cl {
 
 class Instance {
 public:
+  virtual ~Instance() = default;
+
   virtual std::unique_ptr<Window> CreateWindow(const WindowCreateInfo& create_info) const = 0;
 };
 
