@@ -17,12 +17,12 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/instance.hpp src/instance.cpp)
 source_group("src" FILES ${CALCIUM_FILES})
 
-set(OPENGL_FILES src/opengl/opengl_instance.hpp src/opengl/opengl_instance.cpp)
+set(OPENGL_FILES src/opengl/opengl_instance.hpp src/opengl/opengl_instance.cpp src/opengl/opengl_window.hpp src/opengl/opengl_window.cpp)
 source_group("src/opengl" FILES ${OPENGL_FILES})
 
 find_package(Vulkan)
 if (Vulkan_FOUND)
-  set(VULKAN_FILES src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp)
+  set(VULKAN_FILES src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp src/vulkan/vulkan_window.hpp src/vulkan/vulkan_window.cpp)
   source_group("src/vulkan" FILES ${VULKAN_FILES})
 endif()
 
