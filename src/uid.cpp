@@ -1,5 +1,7 @@
 #include "uid.hpp"
 
+#include <cstddef>
+
 namespace cl {
 
 Uid Uid::kNull = -1;
