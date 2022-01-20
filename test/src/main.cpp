@@ -2,5 +2,11 @@
 
 int main() {
   auto instance = cl::CreateInstance(cl::Backend::kOpenGL);
-  auto window = instance->CreateWindow();
+
+  cl::WindowCreateInfo window_info;
+  auto window = instance->CreateWindow(window_info);
+
+  while (window->IsOpen()) {
+    window->PollEvents();
+  }
 }
