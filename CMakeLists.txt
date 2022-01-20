@@ -33,8 +33,8 @@ target_include_directories(${PROJECT_NAME} PUBLIC src)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(test)
-if (PROJECT_IS_TOP_LEVEL)
-  if (APPLE)
+if(PROJECT_IS_TOP_LEVEL)
+  if(APPLE)
     set_target_properties(calcium_test PROPERTIES XCODE_GENERATE_SCHEME TRUE XCODE_SCHEME_WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
   endif()
 
@@ -46,6 +46,13 @@ endif()
 
 add_subdirectory(depend/glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+
+if(APPLE)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC CALCIUM_PLATFORM_MACOS=1)
+endif()
+if(WIN32)
+  target_compile_definitions(${PROJECT_NAME} PUBLIC CALCIUM_PLATFORM_WINDOWS=1)
+endif()
 
 if(Vulkan_FOUND)
   target_link_libraries(${PROJECT_NAME} PRIVATE ${Vulkan_LIBRARY})
