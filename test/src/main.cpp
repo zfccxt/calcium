@@ -1,5 +1,6 @@
 #include <calcium.hpp>
 
 int main() {
-  auto instance = cl::CreateInstance();
+  auto instance = cl::CreateInstance(cl::Backend::kOpenGL);
+  auto window = instance->CreateWindow();
 }
