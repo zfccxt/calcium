@@ -14,15 +14,15 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} DCL_RELEASE=1")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 
-set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/instance.hpp src/instance.cpp src/uid.hpp src/uid.cpp src/window.hpp src/window.cpp src/window_create_info.hpp src/glfw_window.hpp src/glfw_window.cpp src/glfw_utils.hpp src/glfw_utils.cpp)
+set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/context.hpp src/context.cpp src/uid.hpp src/uid.cpp src/window.hpp src/window.cpp src/window_create_info.hpp src/glfw_window.hpp src/glfw_window.cpp src/glfw_utils.hpp src/glfw_utils.cpp)
 source_group("src" FILES ${CALCIUM_FILES})
 
-set(OPENGL_FILES src/opengl/opengl_instance.hpp src/opengl/opengl_instance.cpp src/opengl/opengl_window.hpp src/opengl/opengl_window.cpp)
+set(OPENGL_FILES src/opengl/opengl_context.hpp src/opengl/opengl_context.cpp src/opengl/opengl_window.hpp src/opengl/opengl_window.cpp)
 source_group("src/opengl" FILES ${OPENGL_FILES})
 
 find_package(Vulkan)
 if (Vulkan_FOUND)
-  set(VULKAN_FILES src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp src/vulkan/vulkan_window.hpp src/vulkan/vulkan_window.cpp)
+  set(VULKAN_FILES src/vulkan/vulkan_context.hpp src/vulkan/vulkan_context.cpp src/vulkan/vulkan_window.hpp src/vulkan/vulkan_window.cpp)
   source_group("src/vulkan" FILES ${VULKAN_FILES})
 endif()
 

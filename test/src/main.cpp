@@ -1,9 +1,9 @@
 #include <calcium.hpp>
 
 int main() {
-  auto instance = cl::CreateInstance(cl::Backend::kOpenGL);
+  auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
-  auto window = instance->CreateWindow();
+  auto window = context->CreateWindow();
 
   while (window->IsOpen()) {
     cl::PollWindowEvents();
