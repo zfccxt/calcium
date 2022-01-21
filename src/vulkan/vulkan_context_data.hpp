@@ -2,7 +2,7 @@
 
 #include <vulkan/vulkan.h>
 
-struct VulkanInstanceData {
+struct VulkanContextData {
   VkInstance instance;
   VkAllocationCallbacks* allocator;
 };
