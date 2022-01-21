@@ -12,6 +12,8 @@ class Instance {
 public:
   virtual ~Instance() = default;
 
+  virtual std::unique_ptr<Window> CreateWindow() const = 0;
+  virtual std::unique_ptr<Window> CreateWindow(size_t width, size_t height) const = 0;
   virtual std::unique_ptr<Window> CreateWindow(const WindowCreateInfo& create_info) const = 0;
 };
 

@@ -3,8 +3,7 @@
 int main() {
   auto instance = cl::CreateInstance(cl::Backend::kOpenGL);
 
-  cl::WindowCreateInfo window_info;
-  auto window = instance->CreateWindow(window_info);
+  auto window = instance->CreateWindow();
 
   while (window->IsOpen()) {
     cl::PollWindowEvents();
