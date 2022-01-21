@@ -14,6 +14,7 @@ struct VulkanWindowData {
   VkDevice device;
   VkQueue graphics_queue;
   VkQueue present_queue;
+  VkCommandPool command_pool;
 };
 
 }

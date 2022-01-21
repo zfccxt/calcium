@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "vulkan/vulkan_command_pool.hpp"
 #include "vulkan/vulkan_device.hpp"
 #include "vulkan/vulkan_physical_device.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
@@ -20,9 +21,11 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.device = CreateDevice(window_data_);
   window_data_.graphics_queue = FindGraphicsQueue(window_data_);
   window_data_.present_queue = FindPresentQueue(window_data_);
+  window_data_.command_pool = CreateCommandPool(window_data_);
 }
 
 VulkanWindow::~VulkanWindow() {
+  DestroyCommandPool(window_data_, window_data_.command_pool);
   DestroyDevice(window_data_, window_data_.device);
   DestroyWindowSurface(window_data_, window_data_.surface);
 }
