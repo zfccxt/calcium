@@ -18,6 +18,8 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.surface = CreateWindowSurface(window_data_);
   window_data_.physical_device = ChoosePhysicalDevice(window_data_);
   window_data_.device = CreateDevice(window_data_);
+  window_data_.graphics_queue = FindGraphicsQueue(window_data_);
+  window_data_.present_queue = FindPresentQueue(window_data_);
 }
 
 VulkanWindow::~VulkanWindow() {

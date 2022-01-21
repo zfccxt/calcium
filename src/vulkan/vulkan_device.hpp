@@ -7,4 +7,7 @@ namespace cl::Vulkan {
 VkDevice CreateDevice(const VulkanWindowData& window_data);
 void DestroyDevice(const VulkanWindowData& window_data, VkDevice device);
 
+VkQueue FindGraphicsQueue(const VulkanWindowData& window_data);
+VkQueue FindPresentQueue(const VulkanWindowData& window_data);
+
 }

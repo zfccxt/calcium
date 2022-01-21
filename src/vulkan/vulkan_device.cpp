@@ -60,4 +60,18 @@ void DestroyDevice(const VulkanWindowData& window_data, VkDevice device) {
   vkDestroyDevice(device, window_data.context_data->allocator);
 }
 
+VkQueue FindGraphicsQueue(const VulkanWindowData& window_data) {
+  VulkanQueueFamilyIndices indices(window_data.physical_device, window_data.surface);
+  VkQueue graphics_queue;
+  vkGetDeviceQueue(window_data.device, indices.graphics_family, 0, &graphics_queue);
+  return graphics_queue;
+}
+
+VkQueue FindPresentQueue(const VulkanWindowData& window_data) {
+  VulkanQueueFamilyIndices indices(window_data.physical_device, window_data.surface);
+  VkQueue present_queue;
+  vkGetDeviceQueue(window_data.device, indices.present_family, 0, &present_queue);
+  return present_queue;
+}
+
 }
