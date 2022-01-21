@@ -1,17 +1,25 @@
 #include "vulkan_context.hpp"
 
+#include "debug_call.hpp"
 #include "vulkan/vulkan_allocator.hpp"
+#include "vulkan/vulkan_debug_messenger.hpp"
 #include "vulkan/vulkan_instance.hpp"
 #include "vulkan/vulkan_window.hpp"
 
 namespace cl::Vulkan {
 
 VulkanContext::VulkanContext() {
-  context_data_.allocator = CreateAllocator(context_data_);
-  context_data_.instance  = CreateInstance(context_data_);
+  context_data_.allocator       = CreateAllocator(context_data_);
+  context_data_.instance        = CreateInstance(context_data_);
+#ifdef CALCIUM_BUILD_DEBUG
+  context_data_.debug_messenger = CreateDebugMessenger(context_data_);
+#endif
 }
 
 VulkanContext::~VulkanContext() {
+#ifdef CALCIUM_BUILD_DEBUG
+  DestroyDebugMessenger(context_data_, context_data_.debug_messenger);
+#endif
   DestroyInstance(context_data_, context_data_.instance);
   DestroyAllocator(context_data_, context_data_.allocator);
 }
