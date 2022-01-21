@@ -2,6 +2,8 @@
 
 #include <vulkan/vulkan.h>
 
+namespace cl::Vulkan {
+
 struct VulkanContextData {
   VkInstance instance;
   VkAllocationCallbacks* allocator;
@@ -9,3 +11,5 @@ struct VulkanContextData {
   VkDebugUtilsMessengerEXT debug_messenger;
 #endif
 };
+
+}
