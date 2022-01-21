@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "vulkan/vulkan_physical_device.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
 
 namespace cl::Vulkan {
@@ -14,6 +15,7 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.glfw_window = glfw_window_;
 
   window_data_.surface = CreateWindowSurface(window_data_);
+  window_data_.physical_device = ChoosePhysicalDevice(window_data_);
 }
 
 }

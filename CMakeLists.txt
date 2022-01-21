@@ -22,7 +22,7 @@ source_group("src/opengl" FILES ${OPENGL_FILES})
 
 find_package(Vulkan)
 if (Vulkan_FOUND)
-  set(VULKAN_FILES src/vulkan/vulkan_context.hpp src/vulkan/vulkan_context.cpp src/vulkan/vulkan_window.hpp src/vulkan/vulkan_window.cpp src/vulkan/vulkan_allocator.hpp src/vulkan/vulkan_allocator.cpp src/vulkan/vulkan_context_data.hpp src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp src/vulkan/vulkan_check.hpp src/vulkan/vulkan_check.cpp src/vulkan/vulkan_debug_messenger.hpp src/vulkan/vulkan_debug_messenger.cpp src/vulkan/vulkan_physical_device.hpp src/vulkan/vulkan_physical_device.cpp src/vulkan/vulkan_window_data.hpp src/vulkan/vulkan_window_surface.hpp src/vulkan/vulkan_window_surface.cpp)
+  set(VULKAN_FILES src/vulkan/vulkan_context.hpp src/vulkan/vulkan_context.cpp src/vulkan/vulkan_window.hpp src/vulkan/vulkan_window.cpp src/vulkan/vulkan_allocator.hpp src/vulkan/vulkan_allocator.cpp src/vulkan/vulkan_context_data.hpp src/vulkan/vulkan_instance.hpp src/vulkan/vulkan_instance.cpp src/vulkan/vulkan_check.hpp src/vulkan/vulkan_check.cpp src/vulkan/vulkan_debug_messenger.hpp src/vulkan/vulkan_debug_messenger.cpp src/vulkan/vulkan_physical_device.hpp src/vulkan/vulkan_physical_device.cpp src/vulkan/vulkan_window_data.hpp src/vulkan/vulkan_window_surface.hpp src/vulkan/vulkan_window_surface.cpp src/vulkan/vulkan_queue_family_indices.hpp src/vulkan/vulkan_queue_family_indices.cpp src/vulkan/vulkan_swapchain_support_details.hpp  src/vulkan/vulkan_swapchain_support_details.cpp)
   source_group("src/vulkan" FILES ${VULKAN_FILES})
 endif()
 
