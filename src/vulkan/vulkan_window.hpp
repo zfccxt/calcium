@@ -1,12 +1,16 @@
 #pragma once
 
 #include "glfw_window.hpp"
+#include "vulkan/vulkan_window_data.hpp"
 
 namespace cl::Vulkan {
 
 class VulkanWindow : public GlfwWindow {
 public:
-  VulkanWindow(const WindowCreateInfo& create_info);
+  VulkanWindow(VulkanContextData* context_data, const WindowCreateInfo& create_info);
+
+private:
+  VulkanWindowData window_data_;
 };
 
 }
