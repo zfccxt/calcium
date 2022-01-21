@@ -2,7 +2,7 @@
 
 namespace cl::Vulkan {
 
-VkAllocationCallbacks* CreateAllocator() {
+VkAllocationCallbacks* CreateAllocator(const VulkanContextData& context_data) {
   // Unused
   return nullptr;
 }

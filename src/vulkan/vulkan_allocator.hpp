@@ -1,10 +1,10 @@
 #pragma once
 
-#include <vulkan/vulkan.h>
+#include "vulkan/vulkan_context_data.hpp"
 
 namespace cl::Vulkan {
 
-VkAllocationCallbacks* CreateAllocator();
+VkAllocationCallbacks* CreateAllocator(const VulkanContextData& context_data);
 void DestroyAllocator(VkAllocationCallbacks* allocator);
 
 }
