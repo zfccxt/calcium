@@ -15,6 +15,7 @@ public:
   virtual ~GlfwWindow();
 
   virtual bool IsOpen() const override;
+  virtual void Center(bool center_horizontal = true, bool center_vertical = true) override;
 
   static void PollEvents();
 
