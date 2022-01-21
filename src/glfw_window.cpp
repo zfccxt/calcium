@@ -31,8 +31,10 @@ bool GlfwWindow::IsOpen() const {
   return !glfwWindowShouldClose(glfw_window_);
 }
 
-void GlfwWindow::PollEvents() const {
-  glfwPollEvents();
+void GlfwWindow::PollEvents() {
+  if (num_glfw_windows_ > 0) {
+    glfwPollEvents();
+  }
 }
 
 }

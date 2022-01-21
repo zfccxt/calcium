@@ -7,6 +7,6 @@ int main() {
   auto window = instance->CreateWindow(window_info);
 
   while (window->IsOpen()) {
-    window->PollEvents();
+    cl::PollWindowEvents();
   }
 }

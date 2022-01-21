@@ -15,7 +15,8 @@ public:
   virtual ~GlfwWindow();
 
   virtual bool IsOpen() const override;
-  virtual void PollEvents() const override;
+
+  static void PollEvents();
 
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
