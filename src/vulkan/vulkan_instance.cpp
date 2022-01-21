@@ -1,7 +1,6 @@
 #include "vulkan_instance.hpp"
 
 #include <assert.h>
-#include <vector>
 
 #include <GLFW/glfw3.h>
 

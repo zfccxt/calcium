@@ -8,6 +8,7 @@ namespace cl::Vulkan {
 class VulkanWindow : public GlfwWindow {
 public:
   VulkanWindow(VulkanContextData* context_data, const WindowCreateInfo& create_info);
+  virtual ~VulkanWindow();
 
 private:
   VulkanWindowData window_data_;

@@ -11,6 +11,7 @@ struct VulkanWindowData {
   GLFWwindow* glfw_window;
   VkSurfaceKHR surface;
   VkPhysicalDevice physical_device;
+  VkDevice device;
 };
 
 }

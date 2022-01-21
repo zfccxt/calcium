@@ -5,7 +5,6 @@
 #include <map>
 #include <set>
 #include <string>
-#include <vector>
 
 #include "vulkan/vulkan_swapchain_support_details.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
