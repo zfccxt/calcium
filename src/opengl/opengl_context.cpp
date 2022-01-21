@@ -1,8 +1,17 @@
 #include "opengl_context.hpp"
 
+#include "glfw_utils.hpp"
 #include "opengl/opengl_window.hpp"
 
 namespace cl::OpenGL {
+
+OpenGLContext::OpenGLContext() {
+  GLFW::IncrementGLFWContextCount();
+}
+
+OpenGLContext::~OpenGLContext() {
+  GLFW::DecrementGLFWContextCount();
+}
 
 std::unique_ptr<Window> OpenGLContext::CreateWindow() {
   WindowCreateInfo create_info;

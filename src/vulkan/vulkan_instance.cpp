@@ -40,8 +40,6 @@ void CheckValidationLayerSupport() {
 
 std::vector<const char*> GetRequiredInstanceExtensions() {
   // Get list of extensions required by GLFW
-  // GLFW normally only needs VK_KHR_surface, but presumably the GLFW developers know something I don't.
-  // Maybe it needs more extensions on other platforms.
   uint32_t glfw_extension_count = 0;
   const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
   

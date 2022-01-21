@@ -1,6 +1,7 @@
 #include "vulkan_context.hpp"
 
 #include "debug_call.hpp"
+#include "glfw_utils.hpp"
 #include "vulkan/vulkan_allocator.hpp"
 #include "vulkan/vulkan_debug_messenger.hpp"
 #include "vulkan/vulkan_instance.hpp"
@@ -9,6 +10,7 @@
 namespace cl::Vulkan {
 
 VulkanContext::VulkanContext() {
+  GLFW::IncrementGLFWContextCount();
   context_data_.allocator       = CreateAllocator(context_data_);
   context_data_.instance        = CreateInstance(context_data_);
 #ifdef CALCIUM_BUILD_DEBUG
@@ -22,6 +24,7 @@ VulkanContext::~VulkanContext() {
 #endif
   DestroyInstance(context_data_, context_data_.instance);
   DestroyAllocator(context_data_, context_data_.allocator);
+  GLFW::DecrementGLFWContextCount();
 }
 
 std::unique_ptr<Window> VulkanContext::CreateWindow() {

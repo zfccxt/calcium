@@ -9,6 +9,7 @@ struct WindowCreateInfo {
   size_t width = 1280;
   size_t height = 720;
   std::string title;
+  bool center = true;
 };
 
 }

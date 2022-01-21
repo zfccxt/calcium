@@ -22,9 +22,10 @@ public:
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
 
-private:
+protected:
   GLFWwindow* glfw_window_ = nullptr;
 
+private:
   static size_t num_glfw_windows_;
 };
 
