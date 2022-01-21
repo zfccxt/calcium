@@ -7,7 +7,7 @@ VkAllocationCallbacks* CreateAllocator(const VulkanContextData& context_data) {
   return nullptr;
 }
 
-void DestroyAllocator(VkAllocationCallbacks* allocator) {
+void DestroyAllocator(const VulkanContextData& context_data, VkAllocationCallbacks* allocator) {
   // Unused
 }
 

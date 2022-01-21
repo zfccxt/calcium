@@ -1,16 +1,19 @@
 #include "vulkan_context.hpp"
 
-#include "vulkan/vulkan_window.hpp"
 #include "vulkan/vulkan_allocator.hpp"
+#include "vulkan/vulkan_instance.hpp"
+#include "vulkan/vulkan_window.hpp"
 
 namespace cl::Vulkan {
 
 VulkanContext::VulkanContext() {
   context_data_.allocator = CreateAllocator(context_data_);
+  context_data_.instance  = CreateInstance(context_data_);
 }
 
 VulkanContext::~VulkanContext() {
-  DestroyAllocator(context_data_.allocator);
+  DestroyInstance(context_data_, context_data_.instance);
+  DestroyAllocator(context_data_, context_data_.allocator);
 }
 
 std::unique_ptr<Window> VulkanContext::CreateWindow() const {

@@ -5,6 +5,6 @@
 namespace cl::Vulkan {
 
 VkAllocationCallbacks* CreateAllocator(const VulkanContextData& context_data);
-void DestroyAllocator(VkAllocationCallbacks* allocator);
+void DestroyAllocator(const VulkanContextData& context_data, VkAllocationCallbacks* allocator);
 
 }
