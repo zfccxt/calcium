@@ -46,6 +46,8 @@ endif()
 
 add_subdirectory(depend/glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+add_subdirectory(depend/glad)
+target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 
 if(APPLE)
   target_compile_definitions(${PROJECT_NAME} PUBLIC CALCIUM_PLATFORM_MACOS=1)
