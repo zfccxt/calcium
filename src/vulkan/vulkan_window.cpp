@@ -30,9 +30,12 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.swapchain.CreateSwapchain();
   window_data_.swapchain.swapchain_render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
   window_data_.swapchain.CreateSwapchainFramebuffers();
+  window_data_.swapchain.sync_objects.CreateSwapchainSyncObjects(window_data_);
+  
 }
 
 VulkanWindow::~VulkanWindow() {
+  window_data_.swapchain.sync_objects.DestroySwapchainSyncObjects(window_data_);
   window_data_.swapchain.DestroySwapchainFramebuffers();
   DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.swapchain_render_pass);
   window_data_.swapchain.DestroySwapchain();

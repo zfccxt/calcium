@@ -3,7 +3,7 @@
 #include <cstdint>
 #include <vector>
 
-#include <vulkan/vulkan.h>
+#include "vulkan/vulkan_swapchain_sync_objects.hpp"
 
 namespace cl::Vulkan {
 
@@ -27,6 +27,8 @@ struct VulkanSwapchain {
   std::vector<VkImageView> swapchain_image_views;
   VkRenderPass swapchain_render_pass;
   std::vector<VkFramebuffer> swapchain_framebuffers;
+
+  VulkanSwapchainSyncObjects sync_objects;
 
   bool enable_depth_test;
 };
