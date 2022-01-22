@@ -19,6 +19,7 @@ struct VulkanSwapchain {
   VkFormat swapchain_image_format;
   uint32_t swapchain_image_count;
   std::vector<VkImage> swapchain_images;
+  std::vector<VkImageView> swapchain_image_views;
 
   bool enable_depth_test;
 };

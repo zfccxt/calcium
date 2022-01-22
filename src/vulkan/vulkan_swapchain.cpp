@@ -82,8 +82,32 @@ void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
   swapchain_images.resize(swapchain_image_count);
   vkGetSwapchainImagesKHR(window_data.device, swapchain, &swapchain_image_count, swapchain_images.data());
 
-  // TODO
-  // CreateSwapchainImageViews();
+  // Create image views
+  swapchain_image_views.resize(swapchain_images.size());
+  for (size_t i = 0; i < swapchain_images.size(); ++i) {
+    VkImageViewCreateInfo create_info { VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
+    create_info.image = swapchain_images[i];
+
+    // We want to treat each image as a 2D texture
+    create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+    create_info.format = swapchain_image_format;
+
+    // Use default mapping for colour channels
+    // Note: Swizzling other than VK_COMPONENT_SWIZZLE_IDENTITY is not available on some incomplete Vulkan implementations, for example MoltenVK
+    create_info.components.r = VK_COMPONENT_SWIZZLE_IDENTITY;
+    create_info.components.g = VK_COMPONENT_SWIZZLE_IDENTITY;
+    create_info.components.b = VK_COMPONENT_SWIZZLE_IDENTITY;
+    create_info.components.a = VK_COMPONENT_SWIZZLE_IDENTITY;
+
+    // subresourceRange describes image use, as well as which part of the image to access
+    create_info.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    create_info.subresourceRange.baseMipLevel = 0;
+    create_info.subresourceRange.levelCount = 1;
+    create_info.subresourceRange.baseArrayLayer = 0;
+    create_info.subresourceRange.layerCount = 1;
+
+    VK_CHECK(vkCreateImageView(window_data.device, &create_info, window_data.context_data->allocator, &swapchain_image_views[i]));
+  }
 
   // TODO
   // if (enable_depth_test_) {
@@ -99,8 +123,10 @@ void VulkanSwapchain::DestroySwapchain(const VulkanWindowData& window_data) {
   //   DestroyDepthBuffer();
   // }
 
-  // TODO
-  // DestroySwapchainImageViews();
+  for (auto image_view : swapchain_image_views) {
+    vkDestroyImageView(window_data.device, image_view, window_data.context_data->allocator);
+  }
+
   vkDestroySwapchainKHR(window_data.device, swapchain, window_data.context_data->allocator);
 }
 

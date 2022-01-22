@@ -30,6 +30,7 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
 
 VulkanWindow::~VulkanWindow() {
   window_data_.swapchain.DestroySwapchain(window_data_);
+
   DestroyCommandPool(window_data_, window_data_.command_pool);
   DestroyDevice(window_data_, window_data_.device);
   DestroyWindowSurface(window_data_, window_data_.surface);
