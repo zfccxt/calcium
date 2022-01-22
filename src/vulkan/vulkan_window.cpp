@@ -5,6 +5,7 @@
 #include "vulkan/vulkan_command_pool.hpp"
 #include "vulkan/vulkan_device.hpp"
 #include "vulkan/vulkan_physical_device.hpp"
+#include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
 
 namespace cl::Vulkan {
@@ -24,12 +25,15 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.present_queue = FindPresentQueue(window_data_);
   window_data_.command_pool = CreateCommandPool(window_data_);
 
+  window_data_.swapchain.window_data = &window_data_;
   window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
-  window_data_.swapchain.CreateSwapchain(window_data_);
+  window_data_.swapchain.CreateSwapchain();
+  window_data_.swapchain.swapchain_render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
 }
 
 VulkanWindow::~VulkanWindow() {
-  window_data_.swapchain.DestroySwapchain(window_data_);
+  DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.swapchain_render_pass);
+  window_data_.swapchain.DestroySwapchain();
 
   DestroyCommandPool(window_data_, window_data_.command_pool);
   DestroyDevice(window_data_, window_data_.device);

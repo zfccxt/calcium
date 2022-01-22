@@ -10,9 +10,11 @@ namespace cl::Vulkan {
 struct VulkanWindowData;
 
 struct VulkanSwapchain {
-  void CreateSwapchain(const VulkanWindowData& window_data);
-  void DestroySwapchain(const VulkanWindowData& window_data);
-  void RecreateSwapchain(const VulkanWindowData& window_data);
+  void CreateSwapchain();
+  void DestroySwapchain();
+  void RecreateSwapchain();
+
+  VulkanWindowData* window_data;
 
   VkSwapchainKHR swapchain;
   VkExtent2D swapchain_extent;
@@ -20,6 +22,7 @@ struct VulkanSwapchain {
   uint32_t swapchain_image_count;
   std::vector<VkImage> swapchain_images;
   std::vector<VkImageView> swapchain_image_views;
+  VkRenderPass swapchain_render_pass;
 
   bool enable_depth_test;
 };

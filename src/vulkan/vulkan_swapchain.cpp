@@ -3,6 +3,7 @@
 #include <GLFW/glfw3.h>
 
 #include "vulkan/vulkan_check.hpp"
+#include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_swapchain_support_details.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 #include "vulkan/vulkan_window_data.hpp"
@@ -12,11 +13,11 @@ namespace cl::Vulkan {
 #pragma warning(push)
 #pragma warning(disable: 26812)
 
-void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
-  VulkanSwapchainSupportDetails swapchain_support(window_data.physical_device, window_data.surface);
+void VulkanSwapchain::CreateSwapchain() {
+  VulkanSwapchainSupportDetails swapchain_support(window_data->physical_device, window_data->surface);
   VkSurfaceFormatKHR surface_format = swapchain_support.ChooseBestSurfaceFormat();
-  VkPresentModeKHR present_mode = swapchain_support.ChooseBestPresentMode(window_data.enable_vsync);
-  swapchain_extent = swapchain_support.ChooseSwapExtent(window_data.glfw_window);
+  VkPresentModeKHR present_mode = swapchain_support.ChooseBestPresentMode(window_data->enable_vsync);
+  swapchain_extent = swapchain_support.ChooseSwapExtent(window_data->glfw_window);
   swapchain_image_format = surface_format.format;
 
   // It's  recommended to request at least one more swapchain image than the minimum supported, as this avoids having
@@ -30,7 +31,7 @@ void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
   }
 
   VkSwapchainCreateInfoKHR create_info { VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
-  create_info.surface = window_data.surface;
+  create_info.surface = window_data->surface;
   create_info.minImageCount = swapchain_image_count;
   create_info.imageFormat = surface_format.format;
   create_info.imageColorSpace = surface_format.colorSpace;
@@ -45,7 +46,7 @@ void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
 
   // Next we must specify how to handle swapchain images that will be used across multiple queue families. If so, we
   // would need to draw on the images in the graphics queue, then submit them on the present queue.
-  VulkanQueueFamilyIndices indices(window_data.physical_device, window_data.surface);
+  VulkanQueueFamilyIndices indices(window_data->physical_device, window_data->surface);
   uint32_t queue_family_indices[] = { indices.graphics_family, indices.present_family };
 
   if (indices.graphics_family == indices.present_family) {
@@ -75,15 +76,15 @@ void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
 
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
-  VK_CHECK(vkCreateSwapchainKHR(window_data.device, &create_info, window_data.context_data->allocator, &swapchain));
+  VK_CHECK(vkCreateSwapchainKHR(window_data->device, &create_info, window_data->context_data->allocator, &swapchain));
 
   // We only ever specified a minimum number of swapchain images, so it's possible the swapchain we have created has
   // more. Therefore we need to query the swapchain to find out how many images it contains.
   // We don't need to destroy the images, since they are implicity destroyed when we destroy the swapchain - we are
   // only retrieving image handles
-  vkGetSwapchainImagesKHR(window_data.device, swapchain, &swapchain_image_count, nullptr);
+  vkGetSwapchainImagesKHR(window_data->device, swapchain, &swapchain_image_count, nullptr);
   swapchain_images.resize(swapchain_image_count);
-  vkGetSwapchainImagesKHR(window_data.device, swapchain, &swapchain_image_count, swapchain_images.data());
+  vkGetSwapchainImagesKHR(window_data->device, swapchain, &swapchain_image_count, swapchain_images.data());
 
   // Create image views
   swapchain_image_views.resize(swapchain_images.size());
@@ -109,7 +110,7 @@ void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
     create_info.subresourceRange.baseArrayLayer = 0;
     create_info.subresourceRange.layerCount = 1;
 
-    VK_CHECK(vkCreateImageView(window_data.device, &create_info, window_data.context_data->allocator, &swapchain_image_views[i]));
+    VK_CHECK(vkCreateImageView(window_data->device, &create_info, window_data->context_data->allocator, &swapchain_image_views[i]));
   }
 
   // TODO
@@ -118,8 +119,8 @@ void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
   // }
 }
 
-void VulkanSwapchain::DestroySwapchain(const VulkanWindowData& window_data) {
-  vkDeviceWaitIdle(window_data.device);
+void VulkanSwapchain::DestroySwapchain() {
+  vkDeviceWaitIdle(window_data->device);
 
   // TODO
   // if (window_data.enable_depth_test) {
@@ -127,31 +128,30 @@ void VulkanSwapchain::DestroySwapchain(const VulkanWindowData& window_data) {
   // }
 
   for (auto image_view : swapchain_image_views) {
-    vkDestroyImageView(window_data.device, image_view, window_data.context_data->allocator);
+    vkDestroyImageView(window_data->device, image_view, window_data->context_data->allocator);
   }
 
-  vkDestroySwapchainKHR(window_data.device, swapchain, window_data.context_data->allocator);
+  vkDestroySwapchainKHR(window_data->device, swapchain, window_data->context_data->allocator);
 }
 
-void VulkanSwapchain::RecreateSwapchain(const VulkanWindowData& window_data) {
+void VulkanSwapchain::RecreateSwapchain() {
  // If the window is minimized, wait until it is unminimized
   int width = 0, height = 0;
-  glfwGetFramebufferSize(window_data.glfw_window, &width, &height);
+  glfwGetFramebufferSize(window_data->glfw_window, &width, &height);
   while (width == 0 || height == 0) {
-    glfwGetFramebufferSize(window_data.glfw_window, &width, &height);
+    glfwGetFramebufferSize(window_data->glfw_window, &width, &height);
     glfwWaitEvents();
   }
 
-  vkDeviceWaitIdle(window_data.device);
+  vkDeviceWaitIdle(window_data->device);
 
   // TODO
   // DestroySwapchainFramebuffers();
-  // DestroyRenderPass();
-  DestroySwapchain(window_data);
+  DestroySwapchainRenderPass(*this, swapchain_render_pass);
+  DestroySwapchain();
 
-  CreateSwapchain(window_data);
-  // TODO
-  // CreateRenderPass();
+  CreateSwapchain();
+  swapchain_render_pass = CreateSwapchainRenderPass(*this);
   // CreateSwapchainFramebuffers();
 }
 
