@@ -9,6 +9,9 @@
 
 namespace cl::Vulkan {
 
+#pragma warning(push)
+#pragma warning(disable: 26812)
+
 void VulkanSwapchain::CreateSwapchain(const VulkanWindowData& window_data) {
   VulkanSwapchainSupportDetails swapchain_support(window_data.physical_device, window_data.surface);
   VkSurfaceFormatKHR surface_format = swapchain_support.ChooseBestSurfaceFormat();
@@ -151,5 +154,7 @@ void VulkanSwapchain::RecreateSwapchain(const VulkanWindowData& window_data) {
   // CreateRenderPass();
   // CreateSwapchainFramebuffers();
 }
+
+#pragma warning(pop)
 
 }
