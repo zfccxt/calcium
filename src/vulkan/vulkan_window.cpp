@@ -15,6 +15,7 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
 
   window_data_.context_data = context_data;
   window_data_.glfw_window = glfw_window_;
+  window_data_.enable_vsync = create_info.enable_vsync;
 
   window_data_.surface = CreateWindowSurface(window_data_);
   window_data_.physical_device = ChoosePhysicalDevice(window_data_);
@@ -22,9 +23,13 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.graphics_queue = FindGraphicsQueue(window_data_);
   window_data_.present_queue = FindPresentQueue(window_data_);
   window_data_.command_pool = CreateCommandPool(window_data_);
+
+  window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
+  window_data_.swapchain.CreateSwapchain(window_data_);
 }
 
 VulkanWindow::~VulkanWindow() {
+  window_data_.swapchain.DestroySwapchain(window_data_);
   DestroyCommandPool(window_data_, window_data_.command_pool);
   DestroyDevice(window_data_, window_data_.device);
   DestroyWindowSurface(window_data_, window_data_.surface);

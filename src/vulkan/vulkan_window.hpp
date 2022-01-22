@@ -2,6 +2,7 @@
 
 #include "glfw_window.hpp"
 #include "vulkan/vulkan_window_data.hpp"
+#include "vulkan/vulkan_swapchain.hpp"
 
 namespace cl::Vulkan {
 
