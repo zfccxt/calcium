@@ -145,14 +145,43 @@ void VulkanSwapchain::RecreateSwapchain() {
 
   vkDeviceWaitIdle(window_data->device);
 
-  // TODO
-  // DestroySwapchainFramebuffers();
+  DestroySwapchainFramebuffers();
   DestroySwapchainRenderPass(*this, swapchain_render_pass);
   DestroySwapchain();
 
   CreateSwapchain();
   swapchain_render_pass = CreateSwapchainRenderPass(*this);
-  // CreateSwapchainFramebuffers();
+  CreateSwapchainFramebuffers();
+}
+
+void VulkanSwapchain::CreateSwapchainFramebuffers() {
+  swapchain_framebuffers.resize(swapchain_image_views.size());
+  
+  // Each image view needs its own framebuffer
+  for (size_t i = 0; i < swapchain_image_views.size(); ++i) {
+    std::vector<VkImageView> attachments = { swapchain_image_views[i] };
+
+    // TODO
+    // if (enable_depth_test) {
+    //   attachments.push_back(depth_image_view);
+    // }
+
+    VkFramebufferCreateInfo create_info { VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO };
+    create_info.renderPass = swapchain_render_pass;
+    create_info.attachmentCount = (uint32_t)attachments.size();
+    create_info.pAttachments = attachments.data();
+    create_info.width = swapchain_extent.width;
+    create_info.height = swapchain_extent.height;
+    create_info.layers = 1;
+
+    VK_CHECK(vkCreateFramebuffer(window_data->device, &create_info, window_data->context_data->allocator, &swapchain_framebuffers[i]));
+  }
+}
+
+void VulkanSwapchain::DestroySwapchainFramebuffers() {
+  for (auto framebuffer : swapchain_framebuffers) {
+    vkDestroyFramebuffer(window_data->device, framebuffer, window_data->context_data->allocator);
+  }
 }
 
 #pragma warning(pop)

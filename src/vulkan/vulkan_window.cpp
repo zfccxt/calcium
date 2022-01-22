@@ -29,9 +29,11 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
   window_data_.swapchain.CreateSwapchain();
   window_data_.swapchain.swapchain_render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
+  window_data_.swapchain.CreateSwapchainFramebuffers();
 }
 
 VulkanWindow::~VulkanWindow() {
+  window_data_.swapchain.DestroySwapchainFramebuffers();
   DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.swapchain_render_pass);
   window_data_.swapchain.DestroySwapchain();
 

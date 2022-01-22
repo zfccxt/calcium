@@ -14,6 +14,9 @@ struct VulkanSwapchain {
   void DestroySwapchain();
   void RecreateSwapchain();
 
+  void CreateSwapchainFramebuffers();
+  void DestroySwapchainFramebuffers();
+
   VulkanWindowData* window_data;
 
   VkSwapchainKHR swapchain;
@@ -23,6 +26,7 @@ struct VulkanSwapchain {
   std::vector<VkImage> swapchain_images;
   std::vector<VkImageView> swapchain_image_views;
   VkRenderPass swapchain_render_pass;
+  std::vector<VkFramebuffer> swapchain_framebuffers;
 
   bool enable_depth_test;
 };

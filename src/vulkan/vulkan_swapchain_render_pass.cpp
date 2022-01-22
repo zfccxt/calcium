@@ -6,7 +6,7 @@
 namespace cl::Vulkan {
 
 VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
-    // Render pass objects describe framebuffer attachments - how many colour and depth buffers there are, how to use 
+  // Render pass objects describe framebuffer attachments - how many colour and depth buffers there are, how to use 
   // them, how many samples, etc.
 
   std::vector<VkAttachmentDescription> attachment_descriptions;
