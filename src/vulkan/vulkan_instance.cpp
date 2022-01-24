@@ -9,7 +9,7 @@
 
 namespace cl::Vulkan {
 
-const static std::vector<const char*> kValidationLayers = { "VK_LAYER_KHRONOS_validation" };
+const std::vector<const char*> kValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 void CheckValidationLayerSupport() {
   // Get list of all available instance layers
