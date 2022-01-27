@@ -17,25 +17,25 @@ void VulkanSwapchain::CreateSwapchain() {
   VulkanSwapchainSupportDetails swapchain_support(window_data->physical_device, window_data->surface);
   VkSurfaceFormatKHR surface_format = swapchain_support.ChooseBestSurfaceFormat();
   VkPresentModeKHR present_mode = swapchain_support.ChooseBestPresentMode(window_data->enable_vsync);
-  swapchain_extent = swapchain_support.ChooseSwapExtent(window_data->glfw_window);
-  swapchain_image_format = surface_format.format;
+  extent = swapchain_support.ChooseSwapExtent(window_data->glfw_window);
+  image_format = surface_format.format;
 
   // It's  recommended to request at least one more swapchain image than the minimum supported, as this avoids having
   // to wait for the driver to complete internal operations before we can acquire the next image to render to
-  swapchain_image_count = swapchain_support.surface_capabilities.minImageCount + 1;
+  image_count = swapchain_support.surface_capabilities.minImageCount + 1;
 
   // Make sure we do not exceed the maximum number of swapchain images
   // 0 is a special value indicating that there is no maximum
-  if (swapchain_support.surface_capabilities.maxImageCount > 0 && swapchain_image_count > swapchain_support.surface_capabilities.maxImageCount) {
-    swapchain_image_count = swapchain_support.surface_capabilities.maxImageCount;
+  if (swapchain_support.surface_capabilities.maxImageCount > 0 && image_count > swapchain_support.surface_capabilities.maxImageCount) {
+    image_count = swapchain_support.surface_capabilities.maxImageCount;
   }
 
   VkSwapchainCreateInfoKHR create_info { VK_STRUCTURE_TYPE_SWAPCHAIN_CREATE_INFO_KHR };
   create_info.surface = window_data->surface;
-  create_info.minImageCount = swapchain_image_count;
+  create_info.minImageCount = image_count;
   create_info.imageFormat = surface_format.format;
   create_info.imageColorSpace = surface_format.colorSpace;
-  create_info.imageExtent = swapchain_extent;
+  create_info.imageExtent = extent;
 
   // imageArrayLayers greater than 1 can be used for things like stereoscopic 3D
   create_info.imageArrayLayers = 1;
@@ -82,19 +82,19 @@ void VulkanSwapchain::CreateSwapchain() {
   // more. Therefore we need to query the swapchain to find out how many images it contains.
   // We don't need to destroy the images, since they are implicity destroyed when we destroy the swapchain - we are
   // only retrieving image handles
-  vkGetSwapchainImagesKHR(window_data->device, swapchain, &swapchain_image_count, nullptr);
-  swapchain_images.resize(swapchain_image_count);
-  vkGetSwapchainImagesKHR(window_data->device, swapchain, &swapchain_image_count, swapchain_images.data());
+  vkGetSwapchainImagesKHR(window_data->device, swapchain, &image_count, nullptr);
+  images.resize(image_count);
+  vkGetSwapchainImagesKHR(window_data->device, swapchain, &image_count, images.data());
 
   // Create image views
-  swapchain_image_views.resize(swapchain_images.size());
-  for (size_t i = 0; i < swapchain_images.size(); ++i) {
+  image_views.resize(images.size());
+  for (size_t i = 0; i < images.size(); ++i) {
     VkImageViewCreateInfo create_info { VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
-    create_info.image = swapchain_images[i];
+    create_info.image = images[i];
 
     // We want to treat each image as a 2D texture
     create_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
-    create_info.format = swapchain_image_format;
+    create_info.format = image_format;
 
     // Use default mapping for colour channels
     // Note: Swizzling other than VK_COMPONENT_SWIZZLE_IDENTITY is not available on some incomplete Vulkan implementations, for example MoltenVK
@@ -110,7 +110,7 @@ void VulkanSwapchain::CreateSwapchain() {
     create_info.subresourceRange.baseArrayLayer = 0;
     create_info.subresourceRange.layerCount = 1;
 
-    VK_CHECK(vkCreateImageView(window_data->device, &create_info, window_data->context_data->allocator, &swapchain_image_views[i]));
+    VK_CHECK(vkCreateImageView(window_data->device, &create_info, window_data->context_data->allocator, &image_views[i]));
   }
 
   // TODO
@@ -127,7 +127,7 @@ void VulkanSwapchain::DestroySwapchain() {
   //   DestroyDepthBuffer();
   // }
 
-  for (auto image_view : swapchain_image_views) {
+  for (auto image_view : image_views) {
     vkDestroyImageView(window_data->device, image_view, window_data->context_data->allocator);
   }
 
@@ -146,20 +146,20 @@ void VulkanSwapchain::RecreateSwapchain() {
   vkDeviceWaitIdle(window_data->device);
 
   DestroySwapchainFramebuffers();
-  DestroySwapchainRenderPass(*this, swapchain_render_pass);
+  DestroySwapchainRenderPass(*this, render_pass);
   DestroySwapchain();
 
   CreateSwapchain();
-  swapchain_render_pass = CreateSwapchainRenderPass(*this);
+  render_pass = CreateSwapchainRenderPass(*this);
   CreateSwapchainFramebuffers();
 }
 
 void VulkanSwapchain::CreateSwapchainFramebuffers() {
-  swapchain_framebuffers.resize(swapchain_image_views.size());
+  framebuffers.resize(image_views.size());
   
   // Each image view needs its own framebuffer
-  for (size_t i = 0; i < swapchain_image_views.size(); ++i) {
-    std::vector<VkImageView> attachments = { swapchain_image_views[i] };
+  for (size_t i = 0; i < image_views.size(); ++i) {
+    std::vector<VkImageView> attachments = { image_views[i] };
 
     // TODO
     // if (enable_depth_test) {
@@ -167,20 +167,37 @@ void VulkanSwapchain::CreateSwapchainFramebuffers() {
     // }
 
     VkFramebufferCreateInfo create_info { VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO };
-    create_info.renderPass = swapchain_render_pass;
+    create_info.renderPass = render_pass;
     create_info.attachmentCount = (uint32_t)attachments.size();
     create_info.pAttachments = attachments.data();
-    create_info.width = swapchain_extent.width;
-    create_info.height = swapchain_extent.height;
+    create_info.width = extent.width;
+    create_info.height = extent.height;
     create_info.layers = 1;
 
-    VK_CHECK(vkCreateFramebuffer(window_data->device, &create_info, window_data->context_data->allocator, &swapchain_framebuffers[i]));
+    VK_CHECK(vkCreateFramebuffer(window_data->device, &create_info, window_data->context_data->allocator, &framebuffers[i]));
   }
 }
 
 void VulkanSwapchain::DestroySwapchainFramebuffers() {
-  for (auto framebuffer : swapchain_framebuffers) {
+  for (auto framebuffer : framebuffers) {
     vkDestroyFramebuffer(window_data->device, framebuffer, window_data->context_data->allocator);
+  }
+}
+
+void VulkanSwapchain::SetClearValue(float r, float g, float b, float a) {
+  clear_values.clear();
+
+  VkClearValue colour_clear_value { };
+  colour_clear_value.color.float32[0] = r;
+  colour_clear_value.color.float32[1] = g;
+  colour_clear_value.color.float32[2] = b;
+  colour_clear_value.color.float32[3] = a;
+  clear_values.push_back(colour_clear_value);
+
+  if (enable_depth_test) {
+    VkClearValue depth_clear_value { };
+    depth_clear_value.depthStencil = { 1.0f, 0 };
+    clear_values.push_back(depth_clear_value);
   }
 }
 

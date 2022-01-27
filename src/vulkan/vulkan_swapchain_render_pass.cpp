@@ -13,7 +13,7 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
 
   // We have either only a single colour attachment, or a colour attachment and a depth attachment
   VkAttachmentDescription colour_attachment { };
-  colour_attachment.format = swapchain.swapchain_image_format;
+  colour_attachment.format = swapchain.image_format;
   // If we were to set up MSAA we would need to change this
   colour_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
   // We can have the framebuffer preserve its contents between render passes if we like, however we will not do this
@@ -93,6 +93,22 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
 
 void DestroySwapchainRenderPass(const VulkanSwapchain& swapchain, VkRenderPass render_pass) {
   vkDestroyRenderPass(swapchain.window_data->device, render_pass, swapchain.window_data->context_data->allocator);
+}
+
+void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer command_buffer, int swapchain_image_index) {
+ VkRenderPassBeginInfo render_pass_info { VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
+  render_pass_info.renderPass = swapchain.render_pass;
+  render_pass_info.framebuffer = swapchain.framebuffers[swapchain_image_index];
+  render_pass_info.renderArea.offset = { 0, 0 };
+  render_pass_info.renderArea.extent = swapchain.extent;
+  render_pass_info.clearValueCount = (uint32_t)swapchain.clear_values.size();
+  render_pass_info.pClearValues = swapchain.clear_values.data();
+
+  vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
+}
+
+void RecordEndRenderPassCommand(VkCommandBuffer command_buffer) {
+  vkCmdEndRenderPass(command_buffer);
 }
 
 }

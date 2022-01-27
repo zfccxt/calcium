@@ -17,16 +17,20 @@ struct VulkanSwapchain {
   void CreateSwapchainFramebuffers();
   void DestroySwapchainFramebuffers();
 
+  // TODO: Colour class
+  void SetClearValue(float r, float g, float b, float a);
+
   VulkanWindowData* window_data;
 
   VkSwapchainKHR swapchain;
-  VkExtent2D swapchain_extent;
-  VkFormat swapchain_image_format;
-  uint32_t swapchain_image_count;
-  std::vector<VkImage> swapchain_images;
-  std::vector<VkImageView> swapchain_image_views;
-  VkRenderPass swapchain_render_pass;
-  std::vector<VkFramebuffer> swapchain_framebuffers;
+  VkExtent2D extent;
+  VkFormat image_format;
+  uint32_t image_count;
+  std::vector<VkImage> images;
+  std::vector<VkImageView> image_views;
+  VkRenderPass render_pass;
+  std::vector<VkFramebuffer> framebuffers;
+  std::vector<VkClearValue> clear_values;
 
   VulkanSwapchainSyncObjects sync_objects;
 

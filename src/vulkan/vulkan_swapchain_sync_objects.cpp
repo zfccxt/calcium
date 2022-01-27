@@ -1,12 +1,10 @@
 #include "vulkan_swapchain_sync_objects.hpp"
 
 #include "vulkan/vulkan_check.hpp"
+#include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
 namespace cl::Vulkan {
-
-// This is the maximum number of render command buffers that will be allocated at any given time
-constexpr size_t kMaxFramesInFlight = 3;
 
 void VulkanSwapchainSyncObjects::CreateSwapchainSyncObjects(const VulkanWindowData& window_data) {
   image_available_semaphores.resize(kMaxFramesInFlight);
@@ -23,7 +21,7 @@ void VulkanSwapchainSyncObjects::CreateSwapchainSyncObjects(const VulkanWindowDa
     VK_CHECK(vkCreateFence(window_data.device, &fence_info, window_data.context_data->allocator, &frame_complete_fences[i]));
   }
 
-  swapchain_image_fences.resize(window_data.swapchain.swapchain_image_count, VK_NULL_HANDLE);
+  swapchain_image_fences.resize(window_data.swapchain.image_count, VK_NULL_HANDLE);
 }
 
 void VulkanSwapchainSyncObjects::DestroySwapchainSyncObjects(const VulkanWindowData& window_data) {

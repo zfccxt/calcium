@@ -2,6 +2,7 @@
 
 #include "vulkan/vulkan_context_data.hpp"
 #include "vulkan/vulkan_swapchain.hpp"
+#include "vulkan/vulkan_render_command_buffers.hpp"
 
 struct GLFWwindow;
 
@@ -20,6 +21,7 @@ struct VulkanWindowData {
   VkCommandPool command_pool;
 
   VulkanSwapchain swapchain;
+  VulkanRenderCommandBuffers render_command_buffers;
 };
 
 }

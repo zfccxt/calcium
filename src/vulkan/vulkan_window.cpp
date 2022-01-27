@@ -28,16 +28,21 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.swapchain.window_data = &window_data_;
   window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
   window_data_.swapchain.CreateSwapchain();
-  window_data_.swapchain.swapchain_render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
+  // TODO: Colour class
+  window_data_.swapchain.SetClearValue(1, 0, 0, 1);
+  window_data_.swapchain.render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
   window_data_.swapchain.CreateSwapchainFramebuffers();
   window_data_.swapchain.sync_objects.CreateSwapchainSyncObjects(window_data_);
   
+  window_data_.render_command_buffers.CreateRenderCommandBuffers(window_data_);
 }
 
 VulkanWindow::~VulkanWindow() {
+  window_data_.render_command_buffers.DestroyRenderCommandBuffers(window_data_);
+
   window_data_.swapchain.sync_objects.DestroySwapchainSyncObjects(window_data_);
   window_data_.swapchain.DestroySwapchainFramebuffers();
-  DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.swapchain_render_pass);
+  DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.render_pass);
   window_data_.swapchain.DestroySwapchain();
 
   DestroyCommandPool(window_data_, window_data_.command_pool);

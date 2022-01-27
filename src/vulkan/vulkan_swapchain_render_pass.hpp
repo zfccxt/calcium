@@ -7,4 +7,7 @@ namespace cl::Vulkan {
 VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain);
 void DestroySwapchainRenderPass(const VulkanSwapchain& swapchain, VkRenderPass render_pass);
 
+void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer command_buffer, int swapchain_image_index);
+void RecordEndRenderPassCommand(VkCommandBuffer command_buffer);
+
 }
