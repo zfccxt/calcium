@@ -75,10 +75,6 @@ VkPresentModeKHR VulkanSwapchainSupportDetails::ChooseBestPresentMode(bool enabl
   return VK_PRESENT_MODE_FIFO_KHR;
 }
 
-template <typename T> T Clamp(const T& value, const T& low, const T& high) {
-  return value < low ? low : (value > high ? high : value); 
-}
-
 VkExtent2D VulkanSwapchainSupportDetails::ChooseSwapExtent(GLFWwindow* glfw_window) const {
   // The swap extent is the resolution of the swapchain images
   // Vulkan will try to choose this for us based on the details it already got about the surface
@@ -94,8 +90,8 @@ VkExtent2D VulkanSwapchainSupportDetails::ChooseSwapExtent(GLFWwindow* glfw_wind
     VkExtent2D actual_extent = { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
 
     // Make sure the size returned is within the range of possible values the surface supports
-    actual_extent.width  = Clamp(actual_extent.width,  surface_capabilities.minImageExtent.width,  surface_capabilities.maxImageExtent.width);
-    actual_extent.height = Clamp(actual_extent.height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
+    actual_extent.width  = std::clamp(actual_extent.width,  surface_capabilities.minImageExtent.width,  surface_capabilities.maxImageExtent.width);
+    actual_extent.height = std::clamp(actual_extent.height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
 
     return actual_extent;
   }
