@@ -26,13 +26,11 @@ VulkanQueueFamilyIndices::VulkanQueueFamilyIndices(VkPhysicalDevice physical_dev
       graphics_family = i;
     }
 
-    if (surface != VK_NULL_HANDLE) {
-      // Note: the availability of a presentation queue implies that VK_KHR_swapchain must be supported
-      VkBool32 present_support = false;
-      VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, surface, &present_support));
-      if (present_support) {
-        present_family = i;
-      }
+    // Note: the availability of a presentation queue implies that VK_KHR_swapchain must be supported
+    VkBool32 present_support = false;
+    VK_CHECK(vkGetPhysicalDeviceSurfaceSupportKHR(physical_device, i, surface, &present_support));
+    if (present_support) {
+      present_family = i;
     }
 
     // If we ever find a queue family that can do both graphics and presentation, we stop the search

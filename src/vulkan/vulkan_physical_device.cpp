@@ -101,22 +101,22 @@ int RateDeviceSuitability(VkPhysicalDevice physical_device, VkSurfaceKHR surface
   return score;
 }
 
-VkPhysicalDevice ChoosePhysicalDevice(const VulkanWindowData& window_data) {
+VkPhysicalDevice ChoosePhysicalDevice(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
   // First call to vkEnumeratePhysicalDevices tells us how many devices are present
   uint32_t device_count = 0;
-  vkEnumeratePhysicalDevices(window_data.context_data->instance, &device_count, nullptr);
+  vkEnumeratePhysicalDevices(context_data.instance, &device_count, nullptr);
 
   // If no Vulkan capable devices are detected, we should roll back to another graphics API
   assert(device_count > 0);
 
   // Second call to vkEnumeratePhysicalDevices lists the devices
   std::vector<VkPhysicalDevice> physical_devices(device_count);
-  vkEnumeratePhysicalDevices(window_data.context_data->instance, &device_count, physical_devices.data());
+  vkEnumeratePhysicalDevices(context_data.instance, &device_count, physical_devices.data());
 
   // Create a map to rank GPUs and populate it with scores
   std::multimap<int, VkPhysicalDevice> candidates;
   for (const auto& physical_device : physical_devices) {
-    int score = RateDeviceSuitability(physical_device, window_data.surface);
+    int score = RateDeviceSuitability(physical_device, temp_surface);
     candidates.insert(std::make_pair(score, physical_device));
   }
 

@@ -11,8 +11,8 @@
 
 namespace cl::Vulkan {
 
-VkDevice CreateDevice(const VulkanWindowData& window_data) {
-  VulkanQueueFamilyIndices indices(window_data.physical_device, window_data.surface);
+VkDevice CreateDevice(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
 
   // First we have to configure queues
   std::vector<VkDeviceQueueCreateInfo> queue_create_infos;
@@ -52,25 +52,25 @@ VkDevice CreateDevice(const VulkanWindowData& window_data) {
 #endif
 
   VkDevice device;
-  VK_CHECK(vkCreateDevice(window_data.physical_device, &create_info, window_data.context_data->allocator, &device));
+  VK_CHECK(vkCreateDevice(context_data.physical_device, &create_info, context_data.allocator, &device));
   return device;
 }
 
-void DestroyDevice(const VulkanWindowData& window_data, VkDevice device) {
-  vkDestroyDevice(device, window_data.context_data->allocator);
+void DestroyDevice(const VulkanContextData& context_data, VkDevice device) {
+  vkDestroyDevice(device, context_data.allocator);
 }
 
-VkQueue FindGraphicsQueue(const VulkanWindowData& window_data) {
-  VulkanQueueFamilyIndices indices(window_data.physical_device, window_data.surface);
+VkQueue FindGraphicsQueue(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
   VkQueue graphics_queue;
-  vkGetDeviceQueue(window_data.device, indices.graphics_family, 0, &graphics_queue);
+  vkGetDeviceQueue(context_data.device, indices.graphics_family, 0, &graphics_queue);
   return graphics_queue;
 }
 
-VkQueue FindPresentQueue(const VulkanWindowData& window_data) {
-  VulkanQueueFamilyIndices indices(window_data.physical_device, window_data.surface);
+VkQueue FindPresentQueue(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
   VkQueue present_queue;
-  vkGetDeviceQueue(window_data.device, indices.present_family, 0, &present_queue);
+  vkGetDeviceQueue(context_data.device, indices.present_family, 0, &present_queue);
   return present_queue;
 }
 

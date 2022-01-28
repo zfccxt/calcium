@@ -87,12 +87,12 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   render_pass_info.pDependencies = &dependency;
   
   VkRenderPass render_pass;
-  VK_CHECK(vkCreateRenderPass(swapchain.window_data->device, &render_pass_info, swapchain.window_data->context_data->allocator, &render_pass));
+  VK_CHECK(vkCreateRenderPass(swapchain.window_data->context_data->device, &render_pass_info, swapchain.window_data->context_data->allocator, &render_pass));
   return render_pass;
 }
 
 void DestroySwapchainRenderPass(const VulkanSwapchain& swapchain, VkRenderPass render_pass) {
-  vkDestroyRenderPass(swapchain.window_data->device, render_pass, swapchain.window_data->context_data->allocator);
+  vkDestroyRenderPass(swapchain.window_data->context_data->device, render_pass, swapchain.window_data->context_data->allocator);
 }
 
 void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer command_buffer, int swapchain_image_index) {

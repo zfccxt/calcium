@@ -14,12 +14,6 @@ struct VulkanWindowData {
   bool enable_vsync;
 
   VkSurfaceKHR surface;
-  VkPhysicalDevice physical_device;
-  VkDevice device;
-  VkQueue graphics_queue;
-  VkQueue present_queue;
-  VkCommandPool command_pool;
-
   VulkanSwapchain swapchain;
   VulkanRenderCommandBuffers render_command_buffers;
 };

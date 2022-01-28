@@ -2,9 +2,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include "vulkan/vulkan_command_pool.hpp"
-#include "vulkan/vulkan_device.hpp"
-#include "vulkan/vulkan_physical_device.hpp"
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
 
@@ -19,11 +16,6 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateIn
   window_data_.enable_vsync = create_info.enable_vsync;
 
   window_data_.surface = CreateWindowSurface(window_data_);
-  window_data_.physical_device = ChoosePhysicalDevice(window_data_);
-  window_data_.device = CreateDevice(window_data_);
-  window_data_.graphics_queue = FindGraphicsQueue(window_data_);
-  window_data_.present_queue = FindPresentQueue(window_data_);
-  window_data_.command_pool = CreateCommandPool(window_data_);
 
   window_data_.swapchain.window_data = &window_data_;
   window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
@@ -45,8 +37,6 @@ VulkanWindow::~VulkanWindow() {
   DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.render_pass);
   window_data_.swapchain.DestroySwapchain();
 
-  DestroyCommandPool(window_data_, window_data_.command_pool);
-  DestroyDevice(window_data_, window_data_.device);
   DestroyWindowSurface(window_data_, window_data_.surface);
 }
 

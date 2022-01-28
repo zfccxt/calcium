@@ -12,36 +12,36 @@ void VulkanRenderCommandBuffers::CreateRenderCommandBuffers(const VulkanWindowDa
 }
 
 void VulkanRenderCommandBuffers::DestroyRenderCommandBuffers(const VulkanWindowData& window_data) {
-  vkDeviceWaitIdle(window_data.device);
+  vkDeviceWaitIdle(window_data.context_data->device);
 
-  vkFreeCommandBuffers(window_data.device, window_data.command_pool, kMaxFramesInFlight, render_command_buffers_.data());
+  vkFreeCommandBuffers(window_data.context_data->device, window_data.context_data->command_pool, kMaxFramesInFlight, render_command_buffers_.data());
 }
 
 VkCommandBuffer VulkanRenderCommandBuffers::BeginRenderCommandBuffer(VulkanWindowData& window_data) {
   // Move to next command buffer, along with its associated sync objects
   current_command_buffer_index_ = (current_command_buffer_index_ + 1) % kMaxFramesInFlight;
 
-  vkAcquireNextImageKHR(window_data.device, window_data.swapchain.swapchain, UINT64_MAX, 
+  vkAcquireNextImageKHR(window_data.context_data->device, window_data.swapchain.swapchain, UINT64_MAX, 
     window_data.swapchain.sync_objects.image_available_semaphores[current_command_buffer_index_], VK_NULL_HANDLE, &swapchain_image_index_);
 
   // Check if a previous frame is using this image (i.e. there is its fence to wait on)
   if (window_data.swapchain.sync_objects.swapchain_image_fences[swapchain_image_index_] != VK_NULL_HANDLE) {
-    vkWaitForFences(window_data.device, 1, &window_data.swapchain.sync_objects.swapchain_image_fences[swapchain_image_index_], VK_TRUE, UINT64_MAX);
+    vkWaitForFences(window_data.context_data->device, 1, &window_data.swapchain.sync_objects.swapchain_image_fences[swapchain_image_index_], VK_TRUE, UINT64_MAX);
   }
   // Mark the image as now being in use by this frame
   window_data.swapchain.sync_objects.swapchain_image_fences[swapchain_image_index_] = window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_];
 
   // Deallocate the old command buffer
-  vkWaitForFences(window_data.device, 1, &window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_], VK_TRUE, UINT64_MAX);
-  vkFreeCommandBuffers(window_data.device, window_data.command_pool, 1, &render_command_buffers_[current_command_buffer_index_]);
+  vkWaitForFences(window_data.context_data->device, 1, &window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_], VK_TRUE, UINT64_MAX);
+  vkFreeCommandBuffers(window_data.context_data->device, window_data.context_data->command_pool, 1, &render_command_buffers_[current_command_buffer_index_]);
 
   VkCommandBufferAllocateInfo alloc_info { VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO };
   alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
-  alloc_info.commandPool = window_data.command_pool;
+  alloc_info.commandPool = window_data.context_data->command_pool;
   alloc_info.commandBufferCount = 1;
 
   // Allocate the new command buffer
-  VK_CHECK(vkAllocateCommandBuffers(window_data.device, &alloc_info, &render_command_buffers_[current_command_buffer_index_]));
+  VK_CHECK(vkAllocateCommandBuffers(window_data.context_data->device, &alloc_info, &render_command_buffers_[current_command_buffer_index_]));
 
   // We record the command buffer straight away
   VkCommandBufferBeginInfo begin_info { VK_STRUCTURE_TYPE_COMMAND_BUFFER_BEGIN_INFO };
@@ -73,8 +73,8 @@ void VulkanRenderCommandBuffers::EndAndSubmitRenderCommandBuffer(VulkanWindowDat
   submit_info.signalSemaphoreCount = 1;
   submit_info.pSignalSemaphores = signal_semaphores;
 
-  vkResetFences(window_data.device, 1, &window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_]);
-  VK_CHECK(vkQueueSubmit(window_data.graphics_queue, 1, &submit_info, window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_]));
+  vkResetFences(window_data.context_data->device, 1, &window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_]);
+  VK_CHECK(vkQueueSubmit(window_data.context_data->graphics_queue, 1, &submit_info, window_data.swapchain.sync_objects.frame_complete_fences[current_command_buffer_index_]));
 
   // Present the frame
   VkPresentInfoKHR present_info { VK_STRUCTURE_TYPE_PRESENT_INFO_KHR };
@@ -87,7 +87,7 @@ void VulkanRenderCommandBuffers::EndAndSubmitRenderCommandBuffer(VulkanWindowDat
   present_info.pImageIndices = &swapchain_image_index_;
   present_info.pResults = nullptr; // Optional
 
-  vkQueuePresentKHR(window_data.present_queue, &present_info);
+  vkQueuePresentKHR(window_data.context_data->present_queue, &present_info);
 }
 
 }

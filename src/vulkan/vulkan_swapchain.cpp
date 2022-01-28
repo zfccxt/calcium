@@ -14,7 +14,7 @@ namespace cl::Vulkan {
 #pragma warning(disable: 26812)
 
 void VulkanSwapchain::CreateSwapchain() {
-  VulkanSwapchainSupportDetails swapchain_support(window_data->physical_device, window_data->surface);
+  VulkanSwapchainSupportDetails swapchain_support(window_data->context_data->physical_device, window_data->surface);
   VkSurfaceFormatKHR surface_format = swapchain_support.ChooseBestSurfaceFormat();
   VkPresentModeKHR present_mode = swapchain_support.ChooseBestPresentMode(window_data->enable_vsync);
   extent = swapchain_support.ChooseSwapExtent(window_data->glfw_window);
@@ -46,7 +46,7 @@ void VulkanSwapchain::CreateSwapchain() {
 
   // Next we must specify how to handle swapchain images that will be used across multiple queue families. If so, we
   // would need to draw on the images in the graphics queue, then submit them on the present queue.
-  VulkanQueueFamilyIndices indices(window_data->physical_device, window_data->surface);
+  VulkanQueueFamilyIndices indices(window_data->context_data->physical_device, window_data->surface);
   uint32_t queue_family_indices[] = { indices.graphics_family, indices.present_family };
 
   if (indices.graphics_family == indices.present_family) {
@@ -76,15 +76,15 @@ void VulkanSwapchain::CreateSwapchain() {
 
   create_info.oldSwapchain = VK_NULL_HANDLE;
 
-  VK_CHECK(vkCreateSwapchainKHR(window_data->device, &create_info, window_data->context_data->allocator, &swapchain));
+  VK_CHECK(vkCreateSwapchainKHR(window_data->context_data->device, &create_info, window_data->context_data->allocator, &swapchain));
 
   // We only ever specified a minimum number of swapchain images, so it's possible the swapchain we have created has
   // more. Therefore we need to query the swapchain to find out how many images it contains.
   // We don't need to destroy the images, since they are implicity destroyed when we destroy the swapchain - we are
   // only retrieving image handles
-  vkGetSwapchainImagesKHR(window_data->device, swapchain, &image_count, nullptr);
+  vkGetSwapchainImagesKHR(window_data->context_data->device, swapchain, &image_count, nullptr);
   images.resize(image_count);
-  vkGetSwapchainImagesKHR(window_data->device, swapchain, &image_count, images.data());
+  vkGetSwapchainImagesKHR(window_data->context_data->device, swapchain, &image_count, images.data());
 
   // Create image views
   image_views.resize(images.size());
@@ -110,7 +110,7 @@ void VulkanSwapchain::CreateSwapchain() {
     create_info.subresourceRange.baseArrayLayer = 0;
     create_info.subresourceRange.layerCount = 1;
 
-    VK_CHECK(vkCreateImageView(window_data->device, &create_info, window_data->context_data->allocator, &image_views[i]));
+    VK_CHECK(vkCreateImageView(window_data->context_data->device, &create_info, window_data->context_data->allocator, &image_views[i]));
   }
 
   // TODO
@@ -120,7 +120,7 @@ void VulkanSwapchain::CreateSwapchain() {
 }
 
 void VulkanSwapchain::DestroySwapchain() {
-  vkDeviceWaitIdle(window_data->device);
+  vkDeviceWaitIdle(window_data->context_data->device);
 
   // TODO
   // if (window_data.enable_depth_test) {
@@ -128,10 +128,10 @@ void VulkanSwapchain::DestroySwapchain() {
   // }
 
   for (auto image_view : image_views) {
-    vkDestroyImageView(window_data->device, image_view, window_data->context_data->allocator);
+    vkDestroyImageView(window_data->context_data->device, image_view, window_data->context_data->allocator);
   }
 
-  vkDestroySwapchainKHR(window_data->device, swapchain, window_data->context_data->allocator);
+  vkDestroySwapchainKHR(window_data->context_data->device, swapchain, window_data->context_data->allocator);
 }
 
 void VulkanSwapchain::RecreateSwapchain() {
@@ -143,7 +143,7 @@ void VulkanSwapchain::RecreateSwapchain() {
     glfwWaitEvents();
   }
 
-  vkDeviceWaitIdle(window_data->device);
+  vkDeviceWaitIdle(window_data->context_data->device);
 
   DestroySwapchainFramebuffers();
   DestroySwapchainRenderPass(*this, render_pass);
@@ -174,13 +174,13 @@ void VulkanSwapchain::CreateSwapchainFramebuffers() {
     create_info.height = extent.height;
     create_info.layers = 1;
 
-    VK_CHECK(vkCreateFramebuffer(window_data->device, &create_info, window_data->context_data->allocator, &framebuffers[i]));
+    VK_CHECK(vkCreateFramebuffer(window_data->context_data->device, &create_info, window_data->context_data->allocator, &framebuffers[i]));
   }
 }
 
 void VulkanSwapchain::DestroySwapchainFramebuffers() {
   for (auto framebuffer : framebuffers) {
-    vkDestroyFramebuffer(window_data->device, framebuffer, window_data->context_data->allocator);
+    vkDestroyFramebuffer(window_data->context_data->device, framebuffer, window_data->context_data->allocator);
   }
 }
 

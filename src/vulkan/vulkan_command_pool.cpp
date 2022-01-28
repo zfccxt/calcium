@@ -5,8 +5,8 @@
 
 namespace cl::Vulkan {
 
-VkCommandPool CreateCommandPool(const VulkanContextData& context_data) {
-  VulkanQueueFamilyIndices indices(context_data.physical_device, VK_NULL_HANDLE);
+VkCommandPool CreateCommandPool(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
   VkCommandPoolCreateInfo create_info { VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO };
   create_info.queueFamilyIndex = indices.graphics_family;
   create_info.flags = 0; // optional

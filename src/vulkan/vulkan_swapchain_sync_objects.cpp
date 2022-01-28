@@ -16,21 +16,21 @@ void VulkanSwapchainSyncObjects::CreateSwapchainSyncObjects(const VulkanWindowDa
   fence_info.flags = VK_FENCE_CREATE_SIGNALED_BIT;
 
   for (size_t i = 0; i < kMaxFramesInFlight; ++i) {
-    VK_CHECK(vkCreateSemaphore(window_data.device, &semaphore_info, window_data.context_data->allocator, &image_available_semaphores[i]));
-    VK_CHECK(vkCreateSemaphore(window_data.device, &semaphore_info, window_data.context_data->allocator, &render_complete_semaphores[i]));
-    VK_CHECK(vkCreateFence(window_data.device, &fence_info, window_data.context_data->allocator, &frame_complete_fences[i]));
+    VK_CHECK(vkCreateSemaphore(window_data.context_data->device, &semaphore_info, window_data.context_data->allocator, &image_available_semaphores[i]));
+    VK_CHECK(vkCreateSemaphore(window_data.context_data->device, &semaphore_info, window_data.context_data->allocator, &render_complete_semaphores[i]));
+    VK_CHECK(vkCreateFence(window_data.context_data->device, &fence_info, window_data.context_data->allocator, &frame_complete_fences[i]));
   }
 
   swapchain_image_fences.resize(window_data.swapchain.image_count, VK_NULL_HANDLE);
 }
 
 void VulkanSwapchainSyncObjects::DestroySwapchainSyncObjects(const VulkanWindowData& window_data) {
-  vkDeviceWaitIdle(window_data.device);
+  vkDeviceWaitIdle(window_data.context_data->device);
 
   for (size_t i = 0; i < kMaxFramesInFlight; ++i) {
-    vkDestroySemaphore(window_data.device, image_available_semaphores[i], window_data.context_data->allocator);
-    vkDestroySemaphore(window_data.device, render_complete_semaphores[i], window_data.context_data->allocator);
-    vkDestroyFence(window_data.device, frame_complete_fences[i], window_data.context_data->allocator);
+    vkDestroySemaphore(window_data.context_data->device, image_available_semaphores[i], window_data.context_data->allocator);
+    vkDestroySemaphore(window_data.context_data->device, render_complete_semaphores[i], window_data.context_data->allocator);
+    vkDestroyFence(window_data.context_data->device, frame_complete_fences[i], window_data.context_data->allocator);
   }
 }
 
