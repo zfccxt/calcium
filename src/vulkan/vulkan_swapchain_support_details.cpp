@@ -11,6 +11,9 @@
 
 namespace cl::Vulkan {
 
+#pragma warning(push)
+#pragma warning(disable : 26812)
+
 VulkanSwapchainSupportDetails::VulkanSwapchainSupportDetails(VkPhysicalDevice physical_device, VkSurfaceKHR surface) {
   // Query the physical device's surface capabilities
   VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &surface_capabilities));
@@ -96,5 +99,7 @@ VkExtent2D VulkanSwapchainSupportDetails::ChooseSwapExtent(GLFWwindow* glfw_wind
     return actual_extent;
   }
 }
+
+#pragma warning(pop)
 
 }

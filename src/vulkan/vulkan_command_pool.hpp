@@ -1,10 +1,10 @@
 #pragma once
 
-#include "vulkan/vulkan_window_data.hpp"
+#include "vulkan/vulkan_context_data.hpp"
 
 namespace cl::Vulkan {
 
-VkCommandPool CreateCommandPool(const VulkanWindowData& window_data);
-void DestroyCommandPool(const VulkanWindowData& window_data, VkCommandPool command_pool);
+VkCommandPool CreateCommandPool(const VulkanContextData& context_data);
+void DestroyCommandPool(const VulkanContextData& context_data, VkCommandPool command_pool);
 
 }
