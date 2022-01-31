@@ -11,6 +11,7 @@
 #include "vulkan/vulkan_device.hpp"
 #include "vulkan/vulkan_instance.hpp"
 #include "vulkan/vulkan_physical_device.hpp"
+#include "vulkan/vulkan_shader.hpp"
 #include "vulkan/vulkan_window.hpp"
 
 namespace cl::Vulkan {
@@ -71,6 +72,17 @@ std::unique_ptr<Window> VulkanContext::CreateWindow(size_t width, size_t height)
 
 std::unique_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& create_info) {
   return std::make_unique<VulkanWindow>(&context_data_, create_info);
+}
+
+std::unique_ptr<Shader> VulkanContext::CreateShader(const std::string& vert_path, const std::string& frag_path) {
+  ShaderCreateInfo shader_info;
+  shader_info.vert_path = vert_path;
+  shader_info.frag_path = frag_path;
+  return std::make_unique<VulkanShader>(shader_info);
+}
+
+std::unique_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& create_info) {
+  return std::make_unique<VulkanShader>(create_info);
 }
 
 }

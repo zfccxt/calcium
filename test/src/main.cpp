@@ -5,6 +5,9 @@ int main() {
 
   auto window = context->CreateWindow();
 
+  cl::ShaderCreateInfo shader_info;
+  auto shader = context->CreateShader(shader_info);
+
   while (window->IsOpen()) {
     cl::PollWindowEvents();
   }
