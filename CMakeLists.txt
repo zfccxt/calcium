@@ -50,6 +50,8 @@ add_subdirectory(depend/glad)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 add_subdirectory(depend/fast_obj)
 target_link_libraries(${PROJECT_NAME} PRIVATE fast_obj)
+add_subdirectory(depend/meshoptimizer)
+target_link_libraries(${PROJECT_NAME} PRIVATE meshoptimizer)
 
 if(APPLE)
   target_compile_definitions(${PROJECT_NAME} PUBLIC CALCIUM_PLATFORM_MACOS=1)
