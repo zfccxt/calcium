@@ -1,5 +1,6 @@
 #include "shader.hpp"
 
+#include <cstdint>
 #include <assert.h>
 #include <fstream>
 
