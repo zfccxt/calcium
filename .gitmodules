@@ -7,3 +7,6 @@
 [submodule "depend/meshoptimizer"]
 	path = depend/meshoptimizer
 	url = https://github.com/zeux/meshoptimizer
+[submodule "depend/SPIRV-Cross"]
+	path = depend/SPIRV-Cross
+	url = https://github.com/KhronosGroup/SPIRV-Cross
