@@ -6,8 +6,12 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   // TODO
 }
 
+OpenGLShader::~OpenGLShader() {
+  glDeleteProgram(program_id_);
+}
+
 void OpenGLShader::Bind() {
-  // TODO
+  glUseProgram(program_id_);
 }
 
 }

@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glad/glad.h>
+
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 
@@ -10,6 +12,9 @@ public:
   OpenGLShader(const ShaderCreateInfo& shader_info);
 
   virtual void Bind() override;
+
+private:
+  GLuint program_id_;
 };
 
 }
