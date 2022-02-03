@@ -1,3 +1,6 @@
 [submodule "depend/glfw"]
 	path = depend/glfw
 	url = https://github.com/glfw/glfw
+[submodule "depend/fast_obj"]
+	path = depend/fast_obj
+	url = https://github.com/thisistherk/fast_obj
