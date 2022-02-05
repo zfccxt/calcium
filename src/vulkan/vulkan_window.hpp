@@ -8,7 +8,7 @@ namespace cl::Vulkan {
 
 class VulkanWindow : public GlfwWindow {
 public:
-  VulkanWindow(VulkanContextData* context_data, const WindowCreateInfo& create_info);
+  VulkanWindow(VulkanContextData* context_data, WindowCreateInfo create_info);
   virtual ~VulkanWindow();
 
   virtual void SwapBuffers() override;

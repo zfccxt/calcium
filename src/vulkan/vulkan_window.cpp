@@ -7,8 +7,14 @@
 
 namespace cl::Vulkan {
 
-VulkanWindow::VulkanWindow(VulkanContextData* context_data, const WindowCreateInfo& create_info) {
+VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo create_info) {
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
+  if (create_info.title.empty()) {
+    create_info.title = "Calcium [Vulkan]";
+#ifdef CALCIUM_BUILD_DEBUG
+    create_info.title += " [Debug Build]";
+#endif
+  }
   CreateGlfwWindow(create_info);
 
   window_data_.context_data = context_data;

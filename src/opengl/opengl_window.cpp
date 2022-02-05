@@ -4,7 +4,7 @@
 
 namespace cl::OpenGL {
 
-OpenGLWindow::OpenGLWindow(const WindowCreateInfo& create_info) {
+OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 
   // TODO: Figure out highest supported OpenGL version on the current machine
@@ -15,6 +15,12 @@ OpenGLWindow::OpenGLWindow(const WindowCreateInfo& create_info) {
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
 #endif
 
+  if (create_info.title.empty()) {
+    create_info.title = "Calcium [OpenGL]";
+#ifdef CALCIUM_BUILD_DEBUG
+    create_info.title += " [Debug Build]";
+#endif
+  }
   CreateGlfwWindow(create_info);
 }
 
