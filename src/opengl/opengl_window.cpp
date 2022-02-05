@@ -21,7 +21,13 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
     create_info.title += " [Debug Build]";
 #endif
   }
+
   CreateGlfwWindow(create_info);
+
+  // Set the viewport to the size of the whole window framebuffer
+  int width, height;
+  glfwGetFramebufferSize(glfw_window_, &width, &height);
+  glViewport(0, 0, width, height);
 }
 
 void OpenGLWindow::SwapBuffers() {
