@@ -23,7 +23,11 @@ std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& crea
 }
 
 void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
-  // TODO: if window, make context current otherwise, bind framebuffer as render target
+  // TODO: figure out whether this is a window or a framebuffer and bind appropriately
+
+  // If render target is a window:
+  auto opengl_window = (OpenGLWindow*)(render_target.get());
+  opengl_window->MakeContextCurrent();
 }
 
 }

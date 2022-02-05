@@ -9,6 +9,8 @@ public:
   OpenGLWindow(WindowCreateInfo create_info);
 
   virtual void SwapBuffers() override;
+
+  void MakeContextCurrent();
 };
 
 }

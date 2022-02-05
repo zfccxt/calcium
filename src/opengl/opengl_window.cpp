@@ -28,4 +28,8 @@ void OpenGLWindow::SwapBuffers() {
   glfwSwapBuffers(glfw_window_);
 }
 
+void OpenGLWindow::MakeContextCurrent() {
+  glfwMakeContextCurrent(glfw_window_);
+}
+
 }
