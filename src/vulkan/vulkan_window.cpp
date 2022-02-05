@@ -26,8 +26,7 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo cre
   window_data_.swapchain.window_data = &window_data_;
   window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
   window_data_.swapchain.CreateSwapchain();
-  // TODO: Colour class
-  window_data_.swapchain.SetClearValue(1, 0, 0, 1);
+  window_data_.swapchain.SetClearValue(create_info.clear_colour.r, create_info.clear_colour.g, create_info.clear_colour.b, create_info.clear_colour.a);
   window_data_.swapchain.render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
   window_data_.swapchain.CreateSwapchainFramebuffers();
   window_data_.swapchain.sync_objects.CreateSwapchainSyncObjects(window_data_);

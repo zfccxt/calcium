@@ -42,6 +42,8 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
 
   // Set vsync - 0 is unlimited framerate, 1 is default swap interval
   glfwSwapInterval(create_info.enable_vsync ? 1 : 0);
+
+  SetClearColour(create_info.clear_colour);
 }
 
 void OpenGLWindow::SwapBuffers() {
