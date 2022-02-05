@@ -1,5 +1,8 @@
 #include "opengl_window.hpp"
 
+#include <assert.h>
+
+#include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
 namespace cl::OpenGL {
@@ -24,10 +27,21 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
 
   CreateGlfwWindow(create_info);
 
+  // Make context current so that we can call OpenGL functions on the window's context
+  MakeContextCurrent();
+
+  // Load OpenGL functions - this requires a context, so can't be done before window creation
+  if (!gladLoadGLLoader((GLADloadproc)glfwGetProcAddress)) {
+    assert(false);
+  }
+
   // Set the viewport to the size of the whole window framebuffer
   int width, height;
   glfwGetFramebufferSize(glfw_window_, &width, &height);
   glViewport(0, 0, width, height);
+
+  // Set vsync - 0 is unlimited framerate, 1 is default swap interval
+  glfwSwapInterval(create_info.enable_vsync ? 1 : 0);
 }
 
 void OpenGLWindow::SwapBuffers() {
