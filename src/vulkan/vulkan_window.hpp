@@ -11,6 +11,7 @@ public:
   VulkanWindow(VulkanContextData* context_data, WindowCreateInfo create_info);
   virtual ~VulkanWindow();
 
+  virtual void Clear() override;
   virtual void SwapBuffers() override;
 
   virtual void SetClearColour(const Colour& colour) override;

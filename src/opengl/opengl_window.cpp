@@ -40,10 +40,22 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   glfwGetFramebufferSize(glfw_window_, &width, &height);
   glViewport(0, 0, width, height);
 
-  // Set vsync - 0 is unlimited framerate, 1 is default swap interval
+  // Set vsync: 0 is unlimited framerate, 1 is default swap interval
   glfwSwapInterval(create_info.enable_vsync ? 1 : 0);
 
+  // Enable or disable depth test
+  if (create_info.enable_depth_test) {
+    glEnable(GL_DEPTH_TEST);
+    gl_clear_bits_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+  }
+  else {
+    gl_clear_bits_ = GL_COLOR_BUFFER_BIT;
+  }
   SetClearColour(create_info.clear_colour);
+}
+
+void OpenGLWindow::Clear() {
+  glClear(gl_clear_bits_);
 }
 
 void OpenGLWindow::SwapBuffers() {
