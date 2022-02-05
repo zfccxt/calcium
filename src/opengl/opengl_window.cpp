@@ -18,4 +18,8 @@ OpenGLWindow::OpenGLWindow(const WindowCreateInfo& create_info) {
   CreateGlfwWindow(create_info);
 }
 
+void OpenGLWindow::SwapBuffers() {
+  glfwSwapBuffers(glfw_window_);
+}
+
 }

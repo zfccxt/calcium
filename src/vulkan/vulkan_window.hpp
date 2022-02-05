@@ -11,6 +11,8 @@ public:
   VulkanWindow(VulkanContextData* context_data, const WindowCreateInfo& create_info);
   virtual ~VulkanWindow();
 
+  virtual void SwapBuffers() override;
+
 private:
   VulkanWindowData window_data_;
 };

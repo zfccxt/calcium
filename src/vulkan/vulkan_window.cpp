@@ -40,4 +40,8 @@ VulkanWindow::~VulkanWindow() {
   DestroyWindowSurface(window_data_, window_data_.surface);
 }
 
+void VulkanWindow::SwapBuffers() {
+  // TODO
+}
+
 }

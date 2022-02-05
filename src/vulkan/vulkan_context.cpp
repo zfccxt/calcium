@@ -58,31 +58,17 @@ VulkanContext::~VulkanContext() {
   GLFW::DecrementGLFWContextCount();
 }
 
-std::unique_ptr<Window> VulkanContext::CreateWindow() {
-  WindowCreateInfo create_info;
-  return std::make_unique<VulkanWindow>(&context_data_, create_info);
+
+std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& create_info) {
+  return std::make_shared<VulkanWindow>(&context_data_, create_info);
 }
 
-std::unique_ptr<Window> VulkanContext::CreateWindow(size_t width, size_t height) {
-  WindowCreateInfo create_info;
-  create_info.width = width;
-  create_info.height = height;
-  return std::make_unique<VulkanWindow>(&context_data_, create_info);
+std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& create_info) {
+  return std::make_shared<VulkanShader>(create_info);
 }
 
-std::unique_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& create_info) {
-  return std::make_unique<VulkanWindow>(&context_data_, create_info);
-}
-
-std::unique_ptr<Shader> VulkanContext::CreateShader(const std::string& vert_path, const std::string& frag_path) {
-  ShaderCreateInfo shader_info;
-  shader_info.vert_path = vert_path;
-  shader_info.frag_path = frag_path;
-  return std::make_unique<VulkanShader>(shader_info);
-}
-
-std::unique_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& create_info) {
-  return std::make_unique<VulkanShader>(create_info);
+void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
+  // TODO
 }
 
 }
