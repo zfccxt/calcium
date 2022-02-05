@@ -1,7 +1,7 @@
 #include <calcium.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kOpenGL);
+  auto context = cl::CreateContext(cl::Backend::kVulkan);
 
   auto window = context->CreateWindow();
 

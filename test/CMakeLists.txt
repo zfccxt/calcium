@@ -14,3 +14,24 @@ target_link_libraries(${PROJECT_NAME} PRIVATE calcium)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
+
+# Add custom target - compile glsl shaders to spirv
+if (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "AMD64")
+  set(GLSLANG_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe")
+else()
+  set(GLSLANG_VALIDATOR "$ENV{VULKAN_SDK}/Bin32/glslangValidator.exe")
+endif()
+file(GLOB_RECURSE GLSL_SOURCE_FILES "src/shaders/*.frag.glsl" "src/shaders/*.vert.glsl")
+foreach(GLSL_FILE ${GLSL_SOURCE_FILES})
+  get_filename_component(FILE_NAME ${GLSL_FILE} NAME)
+  set(SPIRV_FILE "${CMAKE_CURRENT_SOURCE_DIR}/res/shaders/${FILE_NAME}.spv")
+  add_custom_command(
+    OUTPUT ${SPIRV_FILE}
+    COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/res/shaders/"
+    COMMAND ${GLSLANG_VALIDATOR} -V ${GLSL_FILE} -o ${SPIRV_FILE}
+    DEPENDS ${GLSL_FILE})
+  list(APPEND SPIRV_BINARY_FILES ${SPIRV_FILE})
+endforeach(GLSL_FILE)
+add_custom_target(calcium_test_shader_target DEPENDS ${SPIRV_BINARY_FILES})
+add_dependencies(${PROJECT_NAME} calcium_test_shader_target)
+
