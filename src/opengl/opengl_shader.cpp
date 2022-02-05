@@ -7,7 +7,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
 }
 
 OpenGLShader::~OpenGLShader() {
-  glDeleteProgram(program_id_);
+  // glDeleteProgram(program_id_);
 }
 
 void OpenGLShader::Bind() {
