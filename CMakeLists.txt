@@ -14,7 +14,7 @@ set(CMAKE_EXE_LINKER_FLAGS_DEBUG "${CMAKE_EXE_LINKER_FLAGS_DEBUG}")
 set(CMAKE_CXX_FLAGS_RELEASE "${CMAKE_CXX_FLAGS_RELEASE} -DCALCIUM_BUILD_RELEASE=1")
 set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 
-set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/context.hpp src/context.cpp src/uid.hpp src/uid.cpp src/window.hpp src/window.cpp src/window_create_info.hpp src/glfw_window.hpp src/glfw_window.cpp src/glfw_utils.hpp src/glfw_utils.cpp src/debug_call.hpp src/shader.hpp src/shader.cpp src/shader_create_info.hpp src/render_target.hpp)
+set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/context.hpp src/context.cpp src/uid.hpp src/uid.cpp src/window.hpp src/window.cpp src/window_create_info.hpp src/glfw_window.hpp src/glfw_window.cpp src/glfw_utils.hpp src/glfw_utils.cpp src/debug_call.hpp src/shader.hpp src/shader.cpp src/shader_create_info.hpp src/render_target.hpp src/colour.hpp src/colour.cpp)
 source_group("src" FILES ${CALCIUM_FILES})
 
 set(OPENGL_FILES src/opengl/opengl_context.hpp src/opengl/opengl_context.cpp src/opengl/opengl_window.hpp src/opengl/opengl_window.cpp src/opengl/opengl_shader.hpp src/shader.cpp src/opengl/opengl_shader.cpp)
