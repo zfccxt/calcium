@@ -10,6 +10,8 @@ public:
 
   virtual void SwapBuffers() override;
 
+  virtual void SetClearColour(const Colour& colour) override;
+
   void MakeContextCurrent();
 };
 

@@ -3,6 +3,8 @@
 #include <cstddef>
 #include <string>
 
+#include "colour.hpp"
+
 namespace cl {
 
 struct WindowCreateInfo {
@@ -13,6 +15,7 @@ struct WindowCreateInfo {
   bool enable_vsync = true;
   bool enable_depth_test = true;
   bool enable_resize = true;
+  Colour clear_colour;
 };
 
 }

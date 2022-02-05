@@ -50,4 +50,8 @@ void VulkanWindow::SwapBuffers() {
   // TODO
 }
 
+void VulkanWindow::SetClearColour(const Colour& colour) {
+  // TODO
+}
+
 }

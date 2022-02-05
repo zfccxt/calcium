@@ -48,6 +48,10 @@ void OpenGLWindow::SwapBuffers() {
   glfwSwapBuffers(glfw_window_);
 }
 
+void OpenGLWindow::SetClearColour(const Colour& colour) {
+  glClearColor(colour.r, colour.g, colour.b, colour.a);
+}
+
 void OpenGLWindow::MakeContextCurrent() {
   glfwMakeContextCurrent(glfw_window_);
 }

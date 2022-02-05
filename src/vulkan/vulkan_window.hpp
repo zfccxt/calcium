@@ -13,6 +13,8 @@ public:
 
   virtual void SwapBuffers() override;
 
+  virtual void SetClearColour(const Colour& colour) override;
+
 private:
   VulkanWindowData window_data_;
 };
