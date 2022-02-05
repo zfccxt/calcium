@@ -33,16 +33,6 @@ target_include_directories(${PROJECT_NAME} PUBLIC src)
 set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(test)
-if(PROJECT_IS_TOP_LEVEL)
-  if(APPLE)
-    set_target_properties(calcium_test PROPERTIES XCODE_GENERATE_SCHEME TRUE XCODE_SCHEME_WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-  endif()
-
-  if(WIN32)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT calcium_test)
-    set_property(TARGET calcium_test PROPERTY VS_DEBUGGER_WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR})
-  endif()
-endif()
 
 add_subdirectory(depend/glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
