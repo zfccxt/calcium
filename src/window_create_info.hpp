@@ -12,6 +12,7 @@ struct WindowCreateInfo {
   bool center = true;
   bool enable_vsync = true;
   bool enable_depth_test = true;
+  bool enable_resize = true;
 };
 
 }

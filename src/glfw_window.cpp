@@ -20,6 +20,8 @@ GlfwWindow::~GlfwWindow() {
 }
 
 void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
+  glfwWindowHint(GLFW_RESIZABLE, create_info.enable_resize);
+
   glfw_window_ = glfwCreateWindow(create_info.width, create_info.height, create_info.title.c_str(), nullptr, nullptr);
   assert(glfw_window_);
 
