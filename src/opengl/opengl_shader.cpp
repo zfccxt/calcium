@@ -1,6 +1,6 @@
 #include "opengl_shader.hpp"
 
-#include "shader_details.hpp"
+#include "shader_reflection_details.hpp"
 
 namespace cl::OpenGL {
 
@@ -14,7 +14,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   if (!shader_info.tess_path.empty()) { code_map.emplace(ShaderType::kTesselationShader, ReadSPV(shader_info.tess_path.c_str())); }
   if (!shader_info.comp_path.empty()) { code_map.emplace(ShaderType::kComputeShader,     ReadSPV(shader_info.comp_path.c_str())); }
 
-  ShaderDetails reflection_details(code_map);
+  ShaderReflectionDetails reflection_details(code_map);
 
   // TODO
 }

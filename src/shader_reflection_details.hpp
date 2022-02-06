@@ -8,8 +8,8 @@ namespace cl {
 
 typedef std::unordered_map<ShaderType, std::vector<uint32_t>> ShaderCodeMap;
 
-struct ShaderDetails {
-  ShaderDetails(const ShaderCodeMap& shaders);
+struct ShaderReflectionDetails {
+  ShaderReflectionDetails(const ShaderCodeMap& shaders);
 };
 
 }
