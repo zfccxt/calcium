@@ -14,5 +14,4 @@ public:
   static std::vector<uint32_t> ReadSPV(const char* file_path);
 };
 
-
 }
