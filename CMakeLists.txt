@@ -17,7 +17,7 @@ set(CMAKE_EXE_LINKER_FLAGS_RELEASE "${CMAKE_EXE_LINKER_FLAGS_RELEASE}")
 set(CALCIUM_FILES src/calcium.hpp src/backend.hpp src/context.hpp src/context.cpp src/uid.hpp src/uid.cpp src/window.hpp src/window.cpp src/window_create_info.hpp src/glfw_window.hpp src/glfw_window.cpp src/glfw_utils.hpp src/glfw_utils.cpp src/debug_call.hpp src/shader.hpp src/shader.cpp src/shader_create_info.hpp src/render_target.hpp src/colour.hpp src/colour.cpp src/shader_reflection_details.hpp src/shader_reflection_details.cpp src/shader_type.hpp src/shader_data_type.hpp src/shader_data_type.cpp src/buffer_element.hpp src/buffer_layout.hpp src/buffer_layout.cpp)
 source_group("src" FILES ${CALCIUM_FILES})
 
-set(OPENGL_FILES src/opengl/opengl_context.hpp src/opengl/opengl_context.cpp src/opengl/opengl_window.hpp src/opengl/opengl_window.cpp src/opengl/opengl_shader.hpp src/shader.cpp src/opengl/opengl_shader.cpp)
+set(OPENGL_FILES src/opengl/opengl_context.hpp src/opengl/opengl_context.cpp src/opengl/opengl_window.hpp src/opengl/opengl_window.cpp src/opengl/opengl_shader.hpp src/shader.cpp src/opengl/opengl_shader.cpp src/opengl/opengl_shader_utils.hpp src/opengl/opengl_shader_utils.cpp)
 source_group("src/opengl" FILES ${OPENGL_FILES})
 
 find_package(Vulkan)

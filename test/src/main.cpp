@@ -19,6 +19,7 @@ int main() {
 
     context->BindRendertarget(window);
     window->Clear();
+    shader->Bind();
     window->SwapBuffers();
   }
 }
