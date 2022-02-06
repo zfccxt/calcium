@@ -9,8 +9,8 @@ int main() {
   auto window = context->CreateWindow(window_info);
 
   cl::ShaderCreateInfo shader_info;
-  shader_info.vert_path = "res/shaders/shader.vert.glsl";
-  shader_info.vert_path = "res/shaders/shader.frag.glsl";
+  shader_info.vert_path = "res/shaders/shader.vert.spv";
+  shader_info.frag_path = "res/shaders/shader.frag.spv";
   auto shader = context->CreateShader(shader_info);
 
 
