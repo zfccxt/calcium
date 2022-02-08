@@ -52,6 +52,10 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
     gl_clear_bits_ = GL_COLOR_BUFFER_BIT;
   }
   SetClearColour(create_info.clear_colour);
+
+  glfwSetWindowSizeCallback(glfw_window_, [](GLFWwindow*, int width, int height) {
+    glViewport(0,0, width, height);
+  });
 }
 
 void OpenGLWindow::Clear() {
