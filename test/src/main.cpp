@@ -14,10 +14,9 @@ int main() {
   auto shader = context->CreateShader(shader_info);
 
   cl::MeshCreateInfo mesh_info;
+  mesh_info.vertex_data_layout = { cl::ShaderDataType::kFloat3 };
   std::vector<float> vertices = {
      0.5f,  0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-    -0.5f,  0.5f, 0.0f,
      0.5f, -0.5f, 0.0f,
     -0.5f, -0.5f, 0.0f,
     -0.5f,  0.5f, 0.0f,
@@ -38,6 +37,7 @@ int main() {
     context->BindRendertarget(window);
     window->Clear();
     shader->Bind();
+    mesh->Draw();
     window->SwapBuffers();
   }
 }

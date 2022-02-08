@@ -9,7 +9,7 @@ class VulkanMesh : public Mesh {
 public:
   VulkanMesh(const MeshCreateInfo& file_path);
 
-  virtual void Bind() override;
+  virtual void Draw() override;
 };
 
 }

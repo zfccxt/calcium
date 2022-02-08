@@ -14,6 +14,8 @@ struct BufferElement {
   ShaderDataType type;
   size_t size;
   size_t offset;
+
+  operator ShaderDataType() { return type; }
 };
 
 }

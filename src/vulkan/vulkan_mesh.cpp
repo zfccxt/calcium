@@ -6,7 +6,7 @@ VulkanMesh::VulkanMesh(const MeshCreateInfo& file_path) {
  // TODO
 }
 
-void VulkanMesh::Bind() {
+void VulkanMesh::Draw() {
  // TODO
 }
 

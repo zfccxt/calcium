@@ -4,7 +4,7 @@ namespace cl {
 
 class Mesh {
 public:
-  virtual void Bind() = 0;
+  virtual void Draw() = 0;
 };
 
 }

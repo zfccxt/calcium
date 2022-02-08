@@ -12,5 +12,6 @@ enum class ShaderDataType : char {
 };
 
 size_t SizeOf(ShaderDataType type);
+size_t ComponentCountOf(ShaderDataType type);
 
 }

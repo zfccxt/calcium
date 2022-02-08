@@ -18,4 +18,21 @@ size_t SizeOf(ShaderDataType type) {
   }
 }
 
+size_t ComponentCountOf(ShaderDataType type) {
+  switch (type) {
+    case ShaderDataType::kBool:    return 1;
+    case ShaderDataType::kInt:     return 1;
+    case ShaderDataType::kInt2:    return 2;
+    case ShaderDataType::kInt3:    return 3;
+    case ShaderDataType::kInt4:    return 4;
+    case ShaderDataType::kFloat:   return 1;
+    case ShaderDataType::kFloat2:  return 2;
+    case ShaderDataType::kFloat3:  return 3;
+    case ShaderDataType::kFloat4:  return 4;
+    case ShaderDataType::kMatrix3: return 3 * 3;
+    case ShaderDataType::kMatrix4: return 4 * 4;
+    default:                       return 0;
+  }
+}
+
 }
