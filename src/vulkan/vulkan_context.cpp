@@ -10,6 +10,7 @@
 #include "vulkan/vulkan_debug_messenger.hpp"
 #include "vulkan/vulkan_device.hpp"
 #include "vulkan/vulkan_instance.hpp"
+#include "vulkan/vulkan_mesh.hpp"
 #include "vulkan/vulkan_physical_device.hpp"
 #include "vulkan/vulkan_shader.hpp"
 #include "vulkan/vulkan_window.hpp"
@@ -59,12 +60,16 @@ VulkanContext::~VulkanContext() {
 }
 
 
-std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& create_info) {
-  return std::make_shared<VulkanWindow>(&context_data_, create_info);
+std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& window_info) {
+  return std::make_shared<VulkanWindow>(&context_data_, window_info);
 }
 
-std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& create_info) {
-  return std::make_shared<VulkanShader>(create_info);
+std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shader_info) {
+  return std::make_shared<VulkanShader>(shader_info);
+}
+
+std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {
+  return std::make_shared<VulkanMesh>(mesh_info);
 }
 
 void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {

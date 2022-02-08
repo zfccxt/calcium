@@ -6,6 +6,9 @@
 
 namespace cl::Vulkan {
 
+#pragma warning(push)
+#pragma warning(disable : 26812)
+
 void PrintVulkanError(VkResult result) {
   switch (result) {
     case (VK_SUCCESS):                                            fprintf(stderr, "[Vulkan] VK_SUCCESS\n");                                            break;
@@ -48,6 +51,8 @@ void PrintVulkanError(VkResult result) {
     default:                                                      fprintf(stderr, "[Vulkan] VK_ERROR_UNKNOWN\n");                                      break;
   }
 }
+
+#pragma warning(pop)
 
 }
 
