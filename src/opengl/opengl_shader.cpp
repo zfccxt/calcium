@@ -34,7 +34,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   glLinkProgram(program_id_);
 
   // Check link status
-#if CALCIUM_BUILD_DEBUG
+#ifdef CALCIUM_BUILD_DEBUG
 	GLint is_linked = 0;
 	glGetProgramiv(program_id_, GL_LINK_STATUS, &is_linked);
 	if (is_linked == GL_FALSE) {
@@ -56,7 +56,8 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
 
 	// Always detach shaders after a successful link.
 	for (auto shader : shader_modules) {
-		glDetachShader(program_id_, shader);
+    glDetachShader(program_id_, shader);
+    // TODO: check if this is okay
     glDeleteShader(shader);
 	}
 }

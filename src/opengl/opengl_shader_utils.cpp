@@ -28,7 +28,7 @@ GLuint CreateShaderModule(const std::string& glsl_code, ShaderType shader_type) 
   glShaderSource(shader, 1, &source_ptr, 0);
   glCompileShader(shader);
 
-#if CALCIUM_BUILD_DEBUG
+#ifdef CALCIUM_BUILD_DEBUG
   GLint is_compiled = 0;
   glGetShaderiv(shader, GL_COMPILE_STATUS, &is_compiled);
   if (is_compiled == GL_FALSE) {
