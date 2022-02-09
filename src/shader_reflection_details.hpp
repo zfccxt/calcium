@@ -10,7 +10,7 @@ namespace cl {
 typedef std::unordered_map<ShaderType, std::vector<uint32_t>> ShaderCodeMap;
 
 struct ShaderReflectionDetails {
-  ShaderReflectionDetails(const ShaderCodeMap& shader_code);
+  void Reflect(const ShaderCodeMap& shader_code);
 
   BufferLayout vertex_input_layout;
 };

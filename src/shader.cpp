@@ -17,4 +17,9 @@ std::vector<uint32_t> Shader::ReadSPV(const char* file_path) {
   return buffer;
 }
 
+
+BufferLayout Shader::GetInputLayout() {
+  return reflection_details_.vertex_input_layout;
+}
+
 }

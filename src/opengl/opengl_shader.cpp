@@ -20,7 +20,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   if (!shader_info.tess_path.empty()) { code_map.emplace(ShaderType::kTesselationShader, ReadSPV(shader_info.tess_path.c_str())); }
   if (!shader_info.comp_path.empty()) { code_map.emplace(ShaderType::kComputeShader,     ReadSPV(shader_info.comp_path.c_str())); }
 
-  ShaderReflectionDetails reflection_details(code_map);
+  reflection_details_.Reflect(code_map);
 
   program_id_ = glCreateProgram();
   std::vector<GLuint> shader_modules;

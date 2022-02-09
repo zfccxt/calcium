@@ -14,7 +14,7 @@ int main() {
   auto shader = context->CreateShader(shader_info);
 
   cl::MeshCreateInfo mesh_info;
-  mesh_info.vertex_data_layout = { cl::ShaderDataType::kFloat3 };
+  mesh_info.vertex_data_layout = shader->GetInputLayout();
   std::vector<float> vertices = {
      0.5f,  0.5f, 0.0f,
      0.5f, -0.5f, 0.0f,
