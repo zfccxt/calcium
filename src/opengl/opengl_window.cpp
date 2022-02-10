@@ -7,12 +7,35 @@
 
 namespace cl::OpenGL {
 
+const static int kSuitableOpenGLVersions[8][2] = { {4,6}, {4,5}, {4,4}, {4,3}, {4,2}, {4,1}, {4,0}, {3,3} };
+
 OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 
-  // TODO: Figure out highest supported OpenGL version on the current machine
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
-  glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
+  // Use a ridiculous hack to guarantee the highest possible OpenGL context version supported on the current machine
+  
+  // There is no clean way to request the highest possible OpenGL context version that the current machine supports
+  // GLFW will _attempt_ to provide this if you don't specify a context version, but this frequently does not work.
+  
+  // When we use glfwWindowHint to request a context version, the operating system is allowed to create a context of any
+  // version compatible with the one requested. Therefore if we request version 3.3 at minimum hoping to recieve a 4.6
+  // context, we may very well get a 3.3 context. This is unacceptable for this application, since we want SPIRV-Cross to
+  // have access to as many up-to-date GLSL features as possible. We cannot tell ahead of time what OpenGL features we
+  // will need - these are inferred at runtime by cross-compiling SPIR-V shaders.
+  
+  // We keep a list of suitable OpenGL versions is order of priority and loop through them trying to create contexts.
+  // As soon as context creation succeeds, we have found the OpenGL version to use, and we continue with the program.
+  glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE);
+  for (size_t i = 0; i < sizeof(kSuitableOpenGLVersions) / sizeof(kSuitableOpenGLVersions[0]); ++i) {
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, kSuitableOpenGLVersions[i][0]);
+    glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, kSuitableOpenGLVersions[i][1]);
+    GLFWwindow* offscreen_context = glfwCreateWindow(1, 1, "", nullptr, nullptr);
+    if (offscreen_context) {
+      glfwDestroyWindow(offscreen_context);
+      break;
+    }
+  }
+  glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
 #ifdef CALCIUM_PLATFORM_MACOS
   glfwWindowHint(GLFW_OPENGL_FORWARD_COMPAT, GL_TRUE);
