@@ -31,10 +31,10 @@ int main() {
   mesh_info.num_indices = indices.size();
   auto mesh = context->CreateMesh(mesh_info);
 
+  context->BindRendertarget(window);
   while (window->IsOpen()) {
     cl::PollWindowEvents();
 
-    context->BindRendertarget(window);
     window->Clear();
     shader->Bind();
     mesh->Draw();

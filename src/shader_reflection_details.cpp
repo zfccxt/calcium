@@ -25,18 +25,21 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
   std::unordered_map<uint32_t, ShaderDataType> vertex_input_map;
 
   for (const auto& shader : shader_code) {
-    spirv_cross::CompilerGLSL glsl(shader.second);
-	  spirv_cross::ShaderResources resources = glsl.get_shader_resources();
+    spirv_cross::CompilerGLSL* glsl = new spirv_cross::CompilerGLSL(shader.second);
+	  spirv_cross::ShaderResources* resources = new spirv_cross::ShaderResources(glsl->get_shader_resources());
 
     // Find vertex input vectors
-		for (auto& stage_input : resources.stage_inputs) {
-      uint32_t location = glsl.get_decoration(stage_input.id, spv::DecorationLocation);
-      spirv_cross::SPIRType type = glsl.get_type(stage_input.type_id);
+		for (auto& stage_input : resources->stage_inputs) {
+      uint32_t location = glsl->get_decoration(stage_input.id, spv::DecorationLocation);
+      spirv_cross::SPIRType type = glsl->get_type(stage_input.type_id);
       ShaderDataType data_type = FindType(type.vecsize);
       if (data_type != ShaderDataType::kUndefined) {
         vertex_input_map.emplace(location, data_type);
       }
     }
+
+    delete resources;
+    delete glsl;
   }
 
   std::vector<BufferElement> buffer_elements;
