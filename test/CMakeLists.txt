@@ -35,7 +35,6 @@ foreach(GLSL_FILE ${GLSL_SOURCE_FILES})
   get_filename_component(FILE_NAME ${GLSL_FILE} NAME)
   string(REGEX REPLACE "[.]glsl$" ".spv" SPIRV_FILE_NAME ${FILE_NAME})
   set(SPIRV_FILE "${CMAKE_CURRENT_SOURCE_DIR}/res/shaders/${SPIRV_FILE_NAME}")
-  message(STATUS "spirv name: ${SPIRV_FILE}")
   add_custom_command(
     OUTPUT ${SPIRV_FILE}
     COMMAND ${CMAKE_COMMAND} -E make_directory "${CMAKE_CURRENT_SOURCE_DIR}/res/shaders/"
