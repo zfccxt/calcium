@@ -5,6 +5,7 @@
 // cause mismatched header and cpp files and you will end up with linker errors
 #include <spirv_glsl.hpp>
 
+#include "opengl_compile_options.hpp"
 #include "opengl_shader_utils.hpp"
 #include "shader_reflection_details.hpp"
 
@@ -26,6 +27,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   std::vector<GLuint> shader_modules;
   for (const auto& spv : code_map) {
     spirv_cross::CompilerGLSL compiler(spv.second);
+    ApplyOpenGLCompileOptions(compiler);
     const std::string glsl_code = compiler.compile();
 		GLuint shader_module = CreateShaderModule(glsl_code, spv.first);
     shader_modules.push_back(shader_module);
