@@ -10,4 +10,8 @@ void VulkanShader::Bind() {
   // TODO
 }
 
+void VulkanShader::UploadUniform(int binding, void* data) {
+  // TODO
+}
+
 }

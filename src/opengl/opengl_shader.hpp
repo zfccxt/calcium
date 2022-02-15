@@ -14,6 +14,8 @@ public:
 
   virtual void Bind() override;
 
+  virtual void UploadUniform(int binding, void* data) override;
+
 private:
   GLuint program_id_;
 };

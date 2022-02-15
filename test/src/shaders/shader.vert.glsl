@@ -6,11 +6,11 @@ layout(location = 0) out vec3 v_colour;
 
 layout (binding = 0) uniform ModelViewMatrix {
   mat4 matrix;
-} u_mv;
+} u_modelview;
 
 layout (binding = 1) uniform ProjectionMatrix {
   mat4 matrix;
-} u_p;
+} u_projection;
 
 void main() {
   gl_Position = vec4(a_pos, 1);

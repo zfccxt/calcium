@@ -17,9 +17,16 @@ std::vector<uint32_t> Shader::ReadSPV(const char* file_path) {
   return buffer;
 }
 
-
 BufferLayout Shader::GetInputLayout() {
   return reflection_details_.vertex_input_layout;
+}
+
+void Shader::UploadUniform(const std::string& name, void* data) {
+  for (const auto& uniform : reflection_details_.uniforms) {
+    if (uniform.name == name) {
+      UploadUniform(uniform.binding, data);
+    }
+  }
 }
 
 }

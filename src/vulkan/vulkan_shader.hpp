@@ -10,6 +10,8 @@ public:
   VulkanShader(const ShaderCreateInfo& shader_info);
 
   virtual void Bind() override;
+
+  virtual void UploadUniform(int binding, void* data) override;
 };
 
 }

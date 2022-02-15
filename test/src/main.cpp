@@ -1,5 +1,7 @@
 #include <calcium.hpp>
 
+#include <glm/glm.hpp>
+
 int main() {
   auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
@@ -31,12 +33,15 @@ int main() {
   mesh_info.num_indices = indices.size();
   auto mesh = context->CreateMesh(mesh_info);
 
+  glm::mat4 projection(1);
+
   context->BindRendertarget(window);
   while (window->IsOpen()) {
     cl::PollWindowEvents();
 
     window->Clear();
     shader->Bind();
+    shader->UploadUniform("u_projection", &projection);
     mesh->Draw();
     window->SwapBuffers();
   }

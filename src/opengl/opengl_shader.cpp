@@ -71,4 +71,8 @@ void OpenGLShader::Bind() {
   glUseProgram(program_id_);
 }
 
+void OpenGLShader::UploadUniform(int binding, void* data) {
+  // TODO
+}
+
 }
