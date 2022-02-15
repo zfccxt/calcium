@@ -61,6 +61,11 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
     glDetachShader(program_id_, shader);
     glDeleteShader(shader);
 	}
+
+  // Create uniform buffers
+  for (const auto& uniform : reflection_details_.uniforms) {
+    uniforms.push_back(std::make_unique<OpenGLUniformBuffer>(program_id_, uniform.binding, uniform.size, uniform.uniform_block_name));
+  }
 }
 
 OpenGLShader::~OpenGLShader() {
@@ -72,7 +77,7 @@ void OpenGLShader::Bind() {
 }
 
 void OpenGLShader::UploadUniform(int binding, void* data) {
-  // TODO
+  uniforms[binding]->Upload(data);
 }
 
 }

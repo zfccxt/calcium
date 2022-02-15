@@ -1,6 +1,9 @@
-#include <calcium.hpp>
+#include <chrono>
 
+#include <calcium.hpp>
 #include <glm/glm.hpp>
+#include <glm/gtc/type_ptr.hpp>
+#include <glm/gtc/matrix_transform.hpp>
 
 int main() {
   auto context = cl::CreateContext(cl::Backend::kOpenGL);
@@ -33,15 +36,25 @@ int main() {
   mesh_info.num_indices = indices.size();
   auto mesh = context->CreateMesh(mesh_info);
 
-  glm::mat4 projection(1);
+  glm::mat4 projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
 
+  auto start_time = std::chrono::high_resolution_clock::now();
   context->BindRendertarget(window);
   while (window->IsOpen()) {
     cl::PollWindowEvents();
 
     window->Clear();
+
+    auto current_time = std::chrono::high_resolution_clock::now();
+    float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
+
+    glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
     shader->Bind();
-    shader->UploadUniform("u_projection", &projection);
+    shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
+
+    glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
+    shader->UploadUniform("u_model", glm::value_ptr(model));
+
     mesh->Draw();
     window->SwapBuffers();
   }

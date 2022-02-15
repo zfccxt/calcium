@@ -45,6 +45,7 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
       uniform_data.stage = current_stage;
       uniform_data.size = glsl->get_declared_struct_size(glsl->get_type(uniform.base_type_id));
       uniform_data.name = glsl->get_name(uniform.id);
+      uniform_data.uniform_block_name = glsl->get_name(uniform.base_type_id);
       uniform_map.emplace(uniform_data.binding, uniform_data);
     }
 

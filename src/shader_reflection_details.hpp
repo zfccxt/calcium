@@ -8,6 +8,8 @@
 #include "shader_data_type.hpp"
 #include "shader_stage.hpp"
 
+// TODO: Convert all single uniforms to uniform buffers?
+
 namespace cl {
 
 typedef std::unordered_map<ShaderStage, std::vector<uint32_t>> ShaderCodeMap;
@@ -19,6 +21,7 @@ struct ShaderReflectionDetails {
  
   struct UniformData {
     std::string name;
+    std::string uniform_block_name;
     size_t binding;
     size_t size;
     ShaderStage stage;

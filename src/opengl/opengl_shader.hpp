@@ -1,7 +1,10 @@
 #pragma once
 
+#include <memory>
+
 #include <glad/glad.h>
 
+#include "opengl_uniform_buffer.hpp"
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 
@@ -18,6 +21,8 @@ public:
 
 private:
   GLuint program_id_;
+
+  std::vector<std::unique_ptr<OpenGLUniformBuffer>> uniforms;
 };
 
 }
