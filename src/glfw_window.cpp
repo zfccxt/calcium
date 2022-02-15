@@ -34,6 +34,12 @@ void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
   }
 }
 
+float GlfwWindow::GetAspectRatio() const {
+  int width, height;
+  glfwGetFramebufferSize(glfw_window_, &width, &height);
+  return (float)width / (float)height;
+}
+
 bool GlfwWindow::IsOpen() const {
   return !glfwWindowShouldClose(glfw_window_);
 }

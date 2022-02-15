@@ -14,6 +14,7 @@ public:
   GlfwWindow();
   virtual ~GlfwWindow();
 
+  virtual float GetAspectRatio() const override;
   virtual bool IsOpen() const override;
   virtual void Center(bool center_horizontal = true, bool center_vertical = true) override;
 
