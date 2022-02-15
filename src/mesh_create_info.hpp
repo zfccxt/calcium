@@ -9,10 +9,10 @@ namespace cl {
 struct MeshCreateInfo {
   BufferLayout vertex_data_layout;
 
-  float* vertices;
+  float* vertices = nullptr;
   size_t num_vertices;
 
-  uint32_t* indices;
+  uint32_t* indices = nullptr;
   size_t num_indices;
 };
 
