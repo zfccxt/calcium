@@ -8,7 +8,7 @@
 
 namespace cl {
 
-ShaderDataType FindType(uint32_t size) {
+ShaderDataType FindVectorType(uint32_t size) {
   switch (size) {
     case 1:  return ShaderDataType::kFloat;
     case 2:  return ShaderDataType::kFloat2;
@@ -32,7 +32,7 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
 		for (auto& stage_input : resources->stage_inputs) {
       uint32_t location = glsl->get_decoration(stage_input.id, spv::DecorationLocation);
       spirv_cross::SPIRType type = glsl->get_type(stage_input.type_id);
-      ShaderDataType data_type = FindType(type.vecsize);
+      ShaderDataType data_type = FindVectorType(type.vecsize);
       if (data_type != ShaderDataType::kUndefined) {
         vertex_input_map.emplace(location, data_type);
       }
