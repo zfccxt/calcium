@@ -41,6 +41,7 @@ target_link_libraries(${PROJECT_NAME} PRIVATE glad)
 add_subdirectory(depend/fast_obj)
 target_link_libraries(${PROJECT_NAME} PRIVATE fast_obj)
 add_subdirectory(depend/meshoptimizer)
+target_link_libraries(${PROJECT_NAME} PRIVATE meshoptimizer)
 
 set(SPIRV_CROSS_CLI OFF CACHE BOOL "Build the CLI binary. Requires SPIRV_CROSS_STATIC." FORCE)
 set(SPIRV_CROSS_ENABLE_TESTS OFF CACHE BOOL "Enable SPIRV-Cross tests." FORCE)
