@@ -2,7 +2,7 @@
 
 #include <glad/glad.h>
 
-namespace cl {
+namespace cl::OpenGL {
 
 void ApplyOpenGLCompileOptions(spirv_cross::CompilerGLSL& compiler) {
 	spirv_cross::CompilerGLSL::Options options;
