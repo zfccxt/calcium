@@ -6,12 +6,12 @@
 
 namespace cl::OpenGL {
 
-GLenum GetOpenGLShaderType(ShaderType type) {
+GLenum GetOpenGLShaderType(ShaderStage type) {
   switch (type) {
-    case ShaderType::kComputeShader:     return GL_COMPUTE_SHADER;
-    case ShaderType::kVertexShader:      return GL_VERTEX_SHADER;
-    case ShaderType::kFragmentShader:    return GL_FRAGMENT_SHADER;
-    case ShaderType::kGeometryShader:    return GL_GEOMETRY_SHADER;
+    case ShaderStage::kComputeShader:  return GL_COMPUTE_SHADER;
+    case ShaderStage::kVertexShader:   return GL_VERTEX_SHADER;
+    case ShaderStage::kFragmentShader: return GL_FRAGMENT_SHADER;
+    case ShaderStage::kGeometryShader: return GL_GEOMETRY_SHADER;
     default: assert(false); return -1;
 
     /* TODO: figure this out
@@ -22,7 +22,7 @@ GLenum GetOpenGLShaderType(ShaderType type) {
   }
 }
 
-GLuint CreateShaderModule(const std::string& glsl_code, ShaderType shader_type) {
+GLuint CreateShaderModule(const std::string& glsl_code, ShaderStage shader_type) {
  GLuint shader = glCreateShader(GetOpenGLShaderType(shader_type));
 	const GLchar* source_ptr = (const GLchar*)glsl_code.c_str();
   glShaderSource(shader, 1, &source_ptr, 0);
