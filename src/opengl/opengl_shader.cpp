@@ -57,7 +57,6 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
 	// Always detach shaders after a successful link.
 	for (auto shader : shader_modules) {
     glDetachShader(program_id_, shader);
-    // TODO: check if this is okay
     glDeleteShader(shader);
 	}
 }
