@@ -45,6 +45,8 @@ target_link_libraries(${PROJECT_NAME} PRIVATE meshoptimizer)
 add_subdirectory(depend/glm)
 target_link_libraries(${PROJECT_NAME} PRIVATE glm)
 target_include_directories(${PROJECT_NAME} PUBLIC depend/glm)
+add_subdirectory(depend/stb_image)
+target_link_libraries(${PROJECT_NAME} PRIVATE stb_image)
 
 set(SPIRV_CROSS_CLI OFF CACHE BOOL "Build the CLI binary. Requires SPIRV_CROSS_STATIC." FORCE)
 set(SPIRV_CROSS_ENABLE_TESTS OFF CACHE BOOL "Enable SPIRV-Cross tests." FORCE)
