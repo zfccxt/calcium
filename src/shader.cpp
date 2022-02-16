@@ -23,10 +23,17 @@ BufferLayout Shader::GetInputLayout() {
 
 void Shader::UploadUniform(const std::string& name, void* data) {
   for (const auto& uniform : reflection_details_.uniforms) {
-    if (uniform.name == name) {
-      UploadUniform(uniform.binding, data);
+    if (uniform.second.name == name) {
+      UploadUniform(uniform.second.binding, data);
     }
   }
 }
 
+void Shader::BindTexture(const std::string& name, const std::shared_ptr<Texture>& texture) {
+  for (const auto& tex : reflection_details_.textures) {
+    if (tex.second.name == name) {
+      BindTexture(tex.second.binding, texture);
+    }
+  }
+}
 }

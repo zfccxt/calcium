@@ -2,7 +2,7 @@
 
 namespace cl::OpenGL {
 
-OpenGLUniformBuffer::OpenGLUniformBuffer(GLuint program_id, uint32_t binding, uint32_t size, const std::string& uniform_block_name) : size_(size) {
+OpenGLUniformBuffer::OpenGLUniformBuffer(GLuint program_id, size_t binding, size_t size, const std::string& uniform_block_name) : size_(size) {
   // Index of block where uniform will be uploaded
   GLuint location = glGetUniformBlockIndex(program_id, uniform_block_name.c_str());
 

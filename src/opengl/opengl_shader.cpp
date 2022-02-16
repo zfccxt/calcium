@@ -64,7 +64,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
 
   // Create uniform buffers
   for (const auto& uniform : reflection_details_.uniforms) {
-    uniforms.push_back(std::make_unique<OpenGLUniformBuffer>(program_id_, uniform.binding, uniform.size, uniform.uniform_block_name));
+    uniforms.emplace(uniform.first, std::make_unique<OpenGLUniformBuffer>(program_id_, uniform.second.binding, uniform.second.size, uniform.second.uniform_block_name));
   }
 }
 
@@ -78,6 +78,10 @@ void OpenGLShader::Bind() {
 
 void OpenGLShader::UploadUniform(int binding, void* data) {
   uniforms[binding]->Upload(data);
+}
+
+void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
+ // TODO
 }
 
 }

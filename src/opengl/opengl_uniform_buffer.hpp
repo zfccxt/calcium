@@ -9,7 +9,7 @@ namespace cl::OpenGL {
 
 class OpenGLUniformBuffer {
 public:
-  OpenGLUniformBuffer(GLuint program_id, uint32_t binding, uint32_t size, const std::string& uniform_block_name);
+  OpenGLUniformBuffer(GLuint program_id, size_t binding, size_t size, const std::string& uniform_block_name);
   ~OpenGLUniformBuffer();
 
   void Upload(void* data);

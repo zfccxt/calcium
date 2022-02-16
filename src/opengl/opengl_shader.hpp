@@ -1,6 +1,7 @@
 #pragma once
 
 #include <memory>
+#include <unordered_map>
 
 #include <glad/glad.h>
 
@@ -18,11 +19,12 @@ public:
   virtual void Bind() override;
 
   virtual void UploadUniform(int binding, void* data) override;
+  virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
 
 private:
   GLuint program_id_;
 
-  std::vector<std::unique_ptr<OpenGLUniformBuffer>> uniforms;
+  std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms;
 };
 
 }

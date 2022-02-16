@@ -57,7 +57,7 @@ int main() {
     glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
     shader->UploadUniform("u_model", glm::value_ptr(model));
 
-    texture->Bind();
+    shader->BindTexture(2, texture);
 
     mesh->Draw();
     window->SwapBuffers();

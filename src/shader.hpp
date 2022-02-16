@@ -6,6 +6,7 @@
 #include <vector>
 
 #include "shader_reflection_details.hpp"
+#include "texture.hpp"
 
 namespace cl {
 
@@ -17,6 +18,9 @@ public:
 
   virtual void UploadUniform(int binding, void* data) = 0;
   virtual void UploadUniform(const std::string& name, void* data);
+
+  virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) = 0;
+  virtual void BindTexture(const std::string& name, const std::shared_ptr<Texture>& texture);
 
   BufferLayout GetInputLayout();
   

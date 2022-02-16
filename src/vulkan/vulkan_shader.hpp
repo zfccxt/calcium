@@ -12,6 +12,7 @@ public:
   virtual void Bind() override;
 
   virtual void UploadUniform(int binding, void* data) override;
+  virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
 };
 
 }

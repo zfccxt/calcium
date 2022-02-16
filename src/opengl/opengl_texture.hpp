@@ -1,5 +1,7 @@
 #pragma once
 
+#include <glad/glad.h>
+
 #include "texture.hpp"
 #include "texture_create_info.hpp"
 
@@ -9,7 +11,8 @@ class OpenGLTexture : public Texture {
 public:
   OpenGLTexture(const TextureCreateInfo& texture_info);
 
-  virtual void Bind() override;
+private:
+  GLuint texture_id_;
 };
 
 }

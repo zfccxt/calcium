@@ -14,4 +14,8 @@ void VulkanShader::UploadUniform(int binding, void* data) {
   // TODO
 }
 
+void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
+ // TODO
+}
+
 }
