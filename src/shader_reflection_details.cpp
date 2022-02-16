@@ -17,10 +17,7 @@ ShaderDataType FindVectorType(uint32_t size) {
 }
 
 void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
-  // TODO: find samplers
-
-  std::unordered_map<uint32_t, ShaderDataType> vertex_input_map;
-  std::unordered_map<uint32_t, UniformData> uniform_map;
+  std::unordered_map<size_t, ShaderDataType> vertex_input_map;
 
   for (const auto& shader : shader_code) {
     const ShaderStage current_stage = shader.first;
@@ -41,30 +38,33 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
     // Find uniforms
     for (auto& uniform : resources->uniform_buffers) {
       UniformData uniform_data;
-      uniform_data.binding =  glsl->get_decoration(uniform.id, spv::DecorationBinding);
+      uniform_data.binding = glsl->get_decoration(uniform.id, spv::DecorationBinding);
       uniform_data.stage = current_stage;
       uniform_data.size = glsl->get_declared_struct_size(glsl->get_type(uniform.base_type_id));
       uniform_data.name = glsl->get_name(uniform.id);
       uniform_data.uniform_block_name = glsl->get_name(uniform.base_type_id);
-      uniform_map.emplace(uniform_data.binding, uniform_data);
+      uniforms.emplace(uniform_data.binding, uniform_data);
+    }
+
+    // Find texture samplers
+    for (auto& texture : resources->sampled_images) {
+      TextureData texture_data;
+      texture_data.binding = glsl->get_decoration(texture.id, spv::DecorationBinding);
+      texture_data.stage = current_stage;
+      texture_data.name = glsl->get_name(texture.id);
+      textures.emplace(texture_data.binding, texture_data);
     }
 
     delete resources;
     delete glsl;
   }
 
-  // Populate reflection details
-  // vertex input layout
+  // Populate vertex input BufferLayout
   std::vector<BufferElement> buffer_elements;
   for (uint32_t i = 0; i < vertex_input_map.size(); ++i) {
     buffer_elements.push_back(vertex_input_map.at(i));
   }
   vertex_input_layout = buffer_elements;
-
-  // uniforms
-  for (uint32_t i = 0; i < uniform_map.size(); ++i) {
-    uniforms.push_back(uniform_map.at(i));
-  }
 }
 
 }

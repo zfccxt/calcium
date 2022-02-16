@@ -26,7 +26,14 @@ struct ShaderReflectionDetails {
     size_t size;
     ShaderStage stage;
   };
-  std::vector<UniformData> uniforms;
+  std::unordered_map<size_t, UniformData> uniforms;
+
+  struct TextureData {
+    std::string name;
+    size_t binding;
+    ShaderStage stage;
+  };
+  std::unordered_map<size_t, TextureData> textures;
 };
 
 }
