@@ -13,6 +13,7 @@
 #include "vulkan/vulkan_mesh.hpp"
 #include "vulkan/vulkan_physical_device.hpp"
 #include "vulkan/vulkan_shader.hpp"
+#include "vulkan/vulkan_texture.hpp"
 #include "vulkan/vulkan_window.hpp"
 
 namespace cl::Vulkan {
@@ -70,6 +71,10 @@ std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shad
 
 std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {
   return std::make_shared<VulkanMesh>(mesh_info);
+}
+
+std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& texture_info) {
+  return std::make_shared<VulkanTexture>(texture_info);
 }
 
 void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {

@@ -26,6 +26,14 @@ std::shared_ptr<Shader> Context::CreateShader(const std::string& vert_path, cons
   return CreateShader(shader_info);
 }
 
+std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
+  TextureCreateInfo texture_info;
+  texture_info.file_path = file_path;
+  texture_info.filter = TextureFilter::kLinear;
+  texture_info.wrap = TextureWrap::kRepeat;
+  return CreateTexture(texture_info);
+}
+
 std::unique_ptr<Context> CreateContext(Backend backend) {
 #ifdef CALCIUM_VULKAN_SDK_FOUND
   if (backend == Backend::kVulkan) {

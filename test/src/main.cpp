@@ -36,6 +36,8 @@ int main() {
   mesh_info.num_indices = indices.size();
   auto mesh = context->CreateMesh(mesh_info);
 
+  auto texture = context->CreateTexture("res/textures/pepper.png");
+
   glm::mat4 projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -54,6 +56,8 @@ int main() {
 
     glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
     shader->UploadUniform("u_model", glm::value_ptr(model));
+
+    texture->Bind();
 
     mesh->Draw();
     window->SwapBuffers();
