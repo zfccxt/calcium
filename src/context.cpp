@@ -34,14 +34,14 @@ std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
   return CreateTexture(texture_info);
 }
 
-std::unique_ptr<Context> CreateContext(Backend backend) {
+std::shared_ptr<Context> CreateContext(Backend backend) {
 #ifdef CALCIUM_VULKAN_SDK_FOUND
   if (backend == Backend::kVulkan) {
-    return std::make_unique<Vulkan::VulkanContext>();
+    return std::make_shared<Vulkan::VulkanContext>();
   }
 #endif
 
-  return std::make_unique<OpenGL::OpenGLContext>();
+  return std::make_shared<OpenGL::OpenGLContext>();
 }
 
 }
