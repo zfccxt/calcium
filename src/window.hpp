@@ -1,6 +1,7 @@
 #pragma once
 
 #include "colour.hpp"
+#include "key_code.hpp"
 #include "render_target.hpp"
 
 namespace cl {
@@ -19,6 +20,19 @@ public:
   virtual void SetClearColour(const Colour& colour) = 0;
 
   virtual void PollEvents() = 0;
+
+  virtual bool IsCursorLocked() = 0;
+
+  virtual void LockCursor() = 0;
+  virtual void UnlockCursor() = 0;
+  virtual void ToggleCursorLock() = 0;
+
+  virtual float CursorDeltaX() = 0;
+  virtual float CursorDeltaY() = 0;
+  virtual float CursorX() = 0;
+  virtual float CursorY() = 0;
+
+  virtual bool IsKeyDown(KeyCode key) = 0;
 };
 
 }

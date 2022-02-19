@@ -56,4 +56,41 @@ void GlfwWindow::PollEvents() {
   glfwGetCursorPos(glfw_window_, &cursor_x_, &cursor_y_);
 }
 
+bool GlfwWindow::IsCursorLocked() {
+  return glfwGetInputMode(glfw_window_, GLFW_CURSOR) == GLFW_CURSOR_DISABLED;
+}
+
+void GlfwWindow::LockCursor() {
+  glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_DISABLED);
+}
+
+void GlfwWindow::UnlockCursor() {
+  glfwSetInputMode(glfw_window_, GLFW_CURSOR, GLFW_CURSOR_NORMAL);
+}
+
+void GlfwWindow::ToggleCursorLock() {
+  int mode = glfwGetInputMode(glfw_window_, GLFW_CURSOR);
+  glfwSetInputMode(glfw_window_, GLFW_CURSOR, mode == GLFW_CURSOR_DISABLED ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
+}
+
+float GlfwWindow::CursorDeltaX() {
+  return (float)(cursor_y_ - cursor_last_y_);
+}
+
+float GlfwWindow::CursorDeltaY() {
+  return (float)(cursor_x_ - cursor_last_x_);
+}
+
+float GlfwWindow::CursorX() {
+  return cursor_x_;
+}
+
+float GlfwWindow::CursorY() {
+  return cursor_y_;
+}
+
+bool GlfwWindow::IsKeyDown(KeyCode key) {
+  return glfwGetKey(glfw_window_, (int)key);
+}
+
 }

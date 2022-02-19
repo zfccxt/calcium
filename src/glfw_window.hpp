@@ -20,6 +20,19 @@ public:
 
   virtual void PollEvents() override;
 
+  virtual bool IsCursorLocked() override;
+
+  virtual void LockCursor() override;
+  virtual void UnlockCursor() override;
+  virtual void ToggleCursorLock() override;
+
+  virtual float CursorDeltaX() override;
+  virtual float CursorDeltaY() override;
+  virtual float CursorX() override;
+  virtual float CursorY() override;
+
+  virtual bool IsKeyDown(KeyCode key) override;
+
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
 

@@ -2,8 +2,6 @@
 
 namespace cl {
 
-#include <GLFW/glfw3.h>
-
 enum class KeyCode {
   kUnknown        = -1,
   kSpace          = 32,
