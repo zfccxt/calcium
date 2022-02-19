@@ -18,7 +18,7 @@ public:
   virtual bool IsOpen() const override;
   virtual void Center(bool center_horizontal = true, bool center_vertical = true) override;
 
-  static void PollEvents();
+  virtual void PollEvents() override;
 
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
@@ -28,6 +28,9 @@ protected:
 
 private:
   static size_t num_glfw_windows_;
+
+  double cursor_x_,     cursor_y_;
+  double cursor_last_x_, cursor_last_y_;
 };
 
 }

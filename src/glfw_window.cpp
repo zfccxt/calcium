@@ -49,9 +49,11 @@ void GlfwWindow::Center(bool center_horizontal, bool center_vertical) {
 }
 
 void GlfwWindow::PollEvents() {
-  if (num_glfw_windows_ > 0) {
-    glfwPollEvents();
-  }
+  glfwPollEvents();
+
+  cursor_last_x_ = cursor_x_;
+  cursor_last_y_ = cursor_y_;
+  glfwGetCursorPos(glfw_window_, &cursor_x_, &cursor_y_);
 }
 
 }

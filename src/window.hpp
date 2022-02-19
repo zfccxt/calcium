@@ -17,8 +17,8 @@ public:
   virtual void SwapBuffers() = 0;
 
   virtual void SetClearColour(const Colour& colour) = 0;
-};
 
-void PollWindowEvents();
+  virtual void PollEvents() = 0;
+};
 
 }

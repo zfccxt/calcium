@@ -45,8 +45,7 @@ int main() {
   auto start_time = std::chrono::high_resolution_clock::now();
   context->BindRendertarget(window);
   while (window->IsOpen()) {
-    cl::PollWindowEvents();
-
+    window->PollEvents();
     window->Clear();
 
     auto current_time = std::chrono::high_resolution_clock::now();
