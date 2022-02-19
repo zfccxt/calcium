@@ -72,7 +72,7 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   {
     size_t i = 0;
     for (const auto& texture : reflection_details_.textures) {
-      texture_slots_.emplace(reflection_details_.textures[i].binding, i);
+      texture_slots_.emplace(texture.binding, i);
       ++i;
     }
   }
