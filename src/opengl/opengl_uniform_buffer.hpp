@@ -5,6 +5,8 @@
 
 #include <glad/glad.h>
 
+// TODO: uniform buffers should be able to be shared between shaders
+
 namespace cl::OpenGL {
 
 class OpenGLUniformBuffer {
