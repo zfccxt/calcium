@@ -24,7 +24,7 @@ public:
 private:
   GLuint program_id_;
 
-  std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms;
+  std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms_;
 };
 
 }
