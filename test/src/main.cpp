@@ -21,10 +21,11 @@ int main() {
   cl::MeshCreateInfo mesh_info;
   mesh_info.vertex_data_layout = shader->GetInputLayout();
   std::vector<float> vertices = {
-     0.5f,  0.5f, 0.0f,
-     0.5f, -0.5f, 0.0f,
-    -0.5f, -0.5f, 0.0f,
-    -0.5f,  0.5f, 0.0f,
+  //  x      y     z     u     v
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
   };
   std::vector<uint32_t> indices = {
     0, 1, 3,
@@ -37,6 +38,7 @@ int main() {
   auto mesh = context->CreateMesh(mesh_info);
 
   auto texture = context->CreateTexture("res/textures/pepper.png");
+  auto texture2 = context->CreateTexture("res/textures/face.png");
 
   glm::mat4 projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
 
@@ -57,7 +59,8 @@ int main() {
     glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
     shader->UploadUniform("u_model", glm::value_ptr(model));
 
-    shader->BindTexture(2, texture);
+    shader->BindTexture("u_diffuse_texture", texture);
+    shader->BindTexture("u_second_texture", texture2);
 
     mesh->Draw();
     window->SwapBuffers();

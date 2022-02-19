@@ -7,6 +7,7 @@
 
 #include "opengl_compile_options.hpp"
 #include "opengl_shader_utils.hpp"
+#include "opengl_texture.hpp"
 #include "shader_reflection_details.hpp"
 
 namespace cl::OpenGL {
@@ -66,6 +67,11 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   for (const auto& uniform : reflection_details_.uniforms) {
     uniforms_.emplace(uniform.first, std::make_unique<OpenGLUniformBuffer>(program_id_, uniform.second.binding, uniform.second.size, uniform.second.uniform_block_name));
   }
+
+  // Associate each texture sampler in the shader with a slot so that multiple textures can be bound at once
+  for (size_t i = 0; i < reflection_details_.textures.size(); ++i) {
+    texture_slots_.emplace(reflection_details_.textures[i].binding, i);
+  }
 }
 
 OpenGLShader::~OpenGLShader() {
@@ -81,7 +87,8 @@ void OpenGLShader::UploadUniform(int binding, void* data) {
 }
 
 void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
- // TODO
+  glActiveTexture(GL_TEXTURE0 + texture_slots_[binding]);
+  texture->Bind();
 }
 
 }

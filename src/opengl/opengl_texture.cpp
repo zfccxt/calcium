@@ -7,7 +7,14 @@
 
 namespace cl::OpenGL {
 
-static GLenum TextureFilterToGLEnum(TextureFilter filter) {
+static GLenum TextureFilterToGLMinFilter(TextureFilter filter) {
+  switch (filter) {
+    case TextureFilter::kLinear:  return GL_LINEAR_MIPMAP_LINEAR;
+    case TextureFilter::kNearest: return GL_NEAREST;
+    default:                      return GL_DONT_CARE;
+  } 
+}
+static GLenum TextureFilterToGLMagFilter(TextureFilter filter) {
   switch (filter) {
     case TextureFilter::kLinear:  return GL_LINEAR;
     case TextureFilter::kNearest: return GL_NEAREST;
@@ -29,7 +36,8 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
   int width, height, channels;
 	stbi_uc* data = nullptr;
 
-	stbi_set_flip_vertically_on_load(true);
+  // TODO: Figure out whether this is needed
+	// stbi_set_flip_vertically_on_load(true);
 	data = stbi_load(texture_info.file_path.c_str(), &width, &height, &channels, 0);
 
 	assert(data);
@@ -50,9 +58,8 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
 	glGenTextures(1, &texture_id_);
 	glBindTexture(GL_TEXTURE_2D, texture_id_);
 	
-	GLenum filter = TextureFilterToGLEnum(texture_info.filter);
-	glTexParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, filter);
-	glTexParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, filter);
+	glTexParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, TextureFilterToGLMinFilter(texture_info.filter));
+	glTexParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter));
 	
 	GLenum wrap = TextureWrapModeToGLEnum(texture_info.wrap);
 	glTexParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap);
@@ -62,6 +69,14 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
 	glGenerateMipmap(GL_TEXTURE_2D);
 	
 	stbi_image_free(data);
+}
+
+OpenGLTexture::~OpenGLTexture() {
+  glDeleteTextures(1, &texture_id_);
+}
+
+void OpenGLTexture::Bind() {
+  glBindTexture(GL_TEXTURE_2D, texture_id_);
 }
 
 }

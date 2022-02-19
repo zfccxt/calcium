@@ -25,6 +25,7 @@ private:
   GLuint program_id_;
 
   std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms_;
+  std::unordered_map<size_t, size_t> texture_slots_;
 };
 
 }

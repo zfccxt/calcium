@@ -8,6 +8,8 @@ namespace cl::Vulkan {
 class VulkanTexture : public Texture {
 public:
   VulkanTexture(const TextureCreateInfo& texture_info);
+
+  virtual void Bind() override;
 };
 
 }

@@ -6,4 +6,8 @@ VulkanTexture::VulkanTexture(const TextureCreateInfo& texture_info) {
   // TODO
 }
 
+void VulkanTexture::Bind() {
+  // TODO
+}
+
 }
