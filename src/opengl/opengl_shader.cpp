@@ -69,8 +69,12 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   }
 
   // Associate each texture sampler in the shader with a slot so that multiple textures can be bound at once
-  for (size_t i = 0; i < reflection_details_.textures.size(); ++i) {
-    texture_slots_.emplace(reflection_details_.textures[i].binding, i);
+  {
+    size_t i = 0;
+    for (const auto& texture : reflection_details_.textures) {
+      texture_slots_.emplace(reflection_details_.textures[i].binding, i);
+      ++i;
+    }
   }
 }
 
