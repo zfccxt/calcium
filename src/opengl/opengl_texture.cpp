@@ -57,13 +57,13 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
 	
 	glGenTextures(1, &texture_id_);
 	glBindTexture(GL_TEXTURE_2D, texture_id_);
-	
-	glTexParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, TextureFilterToGLMinFilter(texture_info.filter));
-	glTexParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter));
-	
+
 	GLenum wrap = TextureWrapModeToGLEnum(texture_info.wrap);
-	glTexParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap);
-	glTexParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap);
+
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGLMinFilter(texture_info.filter));
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter));	
 	
 	glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, data_format, GL_UNSIGNED_BYTE, data);
 	glGenerateMipmap(GL_TEXTURE_2D);

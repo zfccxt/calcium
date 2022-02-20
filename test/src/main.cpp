@@ -37,7 +37,10 @@ int main() {
   mesh_info.num_indices = indices.size();
   auto mesh = context->CreateMesh(mesh_info);
 
-  auto texture = context->CreateTexture("res/textures/pepper.png");
+  cl::TextureCreateInfo pepper_texture_info;
+  pepper_texture_info.file_path = "res/textures/pepper.png";
+  pepper_texture_info.filter = cl::TextureFilter::kNearest;
+  auto texture = context->CreateTexture(pepper_texture_info);
   auto texture2 = context->CreateTexture("res/textures/face.png");
 
   glm::mat4 projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
