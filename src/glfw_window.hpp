@@ -40,11 +40,15 @@ public:
   virtual void SetKeyReleaseCallback(KeyCode, KeyCallback) override;
   virtual void RemoveKeyReleaseCallback(KeyCode) override;
 
+  virtual void SetResizeCallback(ResizeCallback) override;
+  virtual void RemoveResizeCallback() override;
+
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
 
 private:
   static void PerformKeyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mods);
+  static void PerformFramebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 protected:
   GLFWwindow* glfw_window_ = nullptr;
@@ -57,6 +61,8 @@ private:
 
   std::unordered_map<KeyCode, KeyCallback> key_press_callbacks_;
   std::unordered_map<KeyCode, KeyCallback> key_release_callbacks_;
+
+  ResizeCallback resize_callback_ = nullptr;
 };
 
 }

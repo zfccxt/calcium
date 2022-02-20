@@ -9,15 +9,24 @@ void TestCallback() {
   printf("hello\n");
 }
 
+std::shared_ptr<cl::Window> window;
+glm::mat4 projection;
+
+void CalculateProjection() {
+  projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
+}
+
 int main() {
   auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
   window_info.enable_depth_test = false;
-  auto window = context->CreateWindow(window_info);
+  window = context->CreateWindow(window_info);
 
   window->SetKeyPressCallback(cl::KeyCode::kLeftShift, TestCallback);
+  window->SetResizeCallback(CalculateProjection);
+  CalculateProjection();
 
   cl::ShaderCreateInfo shader_info;
   shader_info.vert_path = "res/shaders/shader.vert.spv";
@@ -48,8 +57,6 @@ int main() {
   pepper_texture_info.filter = cl::TextureFilter::kNearest;
   auto texture = context->CreateTexture(pepper_texture_info);
   auto texture2 = context->CreateTexture("res/textures/face.png");
-
-  glm::mat4 projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
 
   auto start_time = std::chrono::high_resolution_clock::now();
   context->BindRendertarget(window);

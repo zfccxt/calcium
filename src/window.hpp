@@ -39,6 +39,9 @@ public:
   virtual void RemoveKeyPressCallback(KeyCode) = 0;
   virtual void SetKeyReleaseCallback(KeyCode, KeyCallback) = 0;
   virtual void RemoveKeyReleaseCallback(KeyCode) = 0;
+
+  virtual void SetResizeCallback(ResizeCallback) = 0;
+  virtual void RemoveResizeCallback() = 0;
 };
 
 }

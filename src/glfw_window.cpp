@@ -127,4 +127,19 @@ void GlfwWindow::PerformKeyCallbacks(GLFWwindow* glfw_window, int key, int scanc
   }
 }
 
+void GlfwWindow::SetResizeCallback(ResizeCallback callback) {
+  glfwSetFramebufferSizeCallback(glfw_window_, PerformFramebufferSizeCallback);
+  resize_callback_ = callback;
+  
+}
+
+void GlfwWindow::RemoveResizeCallback() {
+  glfwSetFramebufferSizeCallback(glfw_window_, nullptr);
+}
+
+void GlfwWindow::PerformFramebufferSizeCallback(GLFWwindow* glfw_window, int width, int height) {
+  GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
+  win->resize_callback_();
+}
+
 }
