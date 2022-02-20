@@ -5,28 +5,20 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
-void TestCallback() {
-  printf("hello\n");
-}
-
-std::shared_ptr<cl::Window> window;
-glm::mat4 projection;
-
-void CalculateProjection() {
-  projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f);
-}
-
 int main() {
   auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
   window_info.enable_depth_test = false;
-  window = context->CreateWindow(window_info);
+  auto window = context->CreateWindow(window_info);
 
-  window->SetKeyPressCallback(cl::KeyCode::kLeftShift, TestCallback);
-  window->SetResizeCallback(CalculateProjection);
-  CalculateProjection();
+  window->SetKeyPressCallback(cl::KeyCode::kLeftShift, [](){ printf("hello\n"); });
+
+  glm::mat4 projection = glm::mat4(1);
+  cl::ResizeCallback calc_projection = [&](){ projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f); };
+  window->SetResizeCallback(calc_projection);
+  calc_projection();
 
   cl::ShaderCreateInfo shader_info;
   shader_info.vert_path = "res/shaders/shader.vert.spv";
@@ -52,10 +44,7 @@ int main() {
   mesh_info.num_indices = indices.size();
   auto mesh = context->CreateMesh(mesh_info);
 
-  cl::TextureCreateInfo pepper_texture_info;
-  pepper_texture_info.file_path = "res/textures/pepper.png";
-  pepper_texture_info.filter = cl::TextureFilter::kNearest;
-  auto texture = context->CreateTexture(pepper_texture_info);
+  auto texture = context->CreateTexture("res/textures/pepper.png");
   auto texture2 = context->CreateTexture("res/textures/face.png");
 
   auto start_time = std::chrono::high_resolution_clock::now();
@@ -80,4 +69,5 @@ int main() {
     mesh->Draw();
     window->SwapBuffers();
   }
+
 }

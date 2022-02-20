@@ -1,8 +1,10 @@
 #pragma once
 
+#include <functional>
+
 namespace cl {
 
-typedef void(*KeyCallback)();
-typedef void(*ResizeCallback)();
+typedef std::function<void()> KeyCallback;
+typedef std::function<void()> ResizeCallback;
 
 }
