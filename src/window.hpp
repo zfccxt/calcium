@@ -3,6 +3,7 @@
 #include "colour.hpp"
 #include "key_code.hpp"
 #include "render_target.hpp"
+#include "key_callback.hpp"
 
 namespace cl {
 
@@ -33,6 +34,11 @@ public:
   virtual float CursorY() = 0;
 
   virtual bool IsKeyDown(KeyCode key) = 0;
+
+  virtual void SetKeyPressCallback(KeyCode, KeyCallback) = 0;
+  virtual void RemoveKeyPressCallback(KeyCode) = 0;
+  virtual void SetKeyReleaseCallback(KeyCode, KeyCallback) = 0;
+  virtual void RemoveKeyReleaseCallback(KeyCode) = 0;
 };
 
 }

@@ -1,7 +1,9 @@
 #pragma once
 
 #include <cstddef>
+#include <unordered_map>
 
+#include "key_callback.hpp"
 #include "window.hpp"
 #include "window_create_info.hpp"
 
@@ -33,8 +35,16 @@ public:
 
   virtual bool IsKeyDown(KeyCode key) override;
 
+  virtual void SetKeyPressCallback(KeyCode, KeyCallback) override;
+  virtual void RemoveKeyPressCallback(KeyCode) override;
+  virtual void SetKeyReleaseCallback(KeyCode, KeyCallback) override;
+  virtual void RemoveKeyReleaseCallback(KeyCode) override;
+
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
+
+private:
+  static void PerformKeyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mods);
 
 protected:
   GLFWwindow* glfw_window_ = nullptr;
@@ -42,8 +52,11 @@ protected:
 private:
   static size_t num_glfw_windows_;
 
-  double cursor_x_,     cursor_y_;
-  double cursor_last_x_, cursor_last_y_;
+  double cursor_x_      = 0.0, cursor_y_      = 0.0;
+  double cursor_last_x_ = 0.0, cursor_last_y_ = 0.0;
+
+  std::unordered_map<KeyCode, KeyCallback> key_press_callbacks_;
+  std::unordered_map<KeyCode, KeyCallback> key_release_callbacks_;
 };
 
 }

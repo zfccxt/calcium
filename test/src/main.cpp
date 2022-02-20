@@ -5,6 +5,10 @@
 #include <glm/gtc/type_ptr.hpp>
 #include <glm/gtc/matrix_transform.hpp>
 
+void TestCallback() {
+  printf("hello\n");
+}
+
 int main() {
   auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
@@ -12,6 +16,8 @@ int main() {
   window_info.clear_colour = 0x336699ff;
   window_info.enable_depth_test = false;
   auto window = context->CreateWindow(window_info);
+
+  window->SetKeyPressCallback(cl::KeyCode::kLeftShift, TestCallback);
 
   cl::ShaderCreateInfo shader_info;
   shader_info.vert_path = "res/shaders/shader.vert.spv";

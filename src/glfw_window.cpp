@@ -10,7 +10,6 @@ namespace cl {
 
 size_t GlfwWindow::num_glfw_windows_ = 0;
 
-
 GlfwWindow::GlfwWindow() {
   ++num_glfw_windows_;
 }
@@ -31,6 +30,9 @@ void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
 #else
     Center();
 #endif
+
+  glfwSetWindowUserPointer(glfw_window_, this);
+  glfwSetKeyCallback(glfw_window_, PerformKeyCallbacks);
   }
 }
 
@@ -91,6 +93,38 @@ float GlfwWindow::CursorY() {
 
 bool GlfwWindow::IsKeyDown(KeyCode key) {
   return glfwGetKey(glfw_window_, (int)key);
+}
+
+void GlfwWindow::SetKeyPressCallback(KeyCode key, KeyCallback callback) {
+  key_press_callbacks_.emplace(key, callback);
+}
+
+void GlfwWindow::RemoveKeyPressCallback(KeyCode key) {
+  key_press_callbacks_.erase(key);
+}
+
+void GlfwWindow::SetKeyReleaseCallback(KeyCode key, KeyCallback callback) {
+  key_release_callbacks_.emplace(key, callback);
+}
+
+void GlfwWindow::RemoveKeyReleaseCallback(KeyCode key) {
+  key_release_callbacks_.erase(key);
+}
+
+void GlfwWindow::PerformKeyCallbacks(GLFWwindow* glfw_window, int key, int scancode, int action, int mods) {
+  GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
+  if (action == GLFW_PRESS) {
+    auto it = win->key_press_callbacks_.find((KeyCode)key);
+    if (it != win->key_press_callbacks_.end()) {
+      it->second();
+    }
+  }
+  else {
+    auto it = win->key_release_callbacks_.find((KeyCode)key);
+    if (it != win->key_release_callbacks_.end()) {
+      it->second();
+    }
+  }
 }
 
 }
