@@ -3,7 +3,7 @@
 #include "colour.hpp"
 #include "key_code.hpp"
 #include "render_target.hpp"
-#include "key_callback.hpp"
+#include "callbacks.hpp"
 
 namespace cl {
 
