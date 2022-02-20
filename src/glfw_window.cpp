@@ -76,11 +76,11 @@ void GlfwWindow::ToggleCursorLock() {
 }
 
 float GlfwWindow::CursorDeltaX() {
-  return (float)(cursor_y_ - cursor_last_y_);
+  return (float)(cursor_x_ - cursor_last_x_);
 }
 
 float GlfwWindow::CursorDeltaY() {
-  return (float)(cursor_x_ - cursor_last_x_);
+  return (float)(cursor_y_ - cursor_last_y_);
 }
 
 float GlfwWindow::CursorX() {
