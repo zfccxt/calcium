@@ -184,14 +184,14 @@ void VulkanSwapchain::DestroySwapchainFramebuffers() {
   }
 }
 
-void VulkanSwapchain::SetClearValue(float r, float g, float b, float a) {
+void VulkanSwapchain::SetClearValue(const Colour& colour) {
   clear_values.clear();
 
   VkClearValue colour_clear_value { };
-  colour_clear_value.color.float32[0] = r;
-  colour_clear_value.color.float32[1] = g;
-  colour_clear_value.color.float32[2] = b;
-  colour_clear_value.color.float32[3] = a;
+  colour_clear_value.color.float32[0] = colour.r;
+  colour_clear_value.color.float32[1] = colour.g;
+  colour_clear_value.color.float32[2] = colour.b;
+  colour_clear_value.color.float32[3] = colour.a;
   clear_values.push_back(colour_clear_value);
 
   if (enable_depth_test) {

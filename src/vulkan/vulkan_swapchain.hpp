@@ -3,6 +3,7 @@
 #include <cstdint>
 #include <vector>
 
+#include "colour.hpp"
 #include "vulkan/vulkan_swapchain_sync_objects.hpp"
 
 namespace cl::Vulkan {
@@ -17,8 +18,7 @@ struct VulkanSwapchain {
   void CreateSwapchainFramebuffers();
   void DestroySwapchainFramebuffers();
 
-  // TODO: Colour class
-  void SetClearValue(float r, float g, float b, float a);
+  void SetClearValue(const Colour& colour);
 
   VulkanWindowData* window_data;
 
