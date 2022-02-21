@@ -6,7 +6,7 @@
 
 namespace cl::OpenGL {
 
-GLenum GetOpenGLShaderType(ShaderStage type) {
+GLenum FindOpenGLShaderStage(ShaderStage type) {
   switch (type) {
     case ShaderStage::kComputeShader:  return GL_COMPUTE_SHADER;
     case ShaderStage::kVertexShader:   return GL_VERTEX_SHADER;
@@ -23,7 +23,7 @@ GLenum GetOpenGLShaderType(ShaderStage type) {
 }
 
 GLuint CreateShaderModule(const std::string& glsl_code, ShaderStage shader_type) {
- GLuint shader = glCreateShader(GetOpenGLShaderType(shader_type));
+ GLuint shader = glCreateShader(FindOpenGLShaderStage(shader_type));
 	const GLchar* source_ptr = (const GLchar*)glsl_code.c_str();
   glShaderSource(shader, 1, &source_ptr, 0);
   glCompileShader(shader);

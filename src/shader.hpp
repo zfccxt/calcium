@@ -25,7 +25,7 @@ public:
 
   BufferLayout GetInputLayout();
   
-  static std::vector<uint32_t> ReadSpv(const char* file_path);
+  static SpvCode ReadSpv(const char* file_path);
   static ShaderCodeMap ReadAllSpvFiles(const ShaderCreateInfo& shader_info);
 
 protected:

@@ -12,7 +12,8 @@
 
 namespace cl {
 
-typedef std::unordered_map<ShaderStage, std::vector<uint32_t>> ShaderCodeMap;
+typedef std::vector<uint32_t> SpvCode;
+typedef std::unordered_map<ShaderStage, SpvCode> ShaderCodeMap;
 
 struct ShaderReflectionDetails {
   void Reflect(const ShaderCodeMap& shader_code);

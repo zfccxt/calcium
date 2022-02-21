@@ -6,11 +6,11 @@
 
 namespace cl {
 
-std::vector<uint32_t> Shader::ReadSpv(const char* file_path) {
+SpvCode Shader::ReadSpv(const char* file_path) {
   std::ifstream file(file_path, std::ios::ate | std::ios::binary);
   assert(file.is_open());
   size_t file_size = (size_t)file.tellg();
-  std::vector<uint32_t> buffer(file_size / sizeof(uint32_t));
+  SpvCode buffer(file_size / sizeof(uint32_t));
   file.seekg(0);
   file.read((char*)buffer.data(), file_size);
   file.close();

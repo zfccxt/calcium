@@ -66,7 +66,7 @@ std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& wind
 }
 
 std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shader_info) {
-  return std::make_shared<VulkanShader>(shader_info);
+  return std::make_shared<VulkanShader>(&context_data_, shader_info);
 }
 
 std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {
