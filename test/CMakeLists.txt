@@ -4,7 +4,7 @@ project(calcium_test)
 set(SOURCE_FILES src/main.cpp)
 source_group("src" FILES ${SOURCE_FILES})
 
-set(SHADER_FILES src/shaders/shader.vert.glsl src/shaders/shader.frag.glsl)
+set(SHADER_FILES src/shaders/shader.vert.glsl src/shaders/shader.frag.glsl src/shaders/noinput.vert.glsl src/shaders/noinput.frag.glsl)
 source_group("src/shaders" FILES ${SHADER_FILES})
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES} ${SHADER_FILES})
