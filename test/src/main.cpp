@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kOpenGL);
+  auto context = cl::CreateContext(cl::Backend::kVulkan);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;

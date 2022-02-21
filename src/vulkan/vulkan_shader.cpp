@@ -1,9 +1,13 @@
 #include "vulkan_shader.hpp"
 
 #include "vulkan_descriptor_set_layout.hpp"
+#include "vulkan_pipeline_layout.hpp"
 #include "vulkan_shader_module.hpp"
 
 namespace cl::Vulkan {
+
+#pragma warning(push)
+#pragma warning(disable : 26812)
 
 VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info) : context_(context) {
   ShaderCodeMap code_map = ReadAllSpvFiles(shader_info);
@@ -16,7 +20,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   descriptor_set_layout_ = CreateDescriptorSetLayout(context, reflection_details_);
   // TODO: Create uniforms & samplers
 
-  // Create pipeline layout
+  graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
   CreatePipeline();
 
   // TODO: Create descriptor pool
@@ -52,7 +56,7 @@ VulkanShader::~VulkanShader() {
 
   DestroyPipeline();
 
-  // TODO: Destroy pipeline layout
+  vkDestroyPipelineLayout(context_->device, graphics_pipeline_layout_, context_->allocator);
   vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
 
   // Destroy all shader modules
@@ -73,5 +77,7 @@ void VulkanShader::UploadUniform(int binding, void* data) {
 void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
  // TODO
 }
+
+#pragma warning(pop)
 
 }
