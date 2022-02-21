@@ -25,7 +25,6 @@ public:
 
 private:
   void CreatePipeline();
-  void DestroyPipeline();
 
 private:
   VulkanContextData* context_;
@@ -35,6 +34,7 @@ private:
 
   std::unordered_map<VkShaderStageFlagBits, VkShaderModule> shader_modules_;
   VkDescriptorSetLayout descriptor_set_layout_;
+  VkDescriptorPool descriptor_pool_;
 };
 
 }

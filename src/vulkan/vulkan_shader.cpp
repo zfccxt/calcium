@@ -1,5 +1,6 @@
 #include "vulkan_shader.hpp"
 
+#include "vulkan_descriptor_pool.hpp"
 #include "vulkan_descriptor_set_layout.hpp"
 #include "vulkan_pipeline_layout.hpp"
 #include "vulkan_shader_module.hpp"
@@ -23,18 +24,20 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
   CreatePipeline();
 
-  // TODO: Create descriptor pool
+  descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
   // TODO: Allocate descriptor sets
 }
 
 void VulkanShader::Recreate() {
-  // TODO: DestroyDescriptorPool();
-  DestroyPipeline();
+  vkDeviceWaitIdle(context_->device);
+
+  vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
   // TODO: DestroyUniforms();
+  vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   // TODO: CreateUniforms();
   CreatePipeline();
-  // TODO: CreateDescriptorPool();
+  descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
   // TODO: AllocateDescriptorSets();
 }
 
@@ -42,19 +45,13 @@ void VulkanShader::CreatePipeline() {
   // TODO
 }
 
-void VulkanShader::DestroyPipeline() {
-  vkDeviceWaitIdle(context_->device);
-
-  // TODO: vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
-}
-
 VulkanShader::~VulkanShader() {
   vkDeviceWaitIdle(context_->device);
 
-  // TODO: Destroy descriptor pool
+  vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
   // TODO: Destroy uniform buffers
 
-  DestroyPipeline();
+  vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   vkDestroyPipelineLayout(context_->device, graphics_pipeline_layout_, context_->allocator);
   vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
@@ -63,7 +60,6 @@ VulkanShader::~VulkanShader() {
   for (auto& shader_module : shader_modules_) {
     vkDestroyShaderModule(context_->device, shader_module.second, context_->allocator);
   }
-
 }
 
 void VulkanShader::Bind() {
