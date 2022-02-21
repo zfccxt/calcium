@@ -5,6 +5,7 @@
 #include <memory>
 #include <vector>
 
+#include "shader_create_info.hpp"
 #include "shader_reflection_details.hpp"
 #include "texture.hpp"
 
@@ -24,7 +25,8 @@ public:
 
   BufferLayout GetInputLayout();
   
-  static std::vector<uint32_t> ReadSPV(const char* file_path);
+  static std::vector<uint32_t> ReadSpv(const char* file_path);
+  static ShaderCodeMap ReadAllSpvFiles(const ShaderCreateInfo& shader_info);
 
 protected:
   ShaderReflectionDetails reflection_details_;
