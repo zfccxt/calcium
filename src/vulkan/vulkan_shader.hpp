@@ -1,6 +1,7 @@
 #pragma once
 
 #include <unordered_map>
+#include <vector>
 
 #include <vulkan/vulkan.h>
 
@@ -35,6 +36,7 @@ private:
   std::unordered_map<VkShaderStageFlagBits, VkShaderModule> shader_modules_;
   VkDescriptorSetLayout descriptor_set_layout_;
   VkDescriptorPool descriptor_pool_;
+  std::vector<VkDescriptorSet> descriptor_sets_;
 };
 
 }

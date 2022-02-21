@@ -25,7 +25,24 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   CreatePipeline();
 
   descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
-  // TODO: Allocate descriptor sets
+  descriptor_sets_ = AllocateDescriptorSets(context, descriptor_set_layout_, descriptor_pool_);
+}
+
+VulkanShader::~VulkanShader() {
+  vkDeviceWaitIdle(context_->device);
+
+  vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+  // TODO: Destroy uniform buffers
+
+  // TODO: vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
+
+  vkDestroyPipelineLayout(context_->device, graphics_pipeline_layout_, context_->allocator);
+  vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
+
+  // Destroy all shader modules
+  for (auto& shader_module : shader_modules_) {
+    vkDestroyShaderModule(context_->device, shader_module.second, context_->allocator);
+  }
 }
 
 void VulkanShader::Recreate() {
@@ -33,7 +50,7 @@ void VulkanShader::Recreate() {
 
   vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
   // TODO: DestroyUniforms();
-  vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
+  // TODO: vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   // TODO: CreateUniforms();
   CreatePipeline();
@@ -43,23 +60,6 @@ void VulkanShader::Recreate() {
 
 void VulkanShader::CreatePipeline() {
   // TODO
-}
-
-VulkanShader::~VulkanShader() {
-  vkDeviceWaitIdle(context_->device);
-
-  vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
-  // TODO: Destroy uniform buffers
-
-  vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
-
-  vkDestroyPipelineLayout(context_->device, graphics_pipeline_layout_, context_->allocator);
-  vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
-
-  // Destroy all shader modules
-  for (auto& shader_module : shader_modules_) {
-    vkDestroyShaderModule(context_->device, shader_module.second, context_->allocator);
-  }
 }
 
 void VulkanShader::Bind() {
