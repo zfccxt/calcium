@@ -24,6 +24,7 @@ public:
 private:
   GLuint program_id_;
 
+  // Map of uniform binding -> uniform buffer so that we can choose a buffer to upload data to by its binding
   std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms_;
 };
 

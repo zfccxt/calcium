@@ -13,16 +13,8 @@
 namespace cl::OpenGL {
 
 OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
-  ShaderCodeMap code_map;
-  if (!shader_info.vert_path.empty()) { code_map.emplace(ShaderStage::kVertexShader,      ReadSPV(shader_info.vert_path.c_str())); }
-  if (!shader_info.frag_path.empty()) { code_map.emplace(ShaderStage::kFragmentShader,    ReadSPV(shader_info.frag_path.c_str())); }
-  if (!shader_info.geom_path.empty()) { code_map.emplace(ShaderStage::kGeometryShader,    ReadSPV(shader_info.geom_path.c_str())); }
-  if (!shader_info.mesh_path.empty()) { code_map.emplace(ShaderStage::kMeshShader,        ReadSPV(shader_info.mesh_path.c_str())); }
-  if (!shader_info.task_path.empty()) { code_map.emplace(ShaderStage::kTaskShader,        ReadSPV(shader_info.task_path.c_str())); }
-  if (!shader_info.tess_path.empty()) { code_map.emplace(ShaderStage::kTesselationShader, ReadSPV(shader_info.tess_path.c_str())); }
-  if (!shader_info.comp_path.empty()) { code_map.emplace(ShaderStage::kComputeShader,     ReadSPV(shader_info.comp_path.c_str())); }
-
-  reflection_details_.Reflect(code_map);
+  ShaderCodeMap code_map = ReadAllSpvFiles(shader_info);
+  reflection_details_.Reflect(code_map); 
 
   program_id_ = glCreateProgram();
   std::vector<GLuint> shader_modules;
