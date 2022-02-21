@@ -34,6 +34,7 @@ private:
   VkPipelineLayout graphics_pipeline_layout_;
 
   std::unordered_map<VkShaderStageFlagBits, VkShaderModule> shader_modules_;
+  VkDescriptorSetLayout descriptor_set_layout_;
 };
 
 }

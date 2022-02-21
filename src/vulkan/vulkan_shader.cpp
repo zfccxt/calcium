@@ -1,5 +1,6 @@
 #include "vulkan_shader.hpp"
 
+#include "vulkan_descriptor_set_layout.hpp"
 #include "vulkan_shader_module.hpp"
 
 namespace cl::Vulkan {
@@ -12,7 +13,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   }
 
   reflection_details_.Reflect(code_map);
-  // TODO: Create descriptor set layout
+  descriptor_set_layout_ = CreateDescriptorSetLayout(context, reflection_details_);
   // TODO: Create uniforms & samplers
 
   // Create pipeline layout
@@ -46,19 +47,19 @@ void VulkanShader::DestroyPipeline() {
 VulkanShader::~VulkanShader() {
   vkDeviceWaitIdle(context_->device);
 
-  // Destroy all shader modules
-  for (auto& shader_module : shader_modules_) {
-    vkDestroyShaderModule(context_->device, shader_module.second, context_->allocator);
-  }
-
-
   // TODO: Destroy descriptor pool
   // TODO: Destroy uniform buffers
 
   DestroyPipeline();
 
   // TODO: Destroy pipeline layout
-  // TODO: Destroy descriptor set layout
+  vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
+
+  // Destroy all shader modules
+  for (auto& shader_module : shader_modules_) {
+    vkDestroyShaderModule(context_->device, shader_module.second, context_->allocator);
+  }
+
 }
 
 void VulkanShader::Bind() {
