@@ -130,16 +130,17 @@ VkPhysicalDevice ChoosePhysicalDevice(const VulkanContextData& context_data, VkS
     // Failed to find a suitable GPU
     assert(false);
   }
-  return physical_device;
 
 #ifdef CALCIUM_BUILD_VERBOSE
   // In verbose mode, print out the name of the chosen device
   VkPhysicalDeviceProperties device_properties;
   vkGetPhysicalDeviceProperties(physical_device, &device_properties);
-  int score = RateDeviceSuitability(physical_device, window_data.surface);
+  int score = RateDeviceSuitability(physical_device, temp_surface);
 
   printf("Chose physical device: %s (Device score: %d)\n", device_properties.deviceName, score);
 #endif
+
+  return physical_device;
 }
 
 }
