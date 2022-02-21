@@ -18,6 +18,7 @@ public:
 
   virtual float GetAspectRatio() const override;
   virtual bool IsOpen() const override;
+  virtual void Close() override;
   virtual void Center(bool center_horizontal = true, bool center_vertical = true) override;
 
   virtual void PollEvents() override;

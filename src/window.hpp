@@ -13,6 +13,7 @@ public:
 
   virtual float GetAspectRatio() const = 0;
   virtual bool IsOpen() const = 0;
+  virtual void Close() = 0;
   virtual void Center(bool center_horizontal=true, bool center_vertical=true) = 0;
 
   virtual void Clear() = 0;

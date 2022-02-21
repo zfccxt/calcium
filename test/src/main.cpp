@@ -14,16 +14,15 @@ int main() {
   auto window = context->CreateWindow(window_info);
 
   window->SetKeyPressCallback(cl::KeyCode::kLeftShift, [](){ printf("hello\n"); });
+  window->SetKeyPressCallback(cl::KeyCode::kEscape,    [&](){ window->Close(); });
 
   glm::mat4 projection = glm::mat4(1);
   cl::ResizeCallback calc_projection = [&](){ projection = glm::perspective(glm::radians(45.0f), window->GetAspectRatio(), 0.1f, 1000.0f); };
   window->SetResizeCallback(calc_projection);
   calc_projection();
 
-  cl::ShaderCreateInfo shader_info;
-  shader_info.vert_path = "res/shaders/shader.vert.spv";
-  shader_info.frag_path = "res/shaders/shader.frag.spv";
-  auto shader = context->CreateShader(shader_info);
+  auto shader = context->CreateShader("res/shaders/shader.vert.spv", "res/shaders/shader.frag.spv");
+  auto no_input_shader = context->CreateShader("res/shaders/noinput.vert.spv", "res/shaders/noinput.frag.spv");
 
   cl::MeshCreateInfo mesh_info;
   mesh_info.vertex_data_layout = shader->GetInputLayout();

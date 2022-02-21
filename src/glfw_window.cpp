@@ -46,6 +46,10 @@ bool GlfwWindow::IsOpen() const {
   return !glfwWindowShouldClose(glfw_window_);
 }
 
+void GlfwWindow::Close() {
+  glfwSetWindowShouldClose(glfw_window_, true);
+}
+
 void GlfwWindow::Center(bool center_horizontal, bool center_vertical) {
   GLFW::CenterWindow(glfw_window_, center_horizontal, center_vertical);
 }
