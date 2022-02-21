@@ -62,11 +62,22 @@ VulkanContext::~VulkanContext() {
 
 
 std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& window_info) {
-  return std::make_shared<VulkanWindow>(&context_data_, window_info);
+  auto window = std::make_shared<VulkanWindow>(&context_data_, window_info);
+
+  // For convenience if there is not yet a bound render target and the library user creates a window, we bind it
+  if (!bound_render_target_.lock()) {
+    bound_render_target_ = window;
+  }
+
+  return window;
 }
 
 std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shader_info) {
-  return std::make_shared<VulkanShader>(&context_data_, shader_info);
+  auto rt = bound_render_target_.lock();
+  VkExtent2D framebuffer_extent = rt->GetFramebufferExtent();
+  VkRenderPass render_pass = rt->GetRenderPass();
+  bool enable_depth_test = rt->IsDepthTestEnabled();
+  return std::make_shared<VulkanShader>(&context_data_, shader_info, framebuffer_extent, render_pass, enable_depth_test);
 }
 
 std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {
@@ -78,7 +89,9 @@ std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& t
 }
 
 void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
-  // TODO
+  // TODO: When we support rendering to framebuffers, check which type this render target is and dynamic_pointer_cast
+  // as appropriate
+  bound_render_target_ = std::dynamic_pointer_cast<VulkanWindow>(render_target);
 }
 
 }

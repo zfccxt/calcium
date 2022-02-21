@@ -5,6 +5,7 @@
 
 #include <vulkan/vulkan.h>
 
+#include "buffer_layout.hpp"
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 #include "vulkan_context_data.hpp"
@@ -13,7 +14,7 @@ namespace cl::Vulkan {
 
 class VulkanShader : public Shader {
 public:
-  VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info);
+  VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info, VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test);
   virtual ~VulkanShader();
 
   virtual void Bind() override;
@@ -22,10 +23,10 @@ public:
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
 
 public:
-  void Recreate();
+  void Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test);
 
 private:
-  void CreatePipeline();
+  void CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test);
 
 private:
   VulkanContextData* context_;

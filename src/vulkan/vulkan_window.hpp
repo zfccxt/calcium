@@ -1,5 +1,7 @@
 #pragma once
 
+#include <vulkan/vulkan.h>
+
 #include "glfw_window.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 #include "vulkan/vulkan_swapchain.hpp"
@@ -15,6 +17,11 @@ public:
   virtual void SwapBuffers() override;
 
   virtual void SetClearColour(const Colour& colour) override;
+
+public:
+  VkExtent2D GetFramebufferExtent();
+  VkRenderPass GetRenderPass();
+  bool IsDepthTestEnabled() const;
 
 private:
   VulkanWindowData window_data_;
