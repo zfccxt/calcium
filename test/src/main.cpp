@@ -46,7 +46,6 @@ int main() {
   auto texture2 = context->CreateTexture("res/textures/face.png");
 
   auto start_time = std::chrono::high_resolution_clock::now();
-  context->BindRendertarget(window);
   while (window->IsOpen()) {
     window->PollEvents();
     window->Clear();

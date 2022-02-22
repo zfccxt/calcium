@@ -16,7 +16,6 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
     VkRenderPass render_pass, bool enable_depth_test) : context_(context) {
 
   ShaderCodeMap code_map = ReadAllSpvFiles(shader_info);
-  // Create shader modules
   for (auto& code : code_map) {
     shader_modules_.emplace(FindVulkanShaderStage(code.first), CreateShaderModule(context, code.second));
   }
@@ -38,7 +37,7 @@ VulkanShader::~VulkanShader() {
   vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
   // TODO: Destroy uniform buffers
 
-  // TODO: vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
+  vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   vkDestroyPipelineLayout(context_->device, graphics_pipeline_layout_, context_->allocator);
   vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
@@ -54,12 +53,12 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
 
   vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
   // TODO: DestroyUniforms();
-  // TODO: vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
+  vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   // TODO: CreateUniforms();
   CreatePipeline(render_target_extent, render_pass, enable_depth_test);
   descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-  // TODO: AllocateDescriptorSets();
+  descriptor_sets_ = AllocateDescriptorSets(context_, descriptor_set_layout_, descriptor_pool_);
 }
 
 // TODO: cache pipelines
