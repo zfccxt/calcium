@@ -25,6 +25,7 @@ void Shader::UploadUniform(const std::string& name, void* data) {
   for (const auto& uniform : reflection_details_.uniforms) {
     if (uniform.second.name == name) {
       UploadUniform(uniform.second.binding, data);
+      return;
     }
   }
 }

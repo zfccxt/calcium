@@ -24,7 +24,10 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   // We only need descriptors if the shader actually contains any uniform buffers or texture samplers
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_set_layout_ = CreateDescriptorSetLayout(context, reflection_details_);
-    // TODO: Create uniforms & samplers
+    for (const auto& uniform : reflection_details_.uniforms) {
+      uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context, uniform.second));
+    }
+    // TODO: Create samplers
   }
 
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
@@ -41,7 +44,8 @@ VulkanShader::~VulkanShader() {
 
   if (reflection_details_.HasUniformsOrTextures()) {
     vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
-    // TODO: Destroy uniform buffers
+    uniform_buffers_.clear();
+    // TODO: Destroy samplers
   }
 
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
@@ -62,12 +66,16 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
 
   if (reflection_details_.HasUniformsOrTextures()) {
     vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
-    // TODO: DestroyUniforms();
+    uniform_buffers_.clear();
+    // TODO: Destroy samplers
   }
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   if (reflection_details_.HasUniformsOrTextures()) {
-    // TODO: CreateUniforms();
+    for (const auto& uniform : reflection_details_.uniforms) {
+      uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context_, uniform.second));
+    }
+    // TODO: Create samplers
   }
   CreatePipeline(render_target_extent, render_pass, enable_depth_test);
   if (reflection_details_.HasUniformsOrTextures()) {
@@ -246,7 +254,7 @@ void VulkanShader::Bind(VkCommandBuffer command_buffer) {
 }
 
 void VulkanShader::UploadUniform(int binding, void* data) {
-  // TODO
+  uniform_buffers_.at(binding)->UploadData(data);
 }
 
 void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {

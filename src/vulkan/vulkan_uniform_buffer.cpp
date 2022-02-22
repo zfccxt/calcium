@@ -6,7 +6,7 @@
 
 namespace cl::Vulkan {
 
-VulkanUniform::VulkanUniform(VulkanContextData* context, const ShaderReflectionDetails::UniformData& descriptor) : context_(context) {
+VulkanUniformBuffer::VulkanUniformBuffer(VulkanContextData* context, const ShaderReflectionDetails::UniformData& descriptor) : context_(context) {
   size_ = descriptor.size;
 
   buffers_.resize(kMaxFramesInFlight);
@@ -17,14 +17,14 @@ VulkanUniform::VulkanUniform(VulkanContextData* context, const ShaderReflectionD
   }
 }
 
-VulkanUniform::~VulkanUniform() {
+VulkanUniformBuffer::~VulkanUniformBuffer() {
   for (size_t i = 0; i < kMaxFramesInFlight; ++i) {
     vkDestroyBuffer(context_->device, buffers_[i], context_->allocator);
     vkFreeMemory(context_->device, buffers_memory_[i], context_->allocator);
   }
 }
 
-void VulkanUniform::UploadData(void* to_upload) {
+void VulkanUniformBuffer::UploadData(void* to_upload) {
   void* data;
   auto bound_render_target = context_->bound_render_target.lock();
   size_t index = bound_render_target->GetCurrentFrameIndex();

@@ -9,10 +9,10 @@
 
 namespace cl::Vulkan {
 
-class VulkanUniform {
+class VulkanUniformBuffer {
 public:
-  VulkanUniform(VulkanContextData* context, const ShaderReflectionDetails::UniformData& descriptor);
-  ~VulkanUniform();
+  VulkanUniformBuffer(VulkanContextData* context, const ShaderReflectionDetails::UniformData& descriptor);
+  ~VulkanUniformBuffer();
 
   void UploadData(void* data);
 

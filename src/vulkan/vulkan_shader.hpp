@@ -1,5 +1,6 @@
 #pragma once
 
+#include <memory>
 #include <unordered_map>
 #include <vector>
 
@@ -9,6 +10,7 @@
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 #include "vulkan_context_data.hpp"
+#include "vulkan_uniform_buffer.hpp"
 
 namespace cl::Vulkan {
 
@@ -35,9 +37,11 @@ private:
   VkPipelineLayout graphics_pipeline_layout_;
 
   std::unordered_map<VkShaderStageFlagBits, VkShaderModule> shader_modules_;
+
   VkDescriptorSetLayout descriptor_set_layout_ = VK_NULL_HANDLE;
   VkDescriptorPool descriptor_pool_;
   std::vector<VkDescriptorSet> descriptor_sets_;
+  std::unordered_map<size_t, std::unique_ptr<VulkanUniformBuffer>> uniform_buffers_;
 };
 
 }

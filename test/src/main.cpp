@@ -54,16 +54,17 @@ int main() {
 
     context->BeginRenderPass(no_input_shader);
 
-    // glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
-    // shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
+    glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
+    shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
 
-    // glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
-    // shader->UploadUniform("u_model", glm::value_ptr(model));
+    glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
+    shader->UploadUniform("u_model", glm::value_ptr(model));
+    no_input_shader->UploadUniform("u_model", glm::value_ptr(model));
 
-    // shader->BindTexture("u_diffuse_texture", texture);
-    // shader->BindTexture("u_second_texture", texture2);
+    shader->BindTexture("u_diffuse_texture", texture);
+    shader->BindTexture("u_second_texture", texture2);
 
-    // mesh->Draw();
+    mesh->Draw();
     context->EndRenderPass();
   }
 
