@@ -20,27 +20,27 @@ int main() {
   window->SetResizeCallback(calc_projection);
   calc_projection();
 
-  // auto shader          = context->CreateShader("res/shaders/shader.vert.spv",  "res/shaders/shader.frag.spv");
+  auto shader          = context->CreateShader("res/shaders/shader.vert.spv",  "res/shaders/shader.frag.spv");
   auto no_input_shader = context->CreateShader("res/shaders/noinput.vert.spv", "res/shaders/noinput.frag.spv");
 
-  // cl::MeshCreateInfo mesh_info;
-  // mesh_info.vertex_data_layout = shader->GetInputLayout();
-  // std::vector<float> vertices = {
-  // //  x      y     z     u     v
-  //    0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-  //    0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-  //   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-  //   -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
-  // };
-  // std::vector<uint32_t> indices = {
-  //   0, 1, 3,
-  //   1, 2, 3,
-  // };
-  // mesh_info.vertices = vertices.data();
-  // mesh_info.num_vertices = vertices.size();
-  // mesh_info.indices = indices.data();
-  // mesh_info.num_indices = indices.size();
-  // auto mesh = context->CreateMesh(mesh_info);
+  cl::MeshCreateInfo mesh_info;
+  mesh_info.vertex_data_layout = shader->GetInputLayout();
+  std::vector<float> vertices = {
+  //  x      y     z     u     v
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+  };
+  std::vector<uint32_t> indices = {
+    0, 1, 3,
+    1, 2, 3,
+  };
+  mesh_info.vertices = vertices.data();
+  mesh_info.num_vertices = vertices.size();
+  mesh_info.indices = indices.data();
+  mesh_info.num_indices = indices.size();
+  auto mesh = context->CreateMesh(mesh_info);
 
   auto texture = context->CreateTexture("res/textures/pepper.png");
   auto texture2 = context->CreateTexture("res/textures/face.png");

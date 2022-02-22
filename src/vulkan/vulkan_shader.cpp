@@ -90,11 +90,13 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
 
   // This is where we specify the format of the vertex data
   VkPipelineVertexInputStateCreateInfo vertex_input_info { VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO };
+  VkVertexInputBindingDescription binding_description;
+  std::vector<VkVertexInputAttributeDescription> attrib_descriptions;
   if (reflection_details_.HasVertexInputs()) {
     vertex_input_info.vertexBindingDescriptionCount = 1;
-    auto binding_description = CreateInputBindingDescription(reflection_details_.vertex_input_layout);
+    binding_description = CreateInputBindingDescription(reflection_details_.vertex_input_layout);
     vertex_input_info.pVertexBindingDescriptions = &binding_description;
-    auto attrib_descriptions = CreateInputAttribDescriptions(reflection_details_.vertex_input_layout);
+    attrib_descriptions = CreateInputAttribDescriptions(reflection_details_.vertex_input_layout);
     vertex_input_info.vertexAttributeDescriptionCount = attrib_descriptions.size();
     vertex_input_info.pVertexAttributeDescriptions = attrib_descriptions.data();
   }
