@@ -17,9 +17,10 @@ struct VulkanRenderCommandBuffers {
   VkCommandBuffer BeginRenderCommandBuffer(VulkanWindowData& window_data);
   void EndAndSubmitRenderCommandBuffer(VulkanWindowData& window_data);
 
-  std::vector<VkCommandBuffer> render_command_buffers_;
-  uint32_t swapchain_image_index_;
-  uint32_t current_command_buffer_index_ = 0;
+  std::vector<VkCommandBuffer> render_command_buffers;
+  VkCommandBuffer current_command_buffer = VK_NULL_HANDLE;
+  uint32_t swapchain_image_index;
+  uint32_t current_command_buffer_index = 0;
 };
 
 }

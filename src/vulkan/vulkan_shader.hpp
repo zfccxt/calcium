@@ -23,6 +23,8 @@ public:
 public:
   void Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test);
 
+  void Bind(VkCommandBuffer command_buffer);
+
 private:
   void CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test);
 

@@ -90,12 +90,21 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
 
   // This is where we specify the format of the vertex data
   VkPipelineVertexInputStateCreateInfo vertex_input_info { VK_STRUCTURE_TYPE_PIPELINE_VERTEX_INPUT_STATE_CREATE_INFO };
-  vertex_input_info.vertexBindingDescriptionCount = 1;
-  auto binding_description = CreateInputBindingDescription(reflection_details_.vertex_input_layout);
-  vertex_input_info.pVertexBindingDescriptions = &binding_description;
-  auto attrib_descriptions = CreateInputAttribDescriptions(reflection_details_.vertex_input_layout);
-  vertex_input_info.vertexAttributeDescriptionCount = attrib_descriptions.size();
-  vertex_input_info.pVertexAttributeDescriptions = attrib_descriptions.data();
+  if (reflection_details_.HasVertexInputs()) {
+    vertex_input_info.vertexBindingDescriptionCount = 1;
+    auto binding_description = CreateInputBindingDescription(reflection_details_.vertex_input_layout);
+    vertex_input_info.pVertexBindingDescriptions = &binding_description;
+    auto attrib_descriptions = CreateInputAttribDescriptions(reflection_details_.vertex_input_layout);
+    vertex_input_info.vertexAttributeDescriptionCount = attrib_descriptions.size();
+    vertex_input_info.pVertexAttributeDescriptions = attrib_descriptions.data();
+  }
+  else {
+    vertex_input_info.vertexBindingDescriptionCount = 0;
+    vertex_input_info.pVertexBindingDescriptions = nullptr;
+    vertex_input_info.vertexAttributeDescriptionCount = 0;
+    vertex_input_info.pVertexAttributeDescriptions = nullptr;
+  }
+
 
   // The next struct tells how the vertices should be assembled into primitives
   // It is similar to choosing GL_TRIANGLES, GL_POINTS, etc
@@ -228,6 +237,10 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
   // This can be used to create multiple pipelines
   // You can also cache pipelines and store them in a file to speed up pipeline creation
   VK_CHECK(vkCreateGraphicsPipelines(context_->device, VK_NULL_HANDLE, 1, &create_info, context_->allocator, &graphics_pipeline_));
+}
+
+void VulkanShader::Bind(VkCommandBuffer command_buffer) {
+  vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_);
 }
 
 void VulkanShader::UploadUniform(int binding, void* data) {

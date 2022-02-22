@@ -26,12 +26,14 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
 	  spirv_cross::ShaderResources* resources = new spirv_cross::ShaderResources(glsl->get_shader_resources());
 
     // Find vertex input vectors
-		for (auto& stage_input : resources->stage_inputs) {
-      uint32_t location = glsl->get_decoration(stage_input.id, spv::DecorationLocation);
-      spirv_cross::SPIRType type = glsl->get_type(stage_input.type_id);
-      ShaderDataType data_type = FindVectorType(type.vecsize);
-      if (data_type != ShaderDataType::kUndefined) {
-        vertex_input_map.emplace(location, data_type);
+    if (current_stage == ShaderStage::kVertexShader) {
+		  for (auto& stage_input : resources->stage_inputs) {
+        uint32_t location = glsl->get_decoration(stage_input.id, spv::DecorationLocation);
+        spirv_cross::SPIRType type = glsl->get_type(stage_input.type_id);
+        ShaderDataType data_type = FindVectorType(type.vecsize);
+        if (data_type != ShaderDataType::kUndefined) {
+          vertex_input_map.emplace(location, data_type);
+        }
       }
     }
 

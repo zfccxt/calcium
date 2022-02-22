@@ -64,11 +64,12 @@ bool VulkanWindow::IsDepthTestEnabled() const {
 void VulkanWindow::BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader) {
   window_data_.render_command_buffers.BeginRenderCommandBuffer(window_data_);
 
-  // TODO: vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+  shader->Bind(window_data_.render_command_buffers.current_command_buffer);
 }
 
 void VulkanWindow::EndAndSubmitRenderCommandBuffer() {
-  // TODO: vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+  // TODO: Test code - yeet
+  vkCmdDraw(window_data_.render_command_buffers.current_command_buffer, 3, 1, 0, 0);
 
   window_data_.render_command_buffers.EndAndSubmitRenderCommandBuffer(window_data_);
 }
