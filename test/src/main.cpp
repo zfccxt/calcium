@@ -20,27 +20,27 @@ int main() {
   window->SetResizeCallback(calc_projection);
   calc_projection();
 
-  auto shader          = context->CreateShader("res/shaders/shader.vert.spv",  "res/shaders/shader.frag.spv");
+  // auto shader          = context->CreateShader("res/shaders/shader.vert.spv",  "res/shaders/shader.frag.spv");
   auto no_input_shader = context->CreateShader("res/shaders/noinput.vert.spv", "res/shaders/noinput.frag.spv");
 
-  cl::MeshCreateInfo mesh_info;
-  mesh_info.vertex_data_layout = shader->GetInputLayout();
-  std::vector<float> vertices = {
-  //  x      y     z     u     v
-     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
-    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
-    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
-  };
-  std::vector<uint32_t> indices = {
-    0, 1, 3,
-    1, 2, 3,
-  };
-  mesh_info.vertices = vertices.data();
-  mesh_info.num_vertices = vertices.size();
-  mesh_info.indices = indices.data();
-  mesh_info.num_indices = indices.size();
-  auto mesh = context->CreateMesh(mesh_info);
+  // cl::MeshCreateInfo mesh_info;
+  // mesh_info.vertex_data_layout = shader->GetInputLayout();
+  // std::vector<float> vertices = {
+  // //  x      y     z     u     v
+  //    0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+  //    0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+  //   -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+  //   -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+  // };
+  // std::vector<uint32_t> indices = {
+  //   0, 1, 3,
+  //   1, 2, 3,
+  // };
+  // mesh_info.vertices = vertices.data();
+  // mesh_info.num_vertices = vertices.size();
+  // mesh_info.indices = indices.data();
+  // mesh_info.num_indices = indices.size();
+  // auto mesh = context->CreateMesh(mesh_info);
 
   auto texture = context->CreateTexture("res/textures/pepper.png");
   auto texture2 = context->CreateTexture("res/textures/face.png");
@@ -54,16 +54,16 @@ int main() {
     float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
 
     glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
-    shader->Bind();
-    shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
+    // shader->Bind();
+    // shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
 
     glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
-    shader->UploadUniform("u_model", glm::value_ptr(model));
+    // shader->UploadUniform("u_model", glm::value_ptr(model));
 
-    shader->BindTexture("u_diffuse_texture", texture);
-    shader->BindTexture("u_second_texture", texture2);
+    // shader->BindTexture("u_diffuse_texture", texture);
+    // shader->BindTexture("u_second_texture", texture2);
 
-    mesh->Draw();
+    // mesh->Draw();
     window->SwapBuffers();
   }
 

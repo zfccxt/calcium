@@ -35,6 +35,11 @@ struct ShaderReflectionDetails {
     ShaderStage stage;
   };
   std::unordered_map<size_t, TextureData> textures;
+
+public:
+  bool HasUniformsOrTextures() const {
+    return !uniforms.empty() || !textures.empty();
+  }
 };
 
 }

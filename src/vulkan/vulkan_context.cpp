@@ -91,6 +91,8 @@ std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& t
 void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
   // TODO: When we support rendering to framebuffers, check which type this render target is and dynamic_pointer_cast
   // as appropriate
+  // For now we only support windows as render targets, so this is guaranteed to be valid unless it was created with
+  // another context
   bound_render_target_ = std::dynamic_pointer_cast<VulkanWindow>(render_target);
 }
 

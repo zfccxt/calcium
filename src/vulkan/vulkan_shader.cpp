@@ -21,28 +21,37 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   }
 
   reflection_details_.Reflect(code_map);
-  descriptor_set_layout_ = CreateDescriptorSetLayout(context, reflection_details_);
-  // TODO: Create uniforms & samplers
+  // We only need descriptors if the shader actually contains any uniform buffers or texture samplers
+  if (reflection_details_.HasUniformsOrTextures()) {
+    descriptor_set_layout_ = CreateDescriptorSetLayout(context, reflection_details_);
+    // TODO: Create uniforms & samplers
+  }
 
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
   CreatePipeline(render_target_extent, render_pass, enable_depth_test);
 
-  descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
-  descriptor_sets_ = AllocateDescriptorSets(context, descriptor_set_layout_, descriptor_pool_);
+  if (reflection_details_.HasUniformsOrTextures()) {
+    descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
+    descriptor_sets_ = AllocateDescriptorSets(context, descriptor_set_layout_, descriptor_pool_);
+  }
 }
 
 VulkanShader::~VulkanShader() {
   vkDeviceWaitIdle(context_->device);
 
-  vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
-  // TODO: Destroy uniform buffers
+  if (reflection_details_.HasUniformsOrTextures()) {
+    vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+    // TODO: Destroy uniform buffers
+  }
 
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
   vkDestroyPipelineLayout(context_->device, graphics_pipeline_layout_, context_->allocator);
-  vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
 
-  // Destroy all shader modules
+  if (reflection_details_.HasUniformsOrTextures()) {
+    vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
+  }
+
   for (auto& shader_module : shader_modules_) {
     vkDestroyShaderModule(context_->device, shader_module.second, context_->allocator);
   }
@@ -51,14 +60,20 @@ VulkanShader::~VulkanShader() {
 void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test) {
   vkDeviceWaitIdle(context_->device);
 
-  vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
-  // TODO: DestroyUniforms();
+  if (reflection_details_.HasUniformsOrTextures()) {
+    vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+    // TODO: DestroyUniforms();
+  }
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
 
-  // TODO: CreateUniforms();
+  if (reflection_details_.HasUniformsOrTextures()) {
+    // TODO: CreateUniforms();
+  }
   CreatePipeline(render_target_extent, render_pass, enable_depth_test);
-  descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-  descriptor_sets_ = AllocateDescriptorSets(context_, descriptor_set_layout_, descriptor_pool_);
+  if (reflection_details_.HasUniformsOrTextures()) {
+    descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, descriptor_set_layout_, descriptor_pool_);
+  }
 }
 
 // TODO: cache pipelines
