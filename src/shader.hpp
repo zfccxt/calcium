@@ -15,8 +15,6 @@ class Shader {
 public:
   virtual ~Shader() = default;
 
-  virtual void Bind() = 0;
-
   virtual void UploadUniform(int binding, void* data) = 0;
   virtual void UploadUniform(const std::string& name, void* data);
 

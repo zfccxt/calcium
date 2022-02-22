@@ -45,14 +45,6 @@ VulkanWindow::~VulkanWindow() {
   DestroyWindowSurface(window_data_, window_data_.surface);
 }
 
-void VulkanWindow::Clear() {
-  // TODO
-}
-
-void VulkanWindow::SwapBuffers() {
-  // TODO
-}
-
 void VulkanWindow::SetClearColour(const Colour& colour) {
   // TODO
 }
@@ -67,6 +59,18 @@ VkRenderPass VulkanWindow::GetRenderPass() {
 
 bool VulkanWindow::IsDepthTestEnabled() const {
   return window_data_.swapchain.enable_depth_test;
+}
+
+void VulkanWindow::BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader) {
+  window_data_.render_command_buffers.BeginRenderCommandBuffer(window_data_);
+
+  // TODO: vkCmdBindPipeline(commandBuffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphicsPipeline);
+}
+
+void VulkanWindow::EndAndSubmitRenderCommandBuffer() {
+  // TODO: vkCmdDraw(commandBuffer, 3, 1, 0, 0);
+
+  window_data_.render_command_buffers.EndAndSubmitRenderCommandBuffer(window_data_);
 }
 
 }

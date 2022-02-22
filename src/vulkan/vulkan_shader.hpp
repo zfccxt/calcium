@@ -17,8 +17,6 @@ public:
   VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info, VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test);
   virtual ~VulkanShader();
 
-  virtual void Bind() override;
-
   virtual void UploadUniform(int binding, void* data) override;
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
 

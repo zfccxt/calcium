@@ -17,7 +17,10 @@ OpenGLContext::~OpenGLContext() {
 }
 
 std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& window_info) {
-  return std::make_shared<OpenGLWindow>(window_info);
+  // For convenience we automatically bind the first window the library user creates as the current render target
+  auto window = std::make_shared<OpenGLWindow>(window_info);
+  bound_render_target_ = window;
+  return window;
 }
 
 std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& shader_info) {
@@ -38,6 +41,25 @@ void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render
   // If render target is a window:
   auto opengl_window = (OpenGLWindow*)(render_target.get());
   opengl_window->MakeContextCurrent();
+}
+
+void OpenGLContext::BeginRenderPass(const std::shared_ptr<Shader>& shader) {
+  auto window = bound_render_target_.lock();
+  // TODO: Make this work with bound framebuffers
+
+  // If the bound render target is a window:
+  window->Clear();
+  
+  auto s = std::dynamic_pointer_cast<OpenGLShader>(shader);
+  s->Bind();
+}
+
+void OpenGLContext::EndRenderPass() {
+  auto window = bound_render_target_.lock();
+  // TODO: Make this work with bound framebuffers
+
+  // If the bound render target is a window:
+  window->SwapBuffers();
 }
 
 }

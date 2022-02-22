@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kVulkan);
+  auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
@@ -48,23 +48,23 @@ int main() {
   auto start_time = std::chrono::high_resolution_clock::now();
   while (window->IsOpen()) {
     window->PollEvents();
-    window->Clear();
 
     auto current_time = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
 
-    glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
-    // shader->Bind();
+    context->BeginRenderPass(no_input_shader);
+
+    // glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
     // shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
 
-    glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
+    // glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
     // shader->UploadUniform("u_model", glm::value_ptr(model));
 
     // shader->BindTexture("u_diffuse_texture", texture);
     // shader->BindTexture("u_second_texture", texture2);
 
     // mesh->Draw();
-    window->SwapBuffers();
+    context->EndRenderPass();
   }
 
 }

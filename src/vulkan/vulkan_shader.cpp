@@ -230,10 +230,6 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
   VK_CHECK(vkCreateGraphicsPipelines(context_->device, VK_NULL_HANDLE, 1, &create_info, context_->allocator, &graphics_pipeline_));
 }
 
-void VulkanShader::Bind() {
-  // TODO
-}
-
 void VulkanShader::UploadUniform(int binding, void* data) {
   // TODO
 }

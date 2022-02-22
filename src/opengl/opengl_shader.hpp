@@ -16,10 +16,11 @@ public:
   OpenGLShader(const ShaderCreateInfo& shader_info);
   virtual ~OpenGLShader();
 
-  virtual void Bind() override;
-
   virtual void UploadUniform(int binding, void* data) override;
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
+
+public:
+  void Bind();
 
 private:
   GLuint program_id_;

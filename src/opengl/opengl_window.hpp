@@ -10,8 +10,8 @@ class OpenGLWindow : public GlfwWindow {
 public:
   OpenGLWindow(WindowCreateInfo create_info);
 
-  virtual void Clear() override;
-  virtual void SwapBuffers() override;
+  void Clear();
+  void SwapBuffers();
 
   virtual void SetClearColour(const Colour& colour) override;
 

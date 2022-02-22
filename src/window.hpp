@@ -16,9 +16,6 @@ public:
   virtual void Close() = 0;
   virtual void Center(bool center_horizontal=true, bool center_vertical=true) = 0;
 
-  virtual void Clear() = 0;
-  virtual void SwapBuffers() = 0;
-
   virtual void SetClearColour(const Colour& colour) = 0;
 
   virtual void PollEvents() = 0;

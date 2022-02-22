@@ -9,6 +9,7 @@ namespace cl::Vulkan {
 
 struct VulkanWindowData;
 
+// TODO: Support multiple render passes
 struct VulkanRenderCommandBuffers {
   void CreateRenderCommandBuffers(const VulkanWindowData& window_data);
   void DestroyRenderCommandBuffers(const VulkanWindowData& window_data);
