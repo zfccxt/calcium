@@ -61,6 +61,10 @@ bool VulkanWindow::IsDepthTestEnabled() const {
   return window_data_.swapchain.enable_depth_test;
 }
 
+size_t VulkanWindow::GetCurrentFrameIndex() const {
+  return window_data_.render_command_buffers.current_command_buffer_index;
+}
+
 void VulkanWindow::BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader) {
   window_data_.render_command_buffers.BeginRenderCommandBuffer(window_data_);
 

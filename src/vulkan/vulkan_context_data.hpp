@@ -1,8 +1,12 @@
 #pragma once
 
+#include <memory>
+
 #include <vulkan/vulkan.h>
 
 namespace cl::Vulkan {
+
+class VulkanWindow;
 
 struct VulkanContextData {
   VkInstance instance;
@@ -16,6 +20,9 @@ struct VulkanContextData {
   VkQueue graphics_queue;
   VkQueue present_queue;
   VkCommandPool command_pool;
+
+  // We only support windows as render targets right now, so this is a guaranteed to be a pointer to a VulkanWindow
+  std::weak_ptr<VulkanWindow> bound_render_target;
 };
 
 }

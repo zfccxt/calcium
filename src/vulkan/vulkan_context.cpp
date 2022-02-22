@@ -65,15 +65,15 @@ std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& wind
   auto window = std::make_shared<VulkanWindow>(&context_data_, window_info);
 
   // For convenience if there is not yet a bound render target and the library user creates a window, we bind it
-  if (!bound_render_target_.lock()) {
-    bound_render_target_ = window;
+  if (!context_data_.bound_render_target.lock()) {
+    context_data_.bound_render_target = window;
   }
 
   return window;
 }
 
 std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shader_info) {
-  auto window = bound_render_target_.lock();
+  auto window = context_data_.bound_render_target.lock();
   VkExtent2D framebuffer_extent = window->GetFramebufferExtent();
   VkRenderPass render_pass = window->GetRenderPass();
   bool enable_depth_test = window->IsDepthTestEnabled();
@@ -93,18 +93,18 @@ void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render
   // as appropriate
   // For now we only support windows as render targets, so this is guaranteed to be valid unless it was created with
   // another context
-  bound_render_target_ = std::dynamic_pointer_cast<VulkanWindow>(render_target);
+  context_data_.bound_render_target = std::dynamic_pointer_cast<VulkanWindow>(render_target);
 }
 
 void VulkanContext::BeginRenderPass(const std::shared_ptr<Shader>& shader) {
   // TODO: Make this work with framebuffers
-  auto window = bound_render_target_.lock();
+  auto window = context_data_.bound_render_target.lock();
   window->BeginRenderCommandBuffer(std::dynamic_pointer_cast<VulkanShader>(shader));
 }
 
 void VulkanContext::EndRenderPass() {
   // TODO: Make this work with framebuffers
-  auto window = bound_render_target_.lock();
+  auto window = context_data_.bound_render_target.lock();
   window->EndAndSubmitRenderCommandBuffer();
 }
 
