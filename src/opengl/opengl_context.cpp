@@ -32,7 +32,10 @@ std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& wind
 }
 
 std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& shader_info) {
-  return std::make_shared<OpenGLShader>(shader_info);
+  auto shader = std::make_shared<OpenGLShader>(shader_info);
+  shader->Bind();
+  shader->BindAllTextureSamplers(blank_texture_);
+  return shader;
 }
 
 std::shared_ptr<Mesh> OpenGLContext::CreateMesh(const MeshCreateInfo& mesh_info) {
@@ -68,10 +71,6 @@ void OpenGLContext::EndRenderPass() {
 
   // If the bound render target is a window:
   window->SwapBuffers();
-}
-
-std::shared_ptr<Texture> OpenGLContext::GetBlankTexture() {
-  return blank_texture_;
 }
 
 }

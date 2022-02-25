@@ -59,6 +59,11 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   for (const auto& uniform : reflection_details_.uniforms) {
     uniforms_.emplace(uniform.first, std::make_unique<OpenGLUniformBuffer>(program_id_, uniform.second.binding, uniform.second.size, uniform.second.uniform_block_name));
   }
+
+  // Store sampler bindings
+  for (const auto& sampler : reflection_details_.textures) {
+    samplers_.push_back(sampler.first);
+  }
 }
 
 OpenGLShader::~OpenGLShader() {
@@ -76,6 +81,13 @@ void OpenGLShader::UploadUniform(int binding, void* data) {
 void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
   glActiveTexture(GL_TEXTURE0 + binding);
   texture->Bind();
+}
+
+void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& texture) {
+  for (auto& sampler : samplers_) {
+    glActiveTexture(GL_TEXTURE0 + sampler);
+    texture->Bind();
+  }
 }
 
 }

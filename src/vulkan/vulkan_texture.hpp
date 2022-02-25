@@ -11,6 +11,7 @@ namespace cl::Vulkan {
 class VulkanTexture : public Texture {
 public:
   VulkanTexture(VulkanContextData* context, const TextureCreateInfo& texture_info);
+  VulkanTexture(VulkanContextData* context, const BlankTextureCreateInfo& texture_info);
   ~VulkanTexture();
 
   virtual void Bind() override;

@@ -46,6 +46,9 @@ VulkanContext::VulkanContext() {
   vkDestroySurfaceKHR(context_data_.instance, temp_surface, context_data_.allocator);
   glfwDestroyWindow(temp_window);
   glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
+
+  BlankTextureCreateInfo texture_info;
+  context_data_.blank_texture = std::make_unique<VulkanTexture>(&context_data_, texture_info);
 }
 
 VulkanContext::~VulkanContext() {
@@ -108,10 +111,6 @@ void VulkanContext::EndRenderPass() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
   window->EndAndSubmitRenderCommandBuffer();
-}
-
-std::shared_ptr<Texture> VulkanContext::GetBlankTexture() {
-  return context_data_.blank_texture;
 }
 
 }

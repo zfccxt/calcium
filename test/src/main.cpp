@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kVulkan);
+  auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
@@ -45,8 +45,6 @@ int main() {
   auto texture = context->CreateTexture("res/textures/pepper.png");
   auto texture2 = context->CreateTexture("res/textures/face.png");
 
-  auto blank_texture = context->GetBlankTexture();
-
   auto start_time = std::chrono::high_resolution_clock::now();
   while (window->IsOpen()) {
     window->PollEvents();
@@ -65,7 +63,6 @@ int main() {
 
     // shader->BindTexture("u_diffuse_texture", texture);
     // shader->BindTexture("u_second_texture", texture2);
-    shader->BindTexture("u_diffuse_texture", blank_texture);
 
     mesh->Draw();
     context->EndRenderPass();

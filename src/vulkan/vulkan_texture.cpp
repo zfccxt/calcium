@@ -45,6 +45,20 @@ VulkanTexture::VulkanTexture(VulkanContextData* context, const TextureCreateInfo
   stbi_image_free(pixels);
 }
 
+VulkanTexture::VulkanTexture(VulkanContextData* context, const BlankTextureCreateInfo& texture_info) : context_(context) {
+  size_t data_size = (size_t)texture_info.width * texture_info.height;
+	uint32_t* pixels = new uint32_t[data_size];
+	// TODO: Why is this backwards?
+	uint32_t colour = texture_info.colour.UintABGR();
+	for (size_t i = 0; i < data_size; ++i) {
+		pixels[i] = colour;
+	}
+
+  CreateTexture(pixels, texture_info.width, texture_info.height, texture_info.filter, texture_info.wrap);
+
+  delete[] pixels;
+}
+
 void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap) {
   VkDeviceSize image_size = (VkDeviceSize)width * height * sizeof(uint32_t);
 

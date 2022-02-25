@@ -23,8 +23,6 @@ public:
   virtual void BeginRenderPass(const std::shared_ptr<Shader>& shader) override;
   virtual void EndRenderPass() override;
 
-  virtual std::shared_ptr<Texture> GetBlankTexture() override;
-
 private:
   // TODO: We only support windows as render targets for now, so this is a pointer to an OpenGLWindow when it should
   // really be a pointer to a RenderTarget

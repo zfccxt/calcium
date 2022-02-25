@@ -34,8 +34,6 @@ public:
   virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) = 0;
   virtual void BeginRenderPass(const std::shared_ptr<Shader>& shader) = 0;
   virtual void EndRenderPass() = 0;
-
-  virtual std::shared_ptr<Texture> GetBlankTexture() = 0;
 };
 
 std::shared_ptr<Context> CreateContext(Backend backend = Backend::kVulkan);

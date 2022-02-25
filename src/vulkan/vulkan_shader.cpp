@@ -29,7 +29,9 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
     for (const auto& uniform : reflection_details_.uniforms) {
       uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context, uniform.second));
     }
-    // TODO: Create samplers
+    for (const auto& sampler : reflection_details_.textures) {
+      texture_samplers_.emplace(sampler.first, std::make_unique<VulkanTextureSampler>());
+    }
   }
 
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);

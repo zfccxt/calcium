@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <unordered_map>
+#include <vector>
 
 #include <glad/glad.h>
 
@@ -20,6 +21,9 @@ public:
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
 
 public:
+  void BindAllTextureSamplers(const std::shared_ptr<Texture>& texture);
+
+public:
   void Bind();
 
 private:
@@ -27,6 +31,7 @@ private:
 
   // Map of uniform binding -> uniform buffer so that we can choose a buffer to upload data to by its binding
   std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms_;
+  std::vector<size_t> samplers_;
 };
 
 }
