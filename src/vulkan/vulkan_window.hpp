@@ -20,6 +20,8 @@ public:
   VkExtent2D GetFramebufferExtent();
   VkRenderPass GetRenderPass();
   bool IsDepthTestEnabled() const;
+  bool IsBackfaceCullingEnabled() const;
+  WindingOrder GetPolygonFrontFace() const;
   size_t GetCurrentFrameIndex() const;
 
   void BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader);

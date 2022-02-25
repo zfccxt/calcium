@@ -12,8 +12,9 @@ namespace cl::Vulkan {
 #pragma warning(push)
 #pragma warning(disable : 26812)
 
-VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info, VkExtent2D render_target_extent,
-    VkRenderPass render_pass, bool enable_depth_test) : context_(context) {
+VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info, bool enable_depth_test,
+    bool enable_backface_cull, WindingOrder front_face, VkExtent2D render_target_extent, VkRenderPass render_pass)
+    : context_(context), enable_depth_test_(enable_depth_test), enable_backface_cull_(enable_backface_cull), front_face_(front_face) {
 
   ShaderCodeMap code_map = ReadAllSpvFiles(shader_info);
   for (auto& code : code_map) {
@@ -31,7 +32,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   }
 
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
-  CreatePipeline(render_target_extent, render_pass, enable_depth_test);
+  CreatePipeline(render_target_extent, render_pass);
 
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
@@ -61,7 +62,7 @@ VulkanShader::~VulkanShader() {
   }
 }
 
-void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test) {
+void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass) {
   vkDeviceWaitIdle(context_->device);
 
   if (reflection_details_.HasUniformsOrTextures()) {
@@ -77,7 +78,7 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
     }
     // TODO: Create samplers
   }
-  CreatePipeline(render_target_extent, render_pass, enable_depth_test);
+  CreatePipeline(render_target_extent, render_pass);
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
     descriptor_sets_ = AllocateDescriptorSets(context_, descriptor_set_layout_, descriptor_pool_);
@@ -85,7 +86,7 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
 }
 
 // TODO: cache pipelines
-void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass, bool enable_depth_test) {
+void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass) {
   // Create the graphics pipeline, setting up all stages explicitly
   std::vector<VkPipelineShaderStageCreateInfo> shader_stages;
   for (const auto& shader_module : shader_modules_) {
@@ -157,9 +158,14 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
   rasterizer.polygonMode = VK_POLYGON_MODE_FILL;
   // Again line widths higher than 1 require an extension
   rasterizer.lineWidth = 1.0f;
-  // Face culling - possibly add the ability to configure this in the front facing API
-  rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
-  rasterizer.frontFace = VK_FRONT_FACE_CLOCKWISE;
+  // Face culling
+  if (enable_backface_cull_) {
+    rasterizer.cullMode = VK_CULL_MODE_BACK_BIT;
+    rasterizer.frontFace = front_face_ == WindingOrder::kClockwise ? VK_FRONT_FACE_CLOCKWISE : VK_FRONT_FACE_COUNTER_CLOCKWISE;
+  }
+  else {
+    rasterizer.cullMode = VK_CULL_MODE_NONE;
+  }
   // No idea what depth bias does
   rasterizer.depthBiasEnable = VK_FALSE;
   rasterizer.depthBiasConstantFactor = 0.0f; // optional
@@ -236,7 +242,7 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
   depth_stencil.back = {};  // optional
 
   // Enable depth testing (optional)
-  if (enable_depth_test) {
+  if (enable_depth_test_) {
     create_info.pDepthStencilState = &depth_stencil;
   }
   else {

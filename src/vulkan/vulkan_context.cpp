@@ -77,7 +77,9 @@ std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shad
   VkExtent2D framebuffer_extent = window->GetFramebufferExtent();
   VkRenderPass render_pass = window->GetRenderPass();
   bool enable_depth_test = window->IsDepthTestEnabled();
-  return std::make_shared<VulkanShader>(&context_data_, shader_info, framebuffer_extent, render_pass, enable_depth_test);
+  bool enable_backface_cull = window->IsBackfaceCullingEnabled();
+  WindingOrder front_face = window->GetPolygonFrontFace();
+  return std::make_shared<VulkanShader>(&context_data_, shader_info, enable_depth_test, enable_backface_cull, front_face, framebuffer_extent, render_pass);
 }
 
 std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {

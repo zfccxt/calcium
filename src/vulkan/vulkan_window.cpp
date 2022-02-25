@@ -20,6 +20,8 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo cre
   window_data_.context_data = context_data;
   window_data_.glfw_window = glfw_window_;
   window_data_.enable_vsync = create_info.enable_vsync;
+  window_data_.enable_backface_cull = create_info.enable_backface_cull;
+  window_data_.front_face = create_info.front_face;
 
   window_data_.surface = CreateWindowSurface(window_data_);
 
@@ -59,6 +61,14 @@ VkRenderPass VulkanWindow::GetRenderPass() {
 
 bool VulkanWindow::IsDepthTestEnabled() const {
   return window_data_.swapchain.enable_depth_test;
+}
+
+bool VulkanWindow::IsBackfaceCullingEnabled() const {
+  return window_data_.enable_backface_cull;
+}
+
+WindingOrder VulkanWindow::GetPolygonFrontFace() const {
+  return window_data_.front_face;
 }
 
 size_t VulkanWindow::GetCurrentFrameIndex() const {

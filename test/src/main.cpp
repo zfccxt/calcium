@@ -11,6 +11,8 @@ int main() {
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
   window_info.enable_depth_test = false;
+  window_info.enable_backface_cull = true;
+  window_info.front_face = cl::WindingOrder::kClockwise;
   auto window = context->CreateWindow(window_info);
 
   window->SetKeyPressCallback(cl::KeyCode::kEscape, [&](){ window->Close(); });
@@ -33,8 +35,8 @@ int main() {
      0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
   };
   std::vector<uint32_t> indices = {
-    0, 1, 2,
-    1, 3, 2,
+    0, 1, 2, 
+    1, 3, 2, 
   };
   mesh_info.vertices = vertices.data();
   mesh_info.num_vertices = vertices.size();

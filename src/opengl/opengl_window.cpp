@@ -76,6 +76,13 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   }
   SetClearColour(create_info.clear_colour);
 
+  // Enable or disable backface culling
+  if (create_info.enable_backface_cull) {
+    glFrontFace(create_info.front_face == WindingOrder::kClockwise ? GL_CW : GL_CCW);
+    glEnable(GL_CULL_FACE);
+    glCullFace(GL_BACK);
+  }
+
   glfwSetWindowSizeCallback(glfw_window_, [](GLFWwindow*, int width, int height) {
     glViewport(0,0, width, height);
   });
