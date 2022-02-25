@@ -23,15 +23,9 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
   }
 
   reflection_details_.Reflect(code_map);
-  // We only need descriptors if the shader actually contains any uniform buffers or texture samplers
-  if (reflection_details_.HasUniformsOrTextures()) {
-    descriptor_set_layout_ = CreateDescriptorSetLayout(context, reflection_details_);
-    for (const auto& uniform : reflection_details_.uniforms) {
-      uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context, uniform.second));
-    }
-    for (const auto& sampler : reflection_details_.textures) {
-      texture_samplers_.push_back(sampler.first);
-    }
+  CreateUniforms();
+  for (const auto& sampler : reflection_details_.textures) {
+    bound_textures_.emplace(sampler.first, context->blank_texture);
   }
 
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
@@ -39,7 +33,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
 
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, texture_samplers_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, bound_textures_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
@@ -49,7 +43,6 @@ VulkanShader::~VulkanShader() {
   if (reflection_details_.HasUniformsOrTextures()) {
     vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
     uniform_buffers_.clear();
-    // TODO: Destroy samplers
   }
 
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
@@ -68,23 +61,30 @@ VulkanShader::~VulkanShader() {
 void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass) {
   vkDeviceWaitIdle(context_->device);
 
-  if (reflection_details_.HasUniformsOrTextures()) {
-    vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
-    uniform_buffers_.clear();
-    // TODO: Destroy samplers
-  }
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
-
-  if (reflection_details_.HasUniformsOrTextures()) {
-    for (const auto& uniform : reflection_details_.uniforms) {
-      uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context_, uniform.second));
-    }
-    // TODO: Create samplers
-  }
+  DestroyUniforms();
+  CreateUniforms();
   CreatePipeline(render_target_extent, render_pass);
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, texture_samplers_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, descriptor_set_layout_, descriptor_pool_);
+  }
+}
+
+void VulkanShader::CreateUniforms() {
+  // We only need descriptors if the shader actually contains any uniform buffers or texture samplers
+  if (reflection_details_.HasUniformsOrTextures()) {
+    descriptor_set_layout_ = CreateDescriptorSetLayout(context_, reflection_details_);
+    for (const auto& uniform : reflection_details_.uniforms) {
+      uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context_, uniform.second));
+    }
+  }
+}
+
+void VulkanShader::DestroyUniforms() {
+  if (reflection_details_.HasUniformsOrTextures()) {
+    vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+    uniform_buffers_.clear();
   }
 }
 
@@ -268,7 +268,15 @@ void VulkanShader::UploadUniform(int binding, void* data) {
 }
 
 void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
- // TODO
+  VulkanTexture* tex = (VulkanTexture*)texture.get();
+  if (reflection_details_.HasUniformsOrTextures() && tex != bound_textures_[binding]) {
+    bound_textures_[binding] = tex;
+
+    vkDeviceWaitIdle(context_->device);
+    vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+    descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, descriptor_set_layout_, descriptor_pool_);
+  }
 }
 
 #pragma warning(pop)

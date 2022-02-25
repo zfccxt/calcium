@@ -13,7 +13,7 @@ public:
   OpenGLTexture(const BlankTextureCreateInfo& texture_info);
   ~OpenGLTexture();
 
-  virtual void Bind() override;
+  void Bind();
 
 private:
   GLuint texture_id_;

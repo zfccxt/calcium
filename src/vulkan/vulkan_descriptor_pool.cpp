@@ -35,7 +35,7 @@ VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderRe
 }
 
 std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, const VulkanUniformMap& uniform_buffers,
-    const std::vector<size_t>& texture_samplers, VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool) {
+    const VulkanTextureMap& texture_samplers, VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool) {
   std::vector<VkDescriptorSet> descriptor_sets(kMaxFramesInFlight);
 
   std::vector<VkDescriptorSetLayout> layouts(kMaxFramesInFlight, descriptor_set_layout);
@@ -68,13 +68,12 @@ std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, 
     for (const auto& sampler : texture_samplers) {
       VkDescriptorImageInfo image_info { };
       image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-      // TODO
-      image_info.imageView = context->blank_texture->GetImageView();
-      image_info.sampler = context->blank_texture->GetSampler();
+      image_info.imageView = sampler.second->GetImageView();
+      image_info.sampler = sampler.second->GetSampler();
 
       VkWriteDescriptorSet write { VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
       write.dstSet = descriptor_sets[i];
-      write.dstBinding = sampler;
+      write.dstBinding = sampler.first;
       write.dstArrayElement = 0;
       write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
       write.descriptorCount = 1;

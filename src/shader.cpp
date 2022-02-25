@@ -46,6 +46,7 @@ void Shader::BindTexture(const std::string& name, const std::shared_ptr<Texture>
   for (const auto& tex : reflection_details_.textures) {
     if (tex.second.name == name) {
       BindTexture(tex.second.binding, texture);
+      break;
     }
   }
 }

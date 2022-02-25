@@ -80,13 +80,13 @@ void OpenGLShader::UploadUniform(int binding, void* data) {
 
 void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
   glActiveTexture(GL_TEXTURE0 + binding);
-  texture->Bind();
+  std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
 }
 
 void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& texture) {
   for (auto& sampler : samplers_) {
     glActiveTexture(GL_TEXTURE0 + sampler);
-    texture->Bind();
+    std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
   }
 }
 

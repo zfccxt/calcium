@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kVulkan);
+  auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
@@ -61,8 +61,8 @@ int main() {
     shader->UploadUniform("u_model", glm::value_ptr(model));
     no_input_shader->UploadUniform("u_model", glm::value_ptr(model));
 
-    // shader->BindTexture("u_diffuse_texture", texture);
-    // shader->BindTexture("u_second_texture", texture2);
+    shader->BindTexture("u_diffuse_texture", texture);
+    shader->BindTexture("u_second_texture", texture2);
 
     mesh->Draw();
     context->EndRenderPass();

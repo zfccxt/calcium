@@ -10,6 +10,7 @@
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 #include "vulkan_context_data.hpp"
+#include "vulkan_texture.hpp"
 #include "vulkan_uniform_buffer.hpp"
 #include "winding_order.hpp"
 
@@ -32,6 +33,9 @@ public:
 private:
   void CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass);
 
+  void CreateUniforms();
+  void DestroyUniforms();
+
 private:
   VulkanContextData* context_;
   bool enable_depth_test_;
@@ -47,7 +51,7 @@ private:
   VkDescriptorPool descriptor_pool_;
   std::vector<VkDescriptorSet> descriptor_sets_;
   VulkanUniformMap uniform_buffers_;
-  std::vector<size_t> texture_samplers_;
+  VulkanTextureMap bound_textures_;
 };
 
 }

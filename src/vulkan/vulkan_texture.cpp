@@ -139,14 +139,12 @@ void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFi
 }
 
 VulkanTexture::~VulkanTexture() {
+  vkDeviceWaitIdle(context_->device);
+
   vkDestroySampler(context_->device, texture_sampler_, context_->allocator);
   vkDestroyImageView(context_->device, texture_image_view_, context_->allocator);
   vkDestroyImage(context_->device, texture_image_, context_->allocator);
   vkFreeMemory(context_->device, texture_image_memory_, context_->allocator);
-}
-
-void VulkanTexture::Bind() {
-  // TODO
 }
 
 #pragma warning(pop)

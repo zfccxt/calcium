@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+#include <unordered_map>
+
 #include <vulkan/vulkan.h>
 
 #include "texture.hpp"
@@ -13,8 +16,6 @@ public:
   VulkanTexture(VulkanContextData* context, const TextureCreateInfo& texture_info);
   VulkanTexture(VulkanContextData* context, const BlankTextureCreateInfo& texture_info);
   ~VulkanTexture();
-
-  virtual void Bind() override;
 
 private:
   void CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap);
@@ -31,5 +32,7 @@ private:
   VkImageView texture_image_view_;
   VkSampler texture_sampler_;
 };
+
+typedef std::unordered_map<size_t, VulkanTexture*> VulkanTextureMap;
 
 }
