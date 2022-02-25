@@ -20,6 +20,7 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo cre
   window_data_.context_data = context_data;
   window_data_.glfw_window = glfw_window_;
   window_data_.enable_vsync = create_info.enable_vsync;
+  window_data_.enable_depth_test = create_info.enable_depth_test;
   window_data_.enable_backface_cull = create_info.enable_backface_cull;
   window_data_.front_face = create_info.front_face;
 

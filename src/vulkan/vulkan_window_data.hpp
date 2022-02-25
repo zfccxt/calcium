@@ -14,6 +14,7 @@ struct VulkanWindowData {
   GLFWwindow* glfw_window;
 
   bool enable_vsync;
+  bool enable_depth_test;
   bool enable_backface_cull;
   WindingOrder front_face;
 

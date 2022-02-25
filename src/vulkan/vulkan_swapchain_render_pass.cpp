@@ -1,6 +1,7 @@
 #include "vulkan_swapchain_render_pass.hpp"
 
 #include "vulkan/vulkan_check.hpp"
+#include "vulkan/vulkan_image_utils.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
 namespace cl::Vulkan {
@@ -42,22 +43,21 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   depth_attachment_ref.attachment = 1;
   depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
-  // TODO
   // No point using a depth buffer if depth testing is not enabled
-  // if (swapchain.enable_depth_test) {
-  //   VkAttachmentDescription depth_attachment { };
-  //   depth_attachment.format = FindDepthFormat();
-  //   depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
-  //   depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-  //   depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-  //   depth_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
-  //   depth_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
-  //   depth_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
-  //   depth_attachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
-  //   attachment_descriptions.push_back(depth_attachment);
-  // 
-  //   subpass.pDepthStencilAttachment = &depth_attachment_ref;
-  // }
+  if (swapchain.enable_depth_test) {
+    VkAttachmentDescription depth_attachment { };
+    depth_attachment.format = FindDepthFormat(swapchain.window_data->context_data);
+    depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
+    depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+    depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    depth_attachment.stencilLoadOp = VK_ATTACHMENT_LOAD_OP_DONT_CARE;
+    depth_attachment.stencilStoreOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
+    depth_attachment.initialLayout = VK_IMAGE_LAYOUT_UNDEFINED;
+    depth_attachment.finalLayout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
+    attachment_descriptions.push_back(depth_attachment);
+  
+    subpass.pDepthStencilAttachment = &depth_attachment_ref;
+  }
 
   // Subpass dependencies are a way of specifying which subpasses rely on which operations to have been completed
   // before they can begin. We create a dependency here to say that the subpass that draws colours to the framebuffer

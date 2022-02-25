@@ -1,9 +1,11 @@
 #pragma once
 
 #include <cstdint>
+#include <memory>
 #include <vector>
 
 #include "colour.hpp"
+#include "vulkan/vulkan_depth_buffer.hpp"
 #include "vulkan/vulkan_swapchain_sync_objects.hpp"
 
 namespace cl::Vulkan {
@@ -35,6 +37,10 @@ struct VulkanSwapchain {
   VulkanSwapchainSyncObjects sync_objects;
 
   bool enable_depth_test;
+
+  // Managed w/ new and delete because order of destruction is important
+  // basically a unique_ptr
+  VulkanDepthBuffer* depth_buffer;
 };
 
 }

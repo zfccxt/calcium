@@ -113,19 +113,17 @@ void VulkanSwapchain::CreateSwapchain() {
     VK_CHECK(vkCreateImageView(window_data->context_data->device, &create_info, window_data->context_data->allocator, &image_views[i]));
   }
 
-  // TODO
-  // if (enable_depth_test_) {
-  //   CreateDepthBuffer();
-  // }
+  if (window_data->enable_depth_test) {
+    depth_buffer = new VulkanDepthBuffer(window_data->context_data, extent);
+  }
 }
 
 void VulkanSwapchain::DestroySwapchain() {
   vkDeviceWaitIdle(window_data->context_data->device);
 
-  // TODO
-  // if (window_data.enable_depth_test) {
-  //   DestroyDepthBuffer();
-  // }
+  if (window_data->enable_depth_test) {
+    delete depth_buffer;
+  }
 
   for (auto image_view : image_views) {
     vkDestroyImageView(window_data->context_data->device, image_view, window_data->context_data->allocator);
@@ -161,10 +159,9 @@ void VulkanSwapchain::CreateSwapchainFramebuffers() {
   for (size_t i = 0; i < image_views.size(); ++i) {
     std::vector<VkImageView> attachments = { image_views[i] };
 
-    // TODO
-    // if (enable_depth_test) {
-    //   attachments.push_back(depth_image_view);
-    // }
+    if (enable_depth_test) {
+      attachments.push_back(depth_buffer->depth_image_view);
+    }
 
     VkFramebufferCreateInfo create_info { VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO };
     create_info.renderPass = render_pass;
