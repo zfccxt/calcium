@@ -52,7 +52,7 @@ VkBuffer CreateBuffer(VulkanContextData* context, VkDeviceSize size, VkBufferUsa
   return buffer;
 }
 
-void CopyBuffer(VulkanContextData* context, VkCommandPool command_pool, VkQueue queue, VkBuffer src_buffer, VkBuffer dest_buffer, VkDeviceSize size) {
+void CopyBuffer(VulkanContextData* context, VkBuffer src_buffer, VkBuffer dest_buffer, VkDeviceSize size) {
   // We can use the graphics queue for transfer operations, since the Vulkan spec tells us that any queue capable of
   // graphics must also be capable of transfer
 
