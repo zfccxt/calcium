@@ -46,7 +46,7 @@ private:
   VkDescriptorSetLayout descriptor_set_layout_ = VK_NULL_HANDLE;
   VkDescriptorPool descriptor_pool_;
   std::vector<VkDescriptorSet> descriptor_sets_;
-  std::unordered_map<size_t, std::unique_ptr<VulkanUniformBuffer>> uniform_buffers_;
+  VulkanUniformMap uniform_buffers_;
 };
 
 }

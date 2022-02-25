@@ -15,7 +15,7 @@ struct WindowCreateInfo {
   bool center = true;
   bool enable_backface_cull = true;
   WindingOrder front_face = WindingOrder::kClockwise;
-  bool enable_depth_test = true;
+  bool enable_depth_test = true; // TODO: fully implement this
   bool enable_resize = true;
   bool enable_vsync = true;
   Colour clear_colour;

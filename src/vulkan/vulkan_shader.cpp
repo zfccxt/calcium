@@ -6,6 +6,7 @@
 #include "vulkan_pipeline_layout.hpp"
 #include "vulkan_shader_module.hpp"
 #include "vulkan_vertex_descriptor.hpp"
+#include "vulkan_window.hpp"
 
 namespace cl::Vulkan {
 
@@ -36,7 +37,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
 
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
@@ -81,7 +82,7 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
   CreatePipeline(render_target_extent, render_pass);
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
@@ -256,6 +257,8 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
 
 void VulkanShader::Bind(VkCommandBuffer command_buffer) {
   vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_);
+  auto rt = context_->bound_render_target.lock();
+  vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_layout_, 0, 1, &descriptor_sets_[rt->GetCurrentFrameIndex()], 0, nullptr);
 }
 
 void VulkanShader::UploadUniform(int binding, void* data) {
