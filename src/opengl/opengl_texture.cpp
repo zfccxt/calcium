@@ -36,8 +36,6 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
   int width, height, channels;
 	stbi_uc* data = nullptr;
 
-  // TODO: Figure out whether this is needed
-	// stbi_set_flip_vertically_on_load(true);
 	data = stbi_load(texture_info.file_path.c_str(), &width, &height, &channels, 0);
 
 	assert(data);
