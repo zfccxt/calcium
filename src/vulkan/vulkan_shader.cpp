@@ -30,7 +30,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
       uniform_buffers_.emplace(uniform.first, std::make_unique<VulkanUniformBuffer>(context, uniform.second));
     }
     for (const auto& sampler : reflection_details_.textures) {
-      texture_samplers_.emplace(sampler.first, std::make_unique<VulkanTextureSampler>());
+      texture_samplers_.push_back(sampler.first);
     }
   }
 

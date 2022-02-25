@@ -48,10 +48,12 @@ VulkanContext::VulkanContext() {
   glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
   BlankTextureCreateInfo texture_info;
-  context_data_.blank_texture = std::make_unique<VulkanTexture>(&context_data_, texture_info);
+  context_data_.blank_texture = new VulkanTexture(&context_data_, texture_info);
 }
 
 VulkanContext::~VulkanContext() {
+  delete context_data_.blank_texture;
+ 
   DestroyCommandPool(context_data_, context_data_.command_pool);
   DestroyDevice(context_data_, context_data_.device);
 

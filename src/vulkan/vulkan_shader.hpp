@@ -10,7 +10,6 @@
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 #include "vulkan_context_data.hpp"
-#include "vulkan_texture_sampler.hpp"
 #include "vulkan_uniform_buffer.hpp"
 #include "winding_order.hpp"
 
@@ -48,7 +47,7 @@ private:
   VkDescriptorPool descriptor_pool_;
   std::vector<VkDescriptorSet> descriptor_sets_;
   VulkanUniformMap uniform_buffers_;
-  VulkanTextureSamplerMap texture_samplers_;
+  std::vector<size_t> texture_samplers_;
 };
 
 }
