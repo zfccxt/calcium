@@ -10,6 +10,7 @@ namespace cl::OpenGL {
 class OpenGLTexture : public Texture {
 public:
   OpenGLTexture(const TextureCreateInfo& texture_info);
+  OpenGLTexture(const BlankTextureCreateInfo& texture_info);
   ~OpenGLTexture();
 
   virtual void Bind() override;

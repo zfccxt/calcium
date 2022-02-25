@@ -110,4 +110,8 @@ void VulkanContext::EndRenderPass() {
   window->EndAndSubmitRenderCommandBuffer();
 }
 
+std::shared_ptr<Texture> VulkanContext::GetBlankTexture() {
+  return context_data_.blank_texture;
+}
+
 }

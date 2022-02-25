@@ -7,6 +7,7 @@
 namespace cl::Vulkan {
 
 class VulkanWindow;
+class VulkanTexture;
 
 struct VulkanContextData {
   VkInstance instance;
@@ -23,6 +24,8 @@ struct VulkanContextData {
 
   // We only support windows as render targets right now, so this is a guaranteed to be a pointer to a VulkanWindow
   std::weak_ptr<VulkanWindow> bound_render_target;
+
+  std::shared_ptr<VulkanTexture> blank_texture;
 };
 
 }

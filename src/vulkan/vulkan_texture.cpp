@@ -11,6 +11,9 @@
 
 namespace cl::Vulkan {
 
+#pragma warning(push)
+#pragma warning(disable : 26812)
+
 VkFilter FindVkFilter(TextureFilter filter) {
   switch (filter) {
     case TextureFilter::kLinear:  return VK_FILTER_LINEAR;
@@ -131,5 +134,7 @@ VulkanTexture::~VulkanTexture() {
 void VulkanTexture::Bind() {
   // TODO
 }
+
+#pragma warning(pop)
 
 }

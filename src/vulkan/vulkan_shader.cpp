@@ -37,7 +37,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
 
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, texture_samplers_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
@@ -82,7 +82,7 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
   CreatePipeline(render_target_extent, render_pass);
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, texture_samplers_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 

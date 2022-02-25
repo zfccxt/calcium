@@ -18,6 +18,10 @@ public:
 private:
   void CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap);
 
+public:
+  inline VkImageView GetImageView() const { return texture_image_view_; }
+  inline VkSampler   GetSampler()   const { return texture_sampler_; }
+
 private:
   VulkanContextData* context_;
 

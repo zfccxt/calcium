@@ -45,6 +45,8 @@ int main() {
   auto texture = context->CreateTexture("res/textures/pepper.png");
   auto texture2 = context->CreateTexture("res/textures/face.png");
 
+  auto blank_texture = context->GetBlankTexture();
+
   auto start_time = std::chrono::high_resolution_clock::now();
   while (window->IsOpen()) {
     window->PollEvents();
@@ -61,8 +63,9 @@ int main() {
     shader->UploadUniform("u_model", glm::value_ptr(model));
     no_input_shader->UploadUniform("u_model", glm::value_ptr(model));
 
-    shader->BindTexture("u_diffuse_texture", texture);
-    shader->BindTexture("u_second_texture", texture2);
+    // shader->BindTexture("u_diffuse_texture", texture);
+    // shader->BindTexture("u_second_texture", texture2);
+    shader->BindTexture("u_diffuse_texture", blank_texture);
 
     mesh->Draw();
     context->EndRenderPass();

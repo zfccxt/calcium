@@ -21,6 +21,8 @@ public:
   virtual void BeginRenderPass(const std::shared_ptr<Shader>& shader) override;
   virtual void EndRenderPass() override;
 
+  virtual std::shared_ptr<Texture> GetBlankTexture() override;
+
 private:
   VulkanContextData context_data_;
 };
