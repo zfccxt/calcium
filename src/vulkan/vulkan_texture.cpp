@@ -29,66 +29,73 @@ VkSamplerAddressMode FindSamplerAddressMode(TextureWrap wrap) {
   }
 }
 
-VulkanTexture::VulkanTexture(VulkanContextData* context, const TextureCreateInfo& texture_info) {
+VulkanTexture::VulkanTexture(VulkanContextData* context, const TextureCreateInfo& texture_info) : context_(context) {
   // Load texture into CPU memory
   int width, height, channels;
   stbi_set_flip_vertically_on_load(true);
   stbi_uc* pixels = stbi_load(texture_info.file_path.c_str(), &width, &height, &channels, STBI_rgb_alpha);
   assert(pixels);
   
+  CreateTexture(pixels, width, height, texture_info.filter, texture_info.wrap);
+
+  // Delete texture from CPU
+  stbi_image_free(pixels);
+}
+
+void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap) {
   VkDeviceSize image_size = (VkDeviceSize)width * height * sizeof(uint32_t);
-  
+
   // Create staging buffer
   VkBuffer staging_buffer;
   VkDeviceMemory staging_buffer_memory;
-  CreateBuffer(context, image_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
+  CreateBuffer(context_, image_size, VK_BUFFER_USAGE_TRANSFER_SRC_BIT,
     VK_MEMORY_PROPERTY_HOST_VISIBLE_BIT | VK_MEMORY_PROPERTY_HOST_COHERENT_BIT,
     staging_buffer, staging_buffer_memory);
   
   // Copy texture to GPU staging buffer
   void* data;
-  vkMapMemory(context->device, staging_buffer_memory, 0, image_size, 0, &data);
+  vkMapMemory(context_->device, staging_buffer_memory, 0, image_size, 0, &data);
   memcpy(data, pixels, (size_t)image_size);
-  vkUnmapMemory(context->device, staging_buffer_memory);
+  vkUnmapMemory(context_->device, staging_buffer_memory);
   
   
   // Create image to store texture data
-  CreateImage(context, width, height, VK_FORMAT_R8G8B8A8_SRGB,
+  CreateImage(context_, width, height, VK_FORMAT_R8G8B8A8_SRGB,
     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
     VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture_image_, texture_image_memory_);
   
   // Copy texture data from staging buffer to image
-  TransitionImageLayout(context, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
-  CopyBufferToImage(context, staging_buffer, texture_image_, (uint32_t)width, (uint32_t)height);
-  TransitionImageLayout(context, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+  TransitionImageLayout(context_, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL);
+  CopyBufferToImage(context_, staging_buffer, texture_image_, (uint32_t)width, (uint32_t)height);
+  TransitionImageLayout(context_, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
 
   // Destroy staging buffer
-  vkDestroyBuffer(context->device, staging_buffer, context->allocator);
-  vkFreeMemory(context->device, staging_buffer_memory, context->allocator);
+  vkDestroyBuffer(context_->device, staging_buffer, context_->allocator);
+  vkFreeMemory(context_->device, staging_buffer_memory, context_->allocator);
   
-  texture_image_view_ = CreateImageView(context, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
+  texture_image_view_ = CreateImageView(context_, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT);
   
   // Create sampler
   VkSamplerCreateInfo sampler_info { VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };
   
   // Set filters from texture_info
-  VkFilter vkfilter = FindVkFilter(texture_info.filter);
+  VkFilter vkfilter = FindVkFilter(filter);
   sampler_info.minFilter = vkfilter;
   sampler_info.magFilter = vkfilter;
   
   // Set address mode from texture_info
-  VkSamplerAddressMode address_mode = FindSamplerAddressMode(texture_info.wrap);
+  VkSamplerAddressMode address_mode = FindSamplerAddressMode(wrap);
   sampler_info.addressModeU = address_mode;
   sampler_info.addressModeV = address_mode;
   sampler_info.addressModeW = address_mode;
   
   // Check whether the device supports anisotropy
   VkPhysicalDeviceFeatures device_features { };
-  vkGetPhysicalDeviceFeatures(context->physical_device, &device_features);
+  vkGetPhysicalDeviceFeatures(context_->physical_device, &device_features);
   if (device_features.samplerAnisotropy) {
     // Query physical device to find max anisotropy and use that
     VkPhysicalDeviceProperties properties { };
-    vkGetPhysicalDeviceProperties(context->physical_device, &properties);
+    vkGetPhysicalDeviceProperties(context_->physical_device, &properties);
     sampler_info.anisotropyEnable = VK_TRUE;
     sampler_info.maxAnisotropy = properties.limits.maxSamplerAnisotropy;
   }
@@ -111,14 +118,14 @@ VulkanTexture::VulkanTexture(VulkanContextData* context, const TextureCreateInfo
   sampler_info.minLod = 0.0f;
   sampler_info.maxLod = 0.0f;
   
-  VK_CHECK(vkCreateSampler(context->device, &sampler_info, context->allocator, &texture_sampler_));
-
-  // Delete texture from CPU
-  stbi_image_free(pixels);
+  VK_CHECK(vkCreateSampler(context_->device, &sampler_info, context_->allocator, &texture_sampler_));
 }
 
 VulkanTexture::~VulkanTexture() {
-
+  vkDestroySampler(context_->device, texture_sampler_, context_->allocator);
+  vkDestroyImageView(context_->device, texture_image_view_, context_->allocator);
+  vkDestroyImage(context_->device, texture_image_, context_->allocator);
+  vkFreeMemory(context_->device, texture_image_memory_, context_->allocator);
 }
 
 void VulkanTexture::Bind() {

@@ -16,6 +16,11 @@ public:
   virtual void Bind() override;
 
 private:
+  void CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap);
+
+private:
+  VulkanContextData* context_;
+
   VkImage texture_image_;
   VkDeviceMemory texture_image_memory_;
   VkImageView texture_image_view_;
