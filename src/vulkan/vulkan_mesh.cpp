@@ -2,6 +2,7 @@
 
 #include "vulkan_buffer_utils.hpp"
 #include "vulkan_check.hpp"
+#include "vulkan_window.hpp"
 
 namespace cl::Vulkan {
 
@@ -79,7 +80,13 @@ VulkanMesh::~VulkanMesh() {
 }
 
 void VulkanMesh::Draw() {
- // TODO
+  constexpr VkDeviceSize offsets[] = { 0 };
+  VkBuffer vertex_buffers[] = { vertex_buffer_ };
+  auto render_target = context_->bound_render_target.lock();
+  VkCommandBuffer render_command_buffer = render_target->GetCurrentRenderCommandBuffer();
+  vkCmdBindVertexBuffers(render_command_buffer, 0, 1, vertex_buffers, offsets);
+  vkCmdBindIndexBuffer(render_command_buffer, index_buffer_, 0, VK_INDEX_TYPE_UINT32);
+  vkCmdDrawIndexed(render_command_buffer, num_indices_, 1, 0, 0, 0);
 }
 
 }

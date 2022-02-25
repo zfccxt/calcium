@@ -27,14 +27,14 @@ int main() {
   mesh_info.vertex_data_layout = shader->GetInputLayout();
   std::vector<float> vertices = {
   //  x      y     z     u     v
-     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
-     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
     -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
     -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
   };
   std::vector<uint32_t> indices = {
-    0, 1, 3,
-    1, 2, 3,
+    0, 1, 2,
+    1, 3, 2,
   };
   mesh_info.vertices = vertices.data();
   mesh_info.num_vertices = vertices.size();
@@ -52,7 +52,7 @@ int main() {
     auto current_time = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
 
-    context->BeginRenderPass(no_input_shader);
+    context->BeginRenderPass(shader);
 
     glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
     shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));

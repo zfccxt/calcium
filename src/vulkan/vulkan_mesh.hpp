@@ -1,5 +1,7 @@
 #pragma once
 
+#include <cstdint>
+
 #include <vulkan/vulkan.h>
 
 #include "mesh.hpp"
@@ -26,7 +28,7 @@ private:
   VkDeviceMemory vertex_buffer_memory_;
   VkBuffer index_buffer_;
   VkDeviceMemory index_buffer_memory_;
-  size_t num_indices_ = 0;
+  uint32_t num_indices_ = 0;
 };
 
 }

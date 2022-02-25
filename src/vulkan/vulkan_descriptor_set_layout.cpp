@@ -22,7 +22,7 @@ VkDescriptorSetLayout CreateDescriptorSetLayout(VulkanContextData* context, cons
     ++i;
   }
 
- for (const auto& uniform : reflection_details.textures) {
+  for (const auto& uniform : reflection_details.textures) {
     layouts[i].binding = (uint32_t)uniform.first;
     layouts[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     layouts[i].descriptorCount = 1;

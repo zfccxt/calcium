@@ -72,10 +72,11 @@ void VulkanWindow::BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>&
 }
 
 void VulkanWindow::EndAndSubmitRenderCommandBuffer() {
-  // TODO: Test code - yeet
-  vkCmdDraw(window_data_.render_command_buffers.current_command_buffer, 3, 1, 0, 0);
-
   window_data_.render_command_buffers.EndAndSubmitRenderCommandBuffer(window_data_);
+}
+
+VkCommandBuffer VulkanWindow::GetCurrentRenderCommandBuffer() {
+  return window_data_.render_command_buffers.current_command_buffer;
 }
 
 }

@@ -24,6 +24,7 @@ public:
 
   void BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader);
   void EndAndSubmitRenderCommandBuffer();
+  VkCommandBuffer GetCurrentRenderCommandBuffer();
 
 private:
   VulkanWindowData window_data_;

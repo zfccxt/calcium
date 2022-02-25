@@ -115,7 +115,6 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
     vertex_input_info.pVertexAttributeDescriptions = nullptr;
   }
 
-
   // The next struct tells how the vertices should be assembled into primitives
   // It is similar to choosing GL_TRIANGLES, GL_POINTS, etc
   VkPipelineInputAssemblyStateCreateInfo input_assemby_info { VK_STRUCTURE_TYPE_PIPELINE_INPUT_ASSEMBLY_STATE_CREATE_INFO };
