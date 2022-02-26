@@ -7,12 +7,12 @@
 namespace cl {
 
 struct MeshCreateInfo {
-  BufferLayout vertex_data_layout;
+  BufferLayout vertex_input_layout;
 
-  float* vertices = nullptr;
+  const float* vertices = nullptr;
   size_t num_vertices = 0;
 
-  uint32_t* indices = nullptr;
+  const uint32_t* indices = nullptr;
   size_t num_indices = 0;
 };
 

@@ -26,7 +26,7 @@ OpenGLMesh::OpenGLMesh(const MeshCreateInfo& mesh_info) {
   glBindVertexArray(vertex_array_id_);
 
   // Make sure the buffer layout contains at least one element
-  assert(mesh_info.vertex_data_layout.GetNumElements() > 0);
+  assert(mesh_info.vertex_input_layout.GetNumElements() > 0);
 
   // Create vertex buffer and upload vertex data to GPU
   // Calcium uses interleaved vertex data rather than separate buffers for positions, tex coords, normals, etc
@@ -35,13 +35,13 @@ OpenGLMesh::OpenGLMesh(const MeshCreateInfo& mesh_info) {
   glBufferData(GL_ARRAY_BUFFER, mesh_info.num_vertices * sizeof(float), mesh_info.vertices, GL_STATIC_DRAW);
 
   // For each element in the buffer layout, tell OpenGL how to interpret that data
-  for (int i = 0; i < mesh_info.vertex_data_layout.GetNumElements(); ++i) {
+  for (int i = 0; i < mesh_info.vertex_input_layout.GetNumElements(); ++i) {
     glEnableVertexAttribArray(i);
-    glVertexAttribPointer(i, ComponentCountOf(mesh_info.vertex_data_layout[i]), 
-      OpenGLTypeOf(mesh_info.vertex_data_layout[i]),
+    glVertexAttribPointer(i, ComponentCountOf(mesh_info.vertex_input_layout[i]), 
+      OpenGLTypeOf(mesh_info.vertex_input_layout[i]),
       GL_FALSE, 
-      mesh_info.vertex_data_layout.GetStride(), 
-      (const void*)(uint64_t)mesh_info.vertex_data_layout[i].offset);
+      mesh_info.vertex_input_layout.GetStride(), 
+      (const void*)(uint64_t)mesh_info.vertex_input_layout[i].offset);
   }
 
   // Create index buffer

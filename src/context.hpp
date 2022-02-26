@@ -5,6 +5,7 @@
 #include "backend.hpp"
 #include "mesh.hpp"
 #include "mesh_create_info.hpp"
+#include "mesh_data.hpp"
 #include "render_target.hpp"
 #include "texture.hpp"
 #include "texture_create_info.hpp"
@@ -27,6 +28,7 @@ public:
   virtual std::shared_ptr<Shader> CreateShader(const ShaderCreateInfo& shader_info) = 0;
 
   virtual std::shared_ptr<Mesh> CreateMesh(const MeshCreateInfo& mesh_info) = 0;
+  std::shared_ptr<Mesh> CreateMesh(const MeshData& mesh_data);
   std::shared_ptr<Mesh> CreateMesh(const std::string& file_path);
 
   std::shared_ptr<Texture> CreateTexture(const std::string& file_path);
