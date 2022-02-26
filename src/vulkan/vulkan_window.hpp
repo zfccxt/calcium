@@ -23,6 +23,7 @@ public:
   bool IsBackfaceCullingEnabled() const;
   WindingOrder GetPolygonFrontFace() const;
   size_t GetCurrentFrameIndex() const;
+  size_t GetNextFrameIndex() const;
 
   void BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader);
   void EndAndSubmitRenderCommandBuffer();

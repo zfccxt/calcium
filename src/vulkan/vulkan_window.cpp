@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
 
@@ -74,6 +75,10 @@ WindingOrder VulkanWindow::GetPolygonFrontFace() const {
 
 size_t VulkanWindow::GetCurrentFrameIndex() const {
   return window_data_.render_command_buffers.current_command_buffer_index;
+}
+
+size_t VulkanWindow::GetNextFrameIndex() const {
+  return (window_data_.render_command_buffers.current_command_buffer_index + 1) % kMaxFramesInFlight;
 }
 
 void VulkanWindow::BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader) {

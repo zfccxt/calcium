@@ -27,7 +27,7 @@ VulkanUniformBuffer::~VulkanUniformBuffer() {
 void VulkanUniformBuffer::UploadData(void* to_upload) {
   void* data;
   auto bound_render_target = context_->bound_render_target.lock();
-  size_t index = bound_render_target->GetCurrentFrameIndex();
+  size_t index = bound_render_target->GetNextFrameIndex();
   vkMapMemory(context_->device, buffers_memory[index], 0, size, 0, &data);
   memcpy(data, to_upload, size);
   vkUnmapMemory(context_->device, buffers_memory[index]);
