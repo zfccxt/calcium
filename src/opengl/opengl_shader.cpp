@@ -86,8 +86,8 @@ void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& text
 }
 
 void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& texture) {
-  for (size_t i = 0; i < samplers_.size(); ++i) {
-    glActiveTexture(GL_TEXTURE0 + i);
+  for (const auto& sampler : samplers_) {
+    glActiveTexture(GL_TEXTURE0 + sampler.first);
     std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
   }
 }
