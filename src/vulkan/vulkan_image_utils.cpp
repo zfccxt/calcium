@@ -8,15 +8,19 @@
 
 namespace cl::Vulkan {
 
-void CreateImage(VulkanContextData* context, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling, VkImageUsageFlags usage, 
-                VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& image_memory) {
+#pragma warning(push)
+#pragma warning(disable : 26812)
+
+void CreateImage(VulkanContextData* context, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
+    VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& image_memory, uint32_t mip_levels) {
+
   // Create texture image
   VkImageCreateInfo image_info { VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
   image_info.imageType = VK_IMAGE_TYPE_2D;
   image_info.extent.width = (uint32_t)width;
   image_info.extent.height = (uint32_t)height;
   image_info.extent.depth = 1;
-  image_info.mipLevels = 1;
+  image_info.mipLevels = mip_levels;
   image_info.arrayLayers = 1;
   // TODO: Implement list of fallbacks. VK_FORMAT_R8G8B8A8_SRGB is widely supported but not guaranteed on all platforms.
   image_info.format = format;
@@ -43,7 +47,7 @@ bool HasStencilComponent(VkFormat format) {
   return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat format, VkImageLayout old_layout, VkImageLayout new_layout) {
+void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat format, VkImageLayout old_layout, VkImageLayout new_layout, uint32_t mip_levels) {
   VkCommandBuffer command_buffer = BeginSingleUseCommandBuffer(context);
 
   VkImageMemoryBarrier barrier { VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
@@ -53,7 +57,7 @@ void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat f
   barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
   barrier.image = image;
   barrier.subresourceRange.baseMipLevel = 0;
-  barrier.subresourceRange.levelCount = 1;
+  barrier.subresourceRange.levelCount = mip_levels;
   barrier.subresourceRange.baseArrayLayer = 0;
   barrier.subresourceRange.layerCount = 1;
 
@@ -138,14 +142,14 @@ VkFormat FindDepthFormat(VulkanContextData* context) {
                                VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 }
 
-VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkFormat format, VkImageAspectFlags aspect_flags) {
+VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkFormat format, VkImageAspectFlags aspect_flags, uint32_t mip_levels) {
   VkImageViewCreateInfo view_info { VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
   view_info.image = image;
   view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
   view_info.format = format;
   view_info.subresourceRange.aspectMask = aspect_flags;
   view_info.subresourceRange.baseMipLevel = 0;
-  view_info.subresourceRange.levelCount = 1;
+  view_info.subresourceRange.levelCount = mip_levels;
   view_info.subresourceRange.baseArrayLayer = 0;
   view_info.subresourceRange.layerCount = 1;
   
@@ -153,5 +157,92 @@ VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkFormat 
   VK_CHECK(vkCreateImageView(context->device, &view_info, context->allocator, &image_view));
   return image_view;
 }
+
+void GenerateMipmaps(VulkanContextData* context, VkImage image, VkFormat image_format, uint32_t width, uint32_t height, uint32_t mip_levels) {
+
+#ifdef CALCIUM_BUILD_DEBUG
+  // Check whether image format supports linear blitting
+  VkFormatProperties formatProperties;
+  vkGetPhysicalDeviceFormatProperties(context->physical_device, image_format, &formatProperties);
+  assert(formatProperties.optimalTilingFeatures & VK_FORMAT_FEATURE_SAMPLED_IMAGE_FILTER_LINEAR_BIT);
+#endif
+
+  VkCommandBuffer command_buffer = BeginSingleUseCommandBuffer(context);
+
+  VkImageMemoryBarrier barrier { VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
+  barrier.image = image;
+  barrier.srcQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+  barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
+  barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+  barrier.subresourceRange.baseArrayLayer = 0;
+  barrier.subresourceRange.layerCount = 1;
+  barrier.subresourceRange.levelCount = 1;
+
+  int32_t mip_width = width;
+  int32_t mip_height = height;
+
+  for (uint32_t i = 1; i < mip_levels; ++i) {
+    barrier.subresourceRange.baseMipLevel = i - 1;
+    barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+    barrier.newLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+    barrier.dstAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+    
+    vkCmdPipelineBarrier(command_buffer, VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_TRANSFER_BIT, 0,
+      0, nullptr,
+      0, nullptr,
+      1, &barrier);
+
+    VkImageBlit blit{};
+    blit.srcOffsets[0] = { 0, 0, 0 };
+    blit.srcOffsets[1] = { mip_width, mip_height, 1 };
+    blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    blit.srcSubresource.mipLevel = i - 1;
+    blit.srcSubresource.baseArrayLayer = 0;
+    blit.srcSubresource.layerCount = 1;
+    blit.dstOffsets[0] = { 0, 0, 0 };
+    blit.dstOffsets[1] = { mip_width > 1 ? mip_width / 2 : 1, mip_height > 1 ? mip_height / 2 : 1, 1 };
+    blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+    blit.dstSubresource.mipLevel = i;
+    blit.dstSubresource.baseArrayLayer = 0;
+    blit.dstSubresource.layerCount = 1;
+
+    vkCmdBlitImage(command_buffer,
+      image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,
+      image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL,
+      1, &blit,
+      VK_FILTER_LINEAR);
+
+    barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL;
+    barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+    barrier.srcAccessMask = VK_ACCESS_TRANSFER_READ_BIT;
+    barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+    
+    vkCmdPipelineBarrier(command_buffer,
+        VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+        0, nullptr,
+        0, nullptr,
+        1, &barrier);
+
+    if (mip_width > 1) mip_width /= 2;
+    if (mip_height > 1) mip_height /= 2;
+  }
+
+  barrier.subresourceRange.baseMipLevel = mip_levels - 1;
+  barrier.oldLayout = VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL;
+  barrier.newLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
+  barrier.srcAccessMask = VK_ACCESS_TRANSFER_WRITE_BIT;
+  barrier.dstAccessMask = VK_ACCESS_SHADER_READ_BIT;
+
+  vkCmdPipelineBarrier(command_buffer,
+      VK_PIPELINE_STAGE_TRANSFER_BIT, VK_PIPELINE_STAGE_FRAGMENT_SHADER_BIT, 0,
+      0, nullptr,
+      0, nullptr,
+      1, &barrier);
+
+  EndAndSubmitSingleUseCommandBuffer(context, command_buffer);
+}
+
+#pragma warning(pop)
 
 }

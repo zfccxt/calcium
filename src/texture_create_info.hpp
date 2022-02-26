@@ -14,6 +14,7 @@ struct TextureCreateInfo {
   std::string file_path;
   TextureFilter filter = TextureFilter::kLinear;
   TextureWrap wrap = TextureWrap::kRepeat;
+  bool flip_vertical_on_load = false;
 };
 
 struct BlankTextureCreateInfo {
