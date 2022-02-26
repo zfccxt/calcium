@@ -27,6 +27,7 @@ public:
   virtual std::shared_ptr<Shader> CreateShader(const ShaderCreateInfo& shader_info) = 0;
 
   virtual std::shared_ptr<Mesh> CreateMesh(const MeshCreateInfo& mesh_info) = 0;
+  std::shared_ptr<Mesh> CreateMesh(const std::string& file_path);
 
   std::shared_ptr<Texture> CreateTexture(const std::string& file_path);
   virtual std::shared_ptr<Texture> CreateTexture(const TextureCreateInfo& texture_info) = 0;

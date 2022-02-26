@@ -26,6 +26,14 @@ std::shared_ptr<Shader> Context::CreateShader(const std::string& vert_path, cons
   return CreateShader(shader_info);
 }
 
+std::shared_ptr<Mesh> Context::CreateMesh(const std::string& file_path) {
+  // TODO: Support more mesh file types
+  // TODO: switch (file extension)
+  // case .obj
+  MeshCreateInfo create_info = Mesh::LoadObjFile(file_path);
+  return CreateMesh(create_info);
+}
+
 std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
   TextureCreateInfo texture_info;
   texture_info.file_path = file_path;
