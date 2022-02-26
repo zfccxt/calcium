@@ -31,7 +31,9 @@ private:
 
   // Map of uniform binding -> uniform buffer so that we can choose a buffer to upload data to by its binding
   std::unordered_map<size_t, std::unique_ptr<OpenGLUniformBuffer>> uniforms_;
-  std::vector<size_t> samplers_;
+  
+  // Map of sampler binding -> GL texture slot so that we can choose a texture slot by its binding
+  std::unordered_map<size_t, size_t> samplers_;
 };
 
 }

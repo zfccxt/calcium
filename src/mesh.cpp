@@ -4,7 +4,7 @@
 #include <meshoptimizer.h>
 
 namespace cl {
-
+/*
 MeshCreateInfo Mesh::LoadObj(const std::string& file_path) {
   fastObjMesh* mesh = fast_obj_read(file_path.c_str());
   assert(mesh);
@@ -79,5 +79,5 @@ MeshCreateInfo Mesh::LoadObj(const std::string& file_path) {
 
   return mesh_info;
 }
-
+*/
 }

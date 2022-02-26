@@ -30,7 +30,7 @@ std::shared_ptr<Mesh> Context::CreateMesh(const std::string& file_path) {
   // TODO: Support more mesh file types
   // TODO: switch (file extension)
   // case .obj
-  MeshCreateInfo create_info = Mesh::LoadObjFile(file_path);
+  MeshCreateInfo create_info; // = Mesh::LoadObjFile(file_path);
   return CreateMesh(create_info);
 }
 

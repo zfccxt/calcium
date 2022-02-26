@@ -10,7 +10,7 @@ class Mesh {
 public:
   virtual void Draw() = 0;
 
-  static MeshCreateInfo LoadObj(const std::string& file_path);
+  // static MeshCreateInfo LoadObj(const std::string& file_path);
 };
 
 }

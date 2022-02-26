@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kVulkan);
+  auto context = cl::CreateContext(cl::Backend::kOpenGL);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
@@ -21,7 +21,26 @@ int main() {
   calc_projection();
 
   auto shader = context->CreateShader("res/shaders/shader.vert.spv",  "res/shaders/shader.frag.spv");
-  auto mesh = context->CreateMesh("res/models/drill.obj");
+  
+  cl::MeshCreateInfo mesh_info;
+  mesh_info.vertex_data_layout = shader->GetInputLayout();
+  std::vector<float> vertices = {
+  //  x      y     z     u     v
+    -0.5f, -0.5f, 0.0f, 0.0f, 0.0f,
+     0.5f, -0.5f, 0.0f, 1.0f, 0.0f,
+    -0.5f,  0.5f, 0.0f, 0.0f, 1.0f,
+     0.5f,  0.5f, 0.0f, 1.0f, 1.0f,
+  };
+  std::vector<uint32_t> indices = {
+    0, 1, 2,
+    1, 3, 2,
+  };
+  mesh_info.vertices = vertices.data();
+  mesh_info.num_vertices = vertices.size();
+  mesh_info.indices = indices.data();
+  mesh_info.num_indices = indices.size();
+  auto mesh = context->CreateMesh(mesh_info);
+  
   auto texture = context->CreateTexture("res/models/drill_diffuse.png");
 
   auto start_time = std::chrono::high_resolution_clock::now();

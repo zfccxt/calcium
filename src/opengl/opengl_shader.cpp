@@ -61,8 +61,10 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   }
 
   // Store sampler bindings
+  size_t i = 0;
   for (const auto& sampler : reflection_details_.textures) {
-    samplers_.push_back(sampler.first);
+    samplers_.emplace(sampler.first, i);
+    ++i;
   }
 }
 
@@ -79,13 +81,13 @@ void OpenGLShader::UploadUniform(int binding, void* data) {
 }
 
 void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
-  glActiveTexture(GL_TEXTURE0 + binding);
+  glActiveTexture(GL_TEXTURE0 + samplers_[binding]);
   std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
 }
 
 void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& texture) {
-  for (auto& sampler : samplers_) {
-    glActiveTexture(GL_TEXTURE0 + sampler);
+  for (size_t i = 0; i < samplers_.size(); ++i) {
+    glActiveTexture(GL_TEXTURE0 + i);
     std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
   }
 }
