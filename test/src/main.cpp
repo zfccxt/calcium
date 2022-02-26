@@ -10,7 +10,6 @@ int main() {
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
-  window_info.enable_depth_test = false;
   auto window = context->CreateWindow(window_info);
 
   window->SetKeyPressCallback(cl::KeyCode::kEscape, [&](){ window->Close(); });
@@ -24,7 +23,10 @@ int main() {
   
   auto mesh = context->CreateMesh("res/models/drill.obj");
   
-  auto texture = context->CreateTexture("res/models/drill_diffuse.png");
+  cl::TextureCreateInfo texture_info;
+  texture_info.file_path = "res/models/drill_diffuse.png";
+  texture_info.flip_vertical_on_load = true;
+  auto texture = context->CreateTexture(texture_info);
   
   auto start_time = std::chrono::high_resolution_clock::now();
   while (window->IsOpen()) {
@@ -33,10 +35,11 @@ int main() {
     auto current_time = std::chrono::high_resolution_clock::now();
     float time = std::chrono::duration<float, std::chrono::seconds::period>(current_time - start_time).count();
 
-    glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, sin(time), -3));
+    glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, 0.1f, -0.4f));
     shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
 
-    glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 0, 1));
+    glm::mat4 model = glm::rotate(glm::mat4(1), time, glm::vec3(0, 1, 0));
+    model = glm::rotate(model, 3.1415f, glm::vec3(0, 0, 1));
     shader->UploadUniform("u_model", glm::value_ptr(model));
     
     shader->BindTexture("u_diffuse_texture", texture);
