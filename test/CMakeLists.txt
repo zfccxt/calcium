@@ -25,11 +25,7 @@ endif()
 
 
 # Add custom target - compile glsl shaders to spirv
-if (${CMAKE_HOST_SYSTEM_PROCESSOR} STREQUAL "AMD64")
-  set(GLSLANG_VALIDATOR "$ENV{VULKAN_SDK}/Bin/glslangValidator.exe")
-else()
-  set(GLSLANG_VALIDATOR "$ENV{VULKAN_SDK}/Bin32/glslangValidator.exe")
-endif()
+set(GLSLANG_VALIDATOR "glslangValidator")
 file(GLOB_RECURSE GLSL_SOURCE_FILES "src/shaders/*.glsl")
 foreach(GLSL_FILE ${GLSL_SOURCE_FILES})
   get_filename_component(FILE_NAME ${GLSL_FILE} NAME)
