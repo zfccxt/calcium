@@ -58,24 +58,18 @@ MeshData Mesh::LoadObj(const std::string& file_path) {
   std::vector<uint32_t> remap(index_count);
   size_t vertex_count = meshopt_generateVertexRemap(&remap[0], nullptr, index_count, &unindexed_vertex_data[0], index_count, vertex_size_bytes);
 
-  std::vector<uint32_t> indices(index_count);
   mesh_data.vertices.resize(vertex_count * vertex_size_floats);
+  mesh_data.indices.resize(index_count);
 
-  meshopt_remapIndexBuffer(&indices[0], nullptr, index_count, &remap[0]);
+  meshopt_remapIndexBuffer(&mesh_data.indices[0], nullptr, index_count, &remap[0]);
   meshopt_remapVertexBuffer(&mesh_data.vertices[0], &unindexed_vertex_data[0], index_count, vertex_size_bytes, &remap[0]);
 
   // TODO: Test other meshoptimizer features and see if they improve performance:
-  meshopt_optimizeVertexCache(&indices[0], &indices[0], index_count, vertex_count);
-  meshopt_optimizeOverdraw(&indices[0], &indices[0], index_count, &mesh_data.vertices[0], vertex_count, vertex_size_bytes, 1.05f);
-  meshopt_optimizeVertexFetch(&mesh_data.vertices[0], &indices[0], index_count, &mesh_data.vertices[0], vertex_count, vertex_size_bytes);
+  meshopt_optimizeVertexCache(&mesh_data.indices[0], &mesh_data.indices[0], index_count, vertex_count);
+  meshopt_optimizeOverdraw(&mesh_data.indices[0], &mesh_data.indices[0], index_count, &mesh_data.vertices[0], vertex_count, vertex_size_bytes, 1.05f);
+  meshopt_optimizeVertexFetch(&mesh_data.vertices[0], &mesh_data.indices[0], index_count, &mesh_data.vertices[0], vertex_count, vertex_size_bytes);
 
   fast_obj_destroy(mesh);
-  
-  // meshoptimizer only uses 4 byte index buffers, so convert the resulting buffer to 2 bytes per index before creating the mesh
-  mesh_data.indices.resize(index_count);
-  for (size_t i = 0; i < index_count; ++i) {
-    mesh_data.indices[i] = (uint16_t)indices[i];
-  }
 
   return mesh_data;
 }
