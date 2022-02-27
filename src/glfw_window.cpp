@@ -30,10 +30,11 @@ void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
 #else
     Center();
 #endif
+  }
 
   glfwSetWindowUserPointer(glfw_window_, this);
   glfwSetKeyCallback(glfw_window_, PerformKeyCallbacks);
-  }
+  glfwSetFramebufferSizeCallback(glfw_window_, PerformFramebufferSizeCallback);
 }
 
 float GlfwWindow::GetAspectRatio() const {
@@ -132,18 +133,19 @@ void GlfwWindow::PerformKeyCallbacks(GLFWwindow* glfw_window, int key, int scanc
 }
 
 void GlfwWindow::SetResizeCallback(ResizeCallback callback) {
-  glfwSetFramebufferSizeCallback(glfw_window_, PerformFramebufferSizeCallback);
   resize_callback_ = callback;
-  
 }
 
 void GlfwWindow::RemoveResizeCallback() {
-  glfwSetFramebufferSizeCallback(glfw_window_, nullptr);
+  resize_callback_ = nullptr;
 }
 
 void GlfwWindow::PerformFramebufferSizeCallback(GLFWwindow* glfw_window, int width, int height) {
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
-  win->resize_callback_();
+  win->OnFramebufferResize(width, height);
+  if (win->resize_callback_) {
+    win->resize_callback_();
+  }
 }
 
 }

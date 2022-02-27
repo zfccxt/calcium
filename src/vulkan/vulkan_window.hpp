@@ -29,6 +29,9 @@ public:
   void EndAndSubmitRenderCommandBuffer();
   VkCommandBuffer GetCurrentRenderCommandBuffer();
 
+protected:
+  virtual void OnFramebufferResize(int width, int height) override;
+
 private:
   VulkanWindowData window_data_;
 };

@@ -84,6 +84,7 @@ void VulkanShader::CreateUniforms() {
 void VulkanShader::DestroyUniforms() {
   if (reflection_details_.HasUniformsOrTextures()) {
     vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+    vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
     uniform_buffers_.clear();
   }
 }

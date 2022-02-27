@@ -95,4 +95,23 @@ VkCommandBuffer VulkanWindow::GetCurrentRenderCommandBuffer() {
   return window_data_.render_command_buffers.current_command_buffer;
 }
 
+void VulkanWindow::OnFramebufferResize(int width, int height) {
+  window_data_.swapchain.RecreateSwapchain();
+
+  std::vector<std::weak_ptr<VulkanShader>>::iterator iter;
+  for (iter = window_data_.context_data->loaded_shaders_.begin(); iter != window_data_.context_data->loaded_shaders_.end();) {
+    auto shader = iter->lock();
+
+    if (!shader) {
+      // If the shader has been destroyed by the client application, delete it from the list of weak pointers to loaded shaders
+      iter = window_data_.context_data->loaded_shaders_.erase(iter);
+    }
+    else {
+      // If the shader is still valid, recreate it
+      shader->Recreate(window_data_.swapchain.extent, window_data_.swapchain.render_pass);
+      ++iter;
+    }
+  }
+}
+
 }

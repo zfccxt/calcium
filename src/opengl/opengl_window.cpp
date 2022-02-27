@@ -82,10 +82,6 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
     glEnable(GL_CULL_FACE);
     glCullFace(GL_BACK);
   }
-
-  glfwSetWindowSizeCallback(glfw_window_, [](GLFWwindow*, int width, int height) {
-    glViewport(0,0, width, height);
-  });
 }
 
 void OpenGLWindow::Clear() {
@@ -102,6 +98,10 @@ void OpenGLWindow::SetClearColour(const Colour& colour) {
 
 void OpenGLWindow::MakeContextCurrent() {
   glfwMakeContextCurrent(glfw_window_);
+}
+
+void OpenGLWindow::OnFramebufferResize(int width, int height) {
+  glViewport(0, 0, width, height);
 }
 
 }

@@ -1,13 +1,15 @@
 #pragma once
 
 #include <memory>
+#include <vector>
 
 #include <vulkan/vulkan.h>
 
 namespace cl::Vulkan {
 
-class VulkanWindow;
+class VulkanShader;
 class VulkanTexture;
+class VulkanWindow;
 
 struct VulkanContextData {
   VkInstance instance;
@@ -28,6 +30,9 @@ struct VulkanContextData {
   // Explicitly managed w/ new and delete because order of destruction matters
   // Probably should be a unique_ptr
   VulkanTexture* blank_texture;
+
+  // Shaders must be destroyed and recreated on window or framebuffer resize
+  std::vector<std::weak_ptr<VulkanShader>> loaded_shaders_;
 };
 
 }

@@ -84,7 +84,9 @@ std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shad
   bool enable_depth_test = window->IsDepthTestEnabled();
   bool enable_backface_cull = window->IsBackfaceCullingEnabled();
   WindingOrder front_face = window->GetPolygonFrontFace();
-  return std::make_shared<VulkanShader>(&context_data_, shader_info, enable_depth_test, enable_backface_cull, front_face, framebuffer_extent, render_pass);
+  auto shader = std::make_shared<VulkanShader>(&context_data_, shader_info, enable_depth_test, enable_backface_cull, front_face, framebuffer_extent, render_pass);
+  context_data_.loaded_shaders_.push_back(shader);
+  return shader;
 }
 
 std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {

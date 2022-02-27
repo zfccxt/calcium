@@ -79,25 +79,17 @@ VkPresentModeKHR VulkanSwapchainSupportDetails::ChooseBestPresentMode(bool enabl
 }
 
 VkExtent2D VulkanSwapchainSupportDetails::ChooseSwapExtent(GLFWwindow* glfw_window) const {
-  // The swap extent is the resolution of the swapchain images
-  // Vulkan will try to choose this for us based on the details it already got about the surface
-  // If it was successful, we just use what it already chose
-  if (surface_capabilities.currentExtent.width != std::numeric_limits<uint32_t>::max()) {
-    return surface_capabilities.currentExtent;
-  }
-  else {
-    // Otherwise, query the size of the window framebuffer and use that as the swap extent
-    int width, height;
-    glfwGetFramebufferSize(glfw_window, &width, &height);
-    
-    VkExtent2D actual_extent = { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
-
-    // Make sure the size returned is within the range of possible values the surface supports
-    actual_extent.width  = std::clamp(actual_extent.width,  surface_capabilities.minImageExtent.width,  surface_capabilities.maxImageExtent.width);
-    actual_extent.height = std::clamp(actual_extent.height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
-
-    return actual_extent;
-  }
+  // Query the size of the window framebuffer and use that as the swap extent
+  int width, height;
+  glfwGetFramebufferSize(glfw_window, &width, &height);
+  
+  VkExtent2D extent = { static_cast<uint32_t>(width), static_cast<uint32_t>(height) };
+  
+  // Make sure the size returned is within the range of possible values the surface supports
+  extent.width  = std::clamp(extent.width,  surface_capabilities.minImageExtent.width,  surface_capabilities.maxImageExtent.width);
+  extent.height = std::clamp(extent.height, surface_capabilities.minImageExtent.height, surface_capabilities.maxImageExtent.height);
+  
+  return extent;
 }
 
 #pragma warning(pop)

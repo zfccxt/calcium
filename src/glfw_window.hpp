@@ -52,6 +52,9 @@ private:
   static void PerformFramebufferSizeCallback(GLFWwindow* window, int width, int height);
 
 protected:
+  virtual void OnFramebufferResize(int width, int height) = 0;
+
+protected:
   GLFWwindow* glfw_window_ = nullptr;
 
 private:
