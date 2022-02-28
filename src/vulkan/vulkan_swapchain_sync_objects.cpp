@@ -1,5 +1,6 @@
 #include "vulkan_swapchain_sync_objects.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_window_data.hpp"
@@ -7,6 +8,8 @@
 namespace cl::Vulkan {
 
 void VulkanSwapchainSyncObjects::CreateSwapchainSyncObjects(const VulkanWindowData& window_data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   image_available_semaphores.resize(kMaxFramesInFlight);
   render_complete_semaphores.resize(kMaxFramesInFlight);
   frame_complete_fences.resize(kMaxFramesInFlight);
@@ -25,6 +28,8 @@ void VulkanSwapchainSyncObjects::CreateSwapchainSyncObjects(const VulkanWindowDa
 }
 
 void VulkanSwapchainSyncObjects::DestroySwapchainSyncObjects(const VulkanWindowData& window_data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkDeviceWaitIdle(window_data.context_data->device);
 
   for (size_t i = 0; i < kMaxFramesInFlight; ++i) {

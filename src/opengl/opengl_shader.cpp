@@ -5,6 +5,7 @@
 // cause mismatched header and cpp files and you will end up with linker errors
 #include <spirv_glsl.hpp>
 
+#include "instrumentor.hpp"
 #include "opengl_compile_options.hpp"
 #include "opengl_shader_utils.hpp"
 #include "opengl_texture.hpp"
@@ -13,6 +14,8 @@
 namespace cl::OpenGL {
 
 OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   ShaderCodeMap code_map = ReadAllSpvFiles(shader_info);
   reflection_details_.Reflect(code_map); 
 
@@ -81,11 +84,15 @@ void OpenGLShader::UploadUniform(int binding, void* data) {
 }
 
 void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
+  CALCIUM_PROFILE_FUNCTION();
+
   glActiveTexture(GL_TEXTURE0 + samplers_[binding]);
   std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
 }
 
 void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& texture) {
+  CALCIUM_PROFILE_FUNCTION();
+
   for (const auto& sampler : samplers_) {
     glActiveTexture(GL_TEXTURE0 + sampler.first);
     std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();

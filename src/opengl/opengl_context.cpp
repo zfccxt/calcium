@@ -1,6 +1,7 @@
 #include "opengl_context.hpp"
 
 #include "glfw_utils.hpp"
+#include "instrumentor.hpp"
 #include "opengl/opengl_mesh.hpp"
 #include "opengl/opengl_shader.hpp"
 #include "opengl/opengl_texture.hpp"
@@ -17,6 +18,8 @@ OpenGLContext::~OpenGLContext() {
 }
 
 std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& window_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // For convenience we automatically bind the first window the library user creates as the current render target
   auto window = std::make_shared<OpenGLWindow>(window_info);
   bound_render_target_ = window;
@@ -32,6 +35,8 @@ std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& wind
 }
 
 std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& shader_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   auto shader = std::make_shared<OpenGLShader>(shader_info);
   shader->Bind();
   shader->BindAllTextureSamplers(blank_texture_);
@@ -39,14 +44,20 @@ std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& shad
 }
 
 std::shared_ptr<Mesh> OpenGLContext::CreateMesh(const MeshCreateInfo& mesh_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   return std::make_shared<OpenGLMesh>(mesh_info);
 }
 
 std::shared_ptr<Texture> OpenGLContext::CreateTexture(const TextureCreateInfo& texture_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   return std::make_shared<OpenGLTexture>(texture_info);
 }
 
 void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // TODO: figure out whether this is a window or a framebuffer and bind appropriately
 
   // If render target is a window:
@@ -55,6 +66,8 @@ void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render
 }
 
 void OpenGLContext::BeginRenderPass(const std::shared_ptr<Shader>& shader) {
+  CALCIUM_PROFILE_FUNCTION();
+
   auto window = bound_render_target_.lock();
   // TODO: Make this work with bound framebuffers
 
@@ -66,6 +79,8 @@ void OpenGLContext::BeginRenderPass(const std::shared_ptr<Shader>& shader) {
 }
 
 void OpenGLContext::EndRenderPass() {
+  CALCIUM_PROFILE_FUNCTION();
+
   auto window = bound_render_target_.lock();
   // TODO: Make this work with bound framebuffers
 

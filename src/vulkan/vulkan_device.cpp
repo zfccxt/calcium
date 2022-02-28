@@ -4,6 +4,7 @@
 #include <set>
 #include <vector>
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_instance.hpp"
 #include "vulkan/vulkan_physical_device.hpp"
@@ -12,6 +13,8 @@
 namespace cl::Vulkan {
 
 VkDevice CreateDevice(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
 
   // First we have to configure queues
@@ -61,6 +64,8 @@ void DestroyDevice(const VulkanContextData& context_data, VkDevice device) {
 }
 
 VkQueue FindGraphicsQueue(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
   VkQueue graphics_queue;
   vkGetDeviceQueue(context_data.device, indices.graphics_family, 0, &graphics_queue);
@@ -68,6 +73,8 @@ VkQueue FindGraphicsQueue(const VulkanContextData& context_data, VkSurfaceKHR te
 }
 
 VkQueue FindPresentQueue(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
   VkQueue present_queue;
   vkGetDeviceQueue(context_data.device, indices.present_family, 0, &present_queue);

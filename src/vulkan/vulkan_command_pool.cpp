@@ -1,11 +1,14 @@
 #include "vulkan_command_pool.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 
 namespace cl::Vulkan {
 
 VkCommandPool CreateCommandPool(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VulkanQueueFamilyIndices indices(context_data.physical_device, temp_surface);
   VkCommandPoolCreateInfo create_info { VK_STRUCTURE_TYPE_COMMAND_POOL_CREATE_INFO };
   create_info.queueFamilyIndex = indices.graphics_family;

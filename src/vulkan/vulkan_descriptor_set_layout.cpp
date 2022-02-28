@@ -2,12 +2,15 @@
 
 #include <vector>
 
+#include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 #include "vulkan_shader_module.hpp"
 
 namespace cl::Vulkan {
 
 VkDescriptorSetLayout CreateDescriptorSetLayout(VulkanContextData* context, const ShaderReflectionDetails& reflection_details) {
+  CALCIUM_PROFILE_FUNCTION();
+
   std::vector<VkDescriptorSetLayoutBinding> layouts(reflection_details.uniforms.size() + reflection_details.textures.size());
 
   size_t i = 0;

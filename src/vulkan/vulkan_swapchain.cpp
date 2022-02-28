@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_swapchain_support_details.hpp"
@@ -14,6 +15,8 @@ namespace cl::Vulkan {
 #pragma warning(disable: 26812)
 
 void VulkanSwapchain::CreateSwapchain() {
+  CALCIUM_PROFILE_FUNCTION();
+
   VulkanSwapchainSupportDetails swapchain_support(window_data->context_data->physical_device, window_data->surface);
   VkSurfaceFormatKHR surface_format = swapchain_support.ChooseBestSurfaceFormat();
   VkPresentModeKHR present_mode = swapchain_support.ChooseBestPresentMode(window_data->enable_vsync);
@@ -119,6 +122,8 @@ void VulkanSwapchain::CreateSwapchain() {
 }
 
 void VulkanSwapchain::DestroySwapchain() {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkDeviceWaitIdle(window_data->context_data->device);
 
   if (window_data->enable_depth_test) {
@@ -133,6 +138,8 @@ void VulkanSwapchain::DestroySwapchain() {
 }
 
 void VulkanSwapchain::RecreateSwapchain() {
+  CALCIUM_PROFILE_FUNCTION();
+
  // If the window is minimized, wait until it is unminimized
   int width = 0, height = 0;
   glfwGetFramebufferSize(window_data->glfw_window, &width, &height);
@@ -153,6 +160,8 @@ void VulkanSwapchain::RecreateSwapchain() {
 }
 
 void VulkanSwapchain::CreateSwapchainFramebuffers() {
+  CALCIUM_PROFILE_FUNCTION();
+
   framebuffers.resize(image_views.size());
   
   // Each image view needs its own framebuffer
@@ -176,12 +185,16 @@ void VulkanSwapchain::CreateSwapchainFramebuffers() {
 }
 
 void VulkanSwapchain::DestroySwapchainFramebuffers() {
+  CALCIUM_PROFILE_FUNCTION();
+
   for (auto framebuffer : framebuffers) {
     vkDestroyFramebuffer(window_data->context_data->device, framebuffer, window_data->context_data->allocator);
   }
 }
 
 void VulkanSwapchain::SetClearValue(const Colour& colour) {
+  CALCIUM_PROFILE_FUNCTION();
+
   clear_values.clear();
 
   VkClearValue colour_clear_value { };

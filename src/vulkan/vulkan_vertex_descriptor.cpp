@@ -2,11 +2,14 @@
 
 #include <vector>
 
+#include "instrumentor.hpp"
 #include "shader_data_type.hpp"
 
 namespace cl::Vulkan {
 
 VkVertexInputBindingDescription CreateInputBindingDescription(const BufferLayout& layout) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // First we describe to Vulkan how to pass this data to the vertex shader
   VkVertexInputBindingDescription binding_description { };
   // binding specifies the index of the binding in the array of bindings
@@ -47,6 +50,8 @@ VkFormat ShaderDataTypeToVulkanFormat(ShaderDataType type) {
 #pragma warning(pop)
 
 std::vector<VkVertexInputAttributeDescription> CreateInputAttribDescriptions(const BufferLayout& layout) {
+  CALCIUM_PROFILE_FUNCTION();
+
   std::vector<VkVertexInputAttributeDescription> attribute_descriptions(layout.GetNumElements());
 
   for (size_t i = 0; i < layout.GetNumElements(); ++i) {

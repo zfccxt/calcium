@@ -4,6 +4,8 @@
 #include <stdio.h>
 #include <vector>
 
+#include "instrumentor.hpp"
+
 namespace cl::OpenGL {
 
 GLenum FindOpenGLShaderStage(ShaderStage type) {
@@ -23,7 +25,9 @@ GLenum FindOpenGLShaderStage(ShaderStage type) {
 }
 
 GLuint CreateShaderModule(const std::string& glsl_code, ShaderStage shader_type) {
- GLuint shader = glCreateShader(FindOpenGLShaderStage(shader_type));
+  CALCIUM_PROFILE_FUNCTION();
+
+  GLuint shader = glCreateShader(FindOpenGLShaderStage(shader_type));
 	const GLchar* source_ptr = (const GLchar*)glsl_code.c_str();
   glShaderSource(shader, 1, &source_ptr, 0);
   glCompileShader(shader);

@@ -1,10 +1,13 @@
 #include "vulkan_command_buffer_utils.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 
 namespace cl::Vulkan {
 
 VkCommandBuffer BeginSingleUseCommandBuffer(VulkanContextData* context) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkCommandBufferAllocateInfo alloc_info { VK_STRUCTURE_TYPE_COMMAND_BUFFER_ALLOCATE_INFO };
   alloc_info.level = VK_COMMAND_BUFFER_LEVEL_PRIMARY;
   alloc_info.commandPool = context->command_pool;
@@ -21,6 +24,8 @@ VkCommandBuffer BeginSingleUseCommandBuffer(VulkanContextData* context) {
 }
 
 void EndAndSubmitSingleUseCommandBuffer(VulkanContextData* context, VkCommandBuffer command_buffer) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VK_CHECK(vkEndCommandBuffer(command_buffer));
 
   VkSubmitInfo submitInfo{};

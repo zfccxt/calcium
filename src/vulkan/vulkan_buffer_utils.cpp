@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include "instrumentor.hpp"
 #include "vulkan_command_buffer_utils.hpp"
 #include "vulkan_check.hpp"
 
@@ -23,6 +24,8 @@ uint32_t FindMemoryType(VulkanContextData* context, uint32_t type_filter, VkMemo
 }
 
 VkBuffer CreateBuffer(VulkanContextData* context, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& buffer_memory) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkBufferCreateInfo buffer_info { VK_STRUCTURE_TYPE_BUFFER_CREATE_INFO };
   // size in bytes of entire vertex data
   buffer_info.size = size;
@@ -53,6 +56,8 @@ VkBuffer CreateBuffer(VulkanContextData* context, VkDeviceSize size, VkBufferUsa
 }
 
 void CopyBuffer(VulkanContextData* context, VkBuffer src_buffer, VkBuffer dest_buffer, VkDeviceSize size) {
+  CALCIUM_PROFILE_FUNCTION();
+  
   // We can use the graphics queue for transfer operations, since the Vulkan spec tells us that any queue capable of
   // graphics must also be capable of transfer
 

@@ -5,6 +5,7 @@
 #include <stb_image.h>
 #include <vulkan/vulkan.h>
 
+#include "instrumentor.hpp"
 #include "vulkan_buffer_utils.hpp"
 #include "vulkan_check.hpp"
 #include "vulkan_image_utils.hpp"
@@ -33,6 +34,8 @@ VkSamplerAddressMode FindSamplerAddressMode(TextureWrap wrap) {
 }
 
 VulkanTexture::VulkanTexture(VulkanContextData* context, const TextureCreateInfo& texture_info) : context_(context) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Load texture into CPU memory
   int width, height, channels;
   stbi_set_flip_vertically_on_load(texture_info.flip_vertical_on_load);
@@ -46,6 +49,8 @@ VulkanTexture::VulkanTexture(VulkanContextData* context, const TextureCreateInfo
 }
 
 VulkanTexture::VulkanTexture(VulkanContextData* context, const BlankTextureCreateInfo& texture_info) : context_(context) {
+  CALCIUM_PROFILE_FUNCTION();
+
   size_t data_size = (size_t)texture_info.width * texture_info.height;
 	uint32_t* pixels = new uint32_t[data_size];
 	// TODO: Why is this backwards?
@@ -60,6 +65,8 @@ VulkanTexture::VulkanTexture(VulkanContextData* context, const BlankTextureCreat
 }
 
 void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkDeviceSize image_size = (VkDeviceSize)width * height * sizeof(uint32_t);
 
   // Create staging buffer
@@ -140,6 +147,8 @@ void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFi
 }
 
 VulkanTexture::~VulkanTexture() {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkDeviceWaitIdle(context_->device);
 
   vkDestroySampler(context_->device, texture_sampler_, context_->allocator);

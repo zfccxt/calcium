@@ -2,11 +2,14 @@
 
 #include <vector>
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
 namespace cl::Vulkan {
 
 VulkanQueueFamilyIndices::VulkanQueueFamilyIndices(VkPhysicalDevice physical_device, VkSurfaceKHR surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // First call to vkGetPhysicalDeviceQueueFamilyProperties finds the number of queue families
   uint32_t queue_family_count = 0;
   vkGetPhysicalDeviceQueueFamilyProperties(physical_device, &queue_family_count, nullptr);

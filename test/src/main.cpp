@@ -19,7 +19,7 @@ int main() {
   window->SetResizeCallback(calc_projection);
   calc_projection();
 
-  auto shader = context->CreateShader("res/shaders/shader.vert.spv",  "res/shaders/shader.frag.spv");
+  auto shader = context->CreateShader("res/shaders/shader.vert.spv", "res/shaders/shader.frag.spv");
   
   auto mesh = context->CreateMesh("res/models/drill.obj");
   

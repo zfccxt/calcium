@@ -1,5 +1,6 @@
 #include "vulkan_depth_buffer.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_image_utils.hpp"
 
 namespace cl::Vulkan {
@@ -8,6 +9,8 @@ namespace cl::Vulkan {
 #pragma warning(disable : 26812)
 
 VulkanDepthBuffer::VulkanDepthBuffer(VulkanContextData* context, VkExtent2D swapchain_extent) : context_(context) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkFormat depth_format = FindDepthFormat(context);
   CreateImage(context, swapchain_extent.width, swapchain_extent.height, depth_format,
     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_DEPTH_STENCIL_ATTACHMENT_BIT, 

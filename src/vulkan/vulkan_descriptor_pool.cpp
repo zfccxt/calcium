@@ -2,6 +2,7 @@
 
 #include <array>
 
+#include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 #include "vulkan_constants.hpp"
 #include "vulkan_texture.hpp"
@@ -9,6 +10,8 @@
 namespace cl::Vulkan {
 
 VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderReflectionDetails& reflection_details) {
+  CALCIUM_PROFILE_FUNCTION();
+
   std::vector<VkDescriptorPoolSize> pool_sizes(reflection_details.uniforms.size() + reflection_details.textures.size());
 
   size_t i = 0;
@@ -36,6 +39,8 @@ VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderRe
 
 std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, const VulkanUniformMap& uniform_buffers,
     const VulkanTextureMap& texture_samplers, VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool) {
+  CALCIUM_PROFILE_FUNCTION();
+
   std::vector<VkDescriptorSet> descriptor_sets(kMaxFramesInFlight);
 
   std::vector<VkDescriptorSetLayout> layouts(kMaxFramesInFlight, descriptor_set_layout);

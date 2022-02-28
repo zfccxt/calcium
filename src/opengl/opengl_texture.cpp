@@ -5,6 +5,8 @@
 #include <glad/glad.h>
 #include <stb_image.h>
 
+#include "instrumentor.hpp"
+
 namespace cl::OpenGL {
 
 static GLenum TextureFilterToGLMinFilter(TextureFilter filter) {
@@ -33,6 +35,8 @@ static GLenum TextureWrapModeToGLEnum(TextureWrap wrap_mode) {
 }
 
 OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   int width, height, channels;
 	stbi_uc* data = nullptr;
 
@@ -71,6 +75,8 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
 }
 
 OpenGLTexture::OpenGLTexture(const BlankTextureCreateInfo& texture_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   glGenTextures(1, &texture_id_);
   glBindTexture(GL_TEXTURE_2D, texture_id_);
 
@@ -94,10 +100,14 @@ OpenGLTexture::OpenGLTexture(const BlankTextureCreateInfo& texture_info) {
 }
 
 OpenGLTexture::~OpenGLTexture() {
+  CALCIUM_PROFILE_FUNCTION();
+
   glDeleteTextures(1, &texture_id_);
 }
 
 void OpenGLTexture::Bind() {
+  CALCIUM_PROFILE_FUNCTION();
+
   glBindTexture(GL_TEXTURE_2D, texture_id_);
 }
 

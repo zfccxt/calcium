@@ -5,9 +5,13 @@
 
 #include <GLFW/glfw3.h>
 
+#include "instrumentor.hpp"
+
 namespace cl::GLFW {
 
 GLFWmonitor* FindBestMonitor(GLFWwindow* glfw_window) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Finds the monitor that the created GLFW window mostly lies on
   // The window can then be centered on that monitor 
 
@@ -50,6 +54,8 @@ GLFWmonitor* FindBestMonitor(GLFWwindow* glfw_window) {
 }
 
 void CenterWindow(GLFWwindow* glfw_window, bool center_horizontal, bool center_vertical) {
+  CALCIUM_PROFILE_FUNCTION();
+
   GLFWmonitor* current_monitor = FindBestMonitor(glfw_window);
   const GLFWvidmode* mode = glfwGetVideoMode(current_monitor);
   if (!mode) return;

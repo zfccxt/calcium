@@ -5,11 +5,15 @@
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
 
+#include "instrumentor.hpp"
+
 namespace cl::OpenGL {
 
 const static int kSuitableOpenGLVersions[8][2] = { {4,6}, {4,5}, {4,4}, {4,3}, {4,2}, {4,1}, {4,0}, {3,3} };
 
 OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
 
   // Use a ridiculous hack to guarantee the highest possible OpenGL context version supported on the current machine

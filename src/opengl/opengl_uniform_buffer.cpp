@@ -1,8 +1,12 @@
 #include "opengl_uniform_buffer.hpp"
 
+#include "instrumentor.hpp"
+
 namespace cl::OpenGL {
 
 OpenGLUniformBuffer::OpenGLUniformBuffer(GLuint program_id, size_t binding, size_t size, const std::string& uniform_block_name) : size_(size) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Index of block where uniform will be uploaded
   GLuint location = glGetUniformBlockIndex(program_id, uniform_block_name.c_str());
 
@@ -24,12 +28,16 @@ OpenGLUniformBuffer::OpenGLUniformBuffer(GLuint program_id, size_t binding, size
 }
 
 OpenGLUniformBuffer::~OpenGLUniformBuffer() {
+  CALCIUM_PROFILE_FUNCTION();
+
   if (memory_ != -1) {
     glDeleteBuffers(1, &memory_);
   }
 }
 
 void OpenGLUniformBuffer::Upload(void* data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   if (memory_ != -1) {
     glBindBuffer(GL_UNIFORM_BUFFER, memory_);
     glBufferSubData(GL_UNIFORM_BUFFER, 0, size_, data);

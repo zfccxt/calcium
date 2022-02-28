@@ -1,5 +1,6 @@
 #include "vulkan_swapchain_render_pass.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_image_utils.hpp"
 #include "vulkan/vulkan_window_data.hpp"
@@ -7,6 +8,8 @@
 namespace cl::Vulkan {
 
 VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Render pass objects describe framebuffer attachments - how many colour and depth buffers there are, how to use 
   // them, how many samples, etc.
 
@@ -92,10 +95,14 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
 }
 
 void DestroySwapchainRenderPass(const VulkanSwapchain& swapchain, VkRenderPass render_pass) {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkDestroyRenderPass(swapchain.window_data->context_data->device, render_pass, swapchain.window_data->context_data->allocator);
 }
 
 void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer command_buffer, int swapchain_image_index) {
+  CALCIUM_PROFILE_FUNCTION();
+
  VkRenderPassBeginInfo render_pass_info { VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
   render_pass_info.renderPass = swapchain.render_pass;
   render_pass_info.framebuffer = swapchain.framebuffers[swapchain_image_index];
@@ -108,6 +115,8 @@ void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer co
 }
 
 void RecordEndRenderPassCommand(VkCommandBuffer command_buffer) {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkCmdEndRenderPass(command_buffer);
 }
 

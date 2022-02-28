@@ -4,9 +4,13 @@
 #include <assert.h>
 #include <fstream>
 
+#include "instrumentor.hpp"
+
 namespace cl {
 
 SpvCode Shader::ReadSpv(const char* file_path) {
+  CALCIUM_PROFILE_FUNCTION();
+
   std::ifstream file(file_path, std::ios::ate | std::ios::binary);
   assert(file.is_open());
   size_t file_size = (size_t)file.tellg();
@@ -31,6 +35,8 @@ void Shader::UploadUniform(const std::string& name, void* data) {
 }
 
 ShaderCodeMap Shader::ReadAllSpvFiles(const ShaderCreateInfo& shader_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   ShaderCodeMap code_map;
   if (!shader_info.vert_path.empty()) { code_map.emplace(ShaderStage::kVertexShader,      ReadSpv(shader_info.vert_path.c_str())); }
   if (!shader_info.frag_path.empty()) { code_map.emplace(ShaderStage::kFragmentShader,    ReadSpv(shader_info.frag_path.c_str())); }

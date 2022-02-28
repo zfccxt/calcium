@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "glfw_utils.hpp"
+#include "instrumentor.hpp"
 
 namespace cl {
 
@@ -19,6 +20,8 @@ GlfwWindow::~GlfwWindow() {
 }
 
 void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   glfwWindowHint(GLFW_RESIZABLE, create_info.enable_resize);
 
   glfw_window_ = glfwCreateWindow(create_info.width, create_info.height, create_info.title.c_str(), nullptr, nullptr);
@@ -112,6 +115,8 @@ void GlfwWindow::RemoveKeyReleaseCallback(KeyCode key) {
 }
 
 void GlfwWindow::PerformKeyCallbacks(GLFWwindow* glfw_window, int key, int scancode, int action, int mods) {
+  CALCIUM_PROFILE_FUNCTION();
+
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
   if (action == GLFW_PRESS) {
     auto it = win->key_press_callbacks_.find((KeyCode)key);
@@ -136,6 +141,8 @@ void GlfwWindow::RemoveResizeCallback() {
 }
 
 void GlfwWindow::PerformFramebufferSizeCallbacks(GLFWwindow* glfw_window, int width, int height) {
+  CALCIUM_PROFILE_FUNCTION();
+
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
   win->OnFramebufferResize(width, height);
   if (win->resize_callback_) {
@@ -160,6 +167,8 @@ void GlfwWindow::RemoveMouseButtonReleaseCallback(MouseButton button) {
 }
 
 void GlfwWindow::PerformMouseButtonCallbacks(GLFWwindow* glfw_window, int button, int action, int mods) {
+  CALCIUM_PROFILE_FUNCTION();
+
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
   if (action == GLFW_PRESS) {
     auto it = win->mouse_press_callbacks_.find((MouseButton)button);
@@ -184,6 +193,8 @@ void GlfwWindow::RemoveMouseWheelCallback() {
 }
 
 void GlfwWindow::PerformMouseWheelCallbacks(GLFWwindow* glfw_window, double xoffs, double yoffs) {
+  CALCIUM_PROFILE_FUNCTION();
+
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
   if (win->mouse_wheel_callback_) {
     win->mouse_wheel_callback_(xoffs, yoffs);
@@ -191,6 +202,8 @@ void GlfwWindow::PerformMouseWheelCallbacks(GLFWwindow* glfw_window, double xoff
 }
 
 void GlfwWindow::PerformMouseMoveCallbacks(GLFWwindow* glfw_window, double xoffs, double yoffs) {
+  CALCIUM_PROFILE_FUNCTION();
+
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
   if (win->mouse_move_callback_) {
     win->mouse_move_callback_(xoffs - win->cursor_last_x_, yoffs - win->cursor_last_y_);

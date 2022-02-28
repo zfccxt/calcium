@@ -1,5 +1,6 @@
 #include "vulkan_uniform_buffer.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_buffer_utils.hpp"
 #include "vulkan_constants.hpp"
 #include "vulkan_window.hpp"
@@ -7,6 +8,8 @@
 namespace cl::Vulkan {
 
 VulkanUniformBuffer::VulkanUniformBuffer(VulkanContextData* context, const ShaderReflectionDetails::UniformData& descriptor) : context_(context) {
+  CALCIUM_PROFILE_FUNCTION();
+
   size = descriptor.size;
 
   buffers.resize(kMaxFramesInFlight);
@@ -18,6 +21,8 @@ VulkanUniformBuffer::VulkanUniformBuffer(VulkanContextData* context, const Shade
 }
 
 VulkanUniformBuffer::~VulkanUniformBuffer() {
+  CALCIUM_PROFILE_FUNCTION();
+
   for (size_t i = 0; i < kMaxFramesInFlight; ++i) {
     vkDestroyBuffer(context_->device, buffers[i], context_->allocator);
     vkFreeMemory(context_->device, buffers_memory[i], context_->allocator);
@@ -25,6 +30,8 @@ VulkanUniformBuffer::~VulkanUniformBuffer() {
 }
 
 void VulkanUniformBuffer::UploadData(void* to_upload) {
+  CALCIUM_PROFILE_FUNCTION();
+
   void* data;
   auto bound_render_target = context_->bound_render_target.lock();
   size_t index = bound_render_target->GetNextFrameIndex();

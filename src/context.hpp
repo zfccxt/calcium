@@ -18,7 +18,7 @@ namespace cl {
 
 class Context {
 public:
-  virtual ~Context() = default;
+  virtual ~Context();
 
   std::shared_ptr<Window> CreateWindow();
   std::shared_ptr<Window> CreateWindow(size_t width, size_t height);

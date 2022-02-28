@@ -5,6 +5,8 @@
   #include "vulkan/vulkan_context.hpp"
 #endif
 
+#include "instrumentor.hpp"
+
 namespace cl {
 
 std::shared_ptr<Window> Context::CreateWindow() {
@@ -53,6 +55,8 @@ std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
 }
 
 std::shared_ptr<Context> CreateContext(Backend backend) {
+  CALCIUM_PROFILE_BEGIN("profile_results.json");
+
 #ifdef CALCIUM_VULKAN_SDK_FOUND
   if (backend == Backend::kVulkan) {
     return std::make_shared<Vulkan::VulkanContext>();
@@ -60,6 +64,10 @@ std::shared_ptr<Context> CreateContext(Backend backend) {
 #endif
 
   return std::make_shared<OpenGL::OpenGLContext>();
+}
+
+Context::~Context() {
+  CALCIUM_PROFILE_END();
 }
 
 }

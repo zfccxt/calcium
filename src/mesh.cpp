@@ -3,10 +3,14 @@
 #include <fast_obj.h>
 #include <meshoptimizer.h>
 
+#include "instrumentor.hpp"
+
 namespace cl {
 
 // TODO: support .obj quad faces as well as triangles
 MeshData Mesh::LoadObj(const std::string& file_path) {
+  CALCIUM_PROFILE_FUNCTION();
+
   fastObjMesh* mesh = fast_obj_read(file_path.c_str());
   assert(mesh);
 

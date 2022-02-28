@@ -2,6 +2,8 @@
 
 #include <assert.h>
 
+#include "instrumentor.hpp"
+
 namespace cl::OpenGL {
 
 GLenum OpenGLTypeOf(ShaderDataType type) {
@@ -22,6 +24,8 @@ GLenum OpenGLTypeOf(ShaderDataType type) {
 }
 
 OpenGLMesh::OpenGLMesh(const MeshCreateInfo& mesh_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   glGenVertexArrays(1, &vertex_array_id_);
   glBindVertexArray(vertex_array_id_);
 
@@ -55,12 +59,16 @@ OpenGLMesh::OpenGLMesh(const MeshCreateInfo& mesh_info) {
 }
 
 OpenGLMesh::~OpenGLMesh() {
+  CALCIUM_PROFILE_FUNCTION();
+
   glDeleteBuffers(1, &index_buffer_id_);
   glDeleteBuffers(1, &vertex_buffer_id_);
   glDeleteVertexArrays(1, &vertex_array_id_);
 }
 
 void OpenGLMesh::Draw() {
+  CALCIUM_PROFILE_FUNCTION();
+
   glBindVertexArray(vertex_array_id_);
   glDrawElements(GL_TRIANGLES, num_indices_, GL_UNSIGNED_INT, 0);
 }

@@ -7,6 +7,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
 namespace cl::Vulkan {
@@ -15,6 +16,8 @@ namespace cl::Vulkan {
 #pragma warning(disable : 26812)
 
 VulkanSwapchainSupportDetails::VulkanSwapchainSupportDetails(VkPhysicalDevice physical_device, VkSurfaceKHR surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Query the physical device's surface capabilities
   VK_CHECK(vkGetPhysicalDeviceSurfaceCapabilitiesKHR(physical_device, surface, &surface_capabilities));
 
@@ -36,6 +39,8 @@ VulkanSwapchainSupportDetails::VulkanSwapchainSupportDetails(VkPhysicalDevice ph
 }
 
 VkSurfaceFormatKHR VulkanSwapchainSupportDetails::ChooseBestSurfaceFormat() const {
+  CALCIUM_PROFILE_FUNCTION();
+
   // TODO: Rank available surface formats and pick the best
 
   // If SRBG is available, that is what we will use
@@ -50,6 +55,8 @@ VkSurfaceFormatKHR VulkanSwapchainSupportDetails::ChooseBestSurfaceFormat() cons
 }
 
 VkPresentModeKHR VulkanSwapchainSupportDetails::ChooseBestPresentMode(bool enable_vsync) const {
+  CALCIUM_PROFILE_FUNCTION();
+
   // VK_PRESENT_MODE_FIFO_KHR waits for a vertical blank. This should be the correct way of doing vsync across all
   // platforms that support Vulkan.
   // VK_PRESENT_MODE_FIFO_KHR is guaranteed to be available as long as the physical device is capable of presentation
@@ -79,6 +86,8 @@ VkPresentModeKHR VulkanSwapchainSupportDetails::ChooseBestPresentMode(bool enabl
 }
 
 VkExtent2D VulkanSwapchainSupportDetails::ChooseSwapExtent(GLFWwindow* glfw_window) const {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Query the size of the window framebuffer and use that as the swap extent
   int width, height;
   glfwGetFramebufferSize(glfw_window, &width, &height);

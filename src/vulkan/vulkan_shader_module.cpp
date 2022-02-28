@@ -1,5 +1,6 @@
 #include "vulkan_shader_module.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 
 namespace cl::Vulkan {
@@ -8,6 +9,8 @@ namespace cl::Vulkan {
 #pragma warning(disable : 26812)
 
 VkShaderModule CreateShaderModule(VulkanContextData* context, const SpvCode& code) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkShaderModuleCreateInfo create_info { VK_STRUCTURE_TYPE_SHADER_MODULE_CREATE_INFO };
   create_info.codeSize = code.size() * sizeof(uint32_t);
   create_info.pCode = code.data();

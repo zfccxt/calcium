@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
@@ -9,6 +10,8 @@
 namespace cl::Vulkan {
 
 VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo create_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   glfwWindowHint(GLFW_CLIENT_API, GLFW_NO_API);
   if (create_info.title.empty()) {
     create_info.title = "Calcium [Vulkan]";
@@ -39,6 +42,8 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo cre
 }
 
 VulkanWindow::~VulkanWindow() {
+  CALCIUM_PROFILE_FUNCTION();
+
   window_data_.render_command_buffers.DestroyRenderCommandBuffers(window_data_);
 
   window_data_.swapchain.sync_objects.DestroySwapchainSyncObjects(window_data_);
@@ -96,6 +101,8 @@ VkCommandBuffer VulkanWindow::GetCurrentRenderCommandBuffer() {
 }
 
 void VulkanWindow::OnFramebufferResize(int width, int height) {
+  CALCIUM_PROFILE_FUNCTION();
+
   window_data_.swapchain.RecreateSwapchain();
 
   std::vector<std::weak_ptr<VulkanShader>>::iterator iter;

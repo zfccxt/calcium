@@ -2,6 +2,7 @@
 
 #include <assert.h>
 
+#include "instrumentor.hpp"
 #include "vulkan_buffer_utils.hpp"
 #include "vulkan_check.hpp"
 #include "vulkan_command_buffer_utils.hpp"
@@ -13,6 +14,7 @@ namespace cl::Vulkan {
 
 void CreateImage(VulkanContextData* context, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
     VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& image_memory, uint32_t mip_levels) {
+  CALCIUM_PROFILE_FUNCTION();
 
   // Create texture image
   VkImageCreateInfo image_info { VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
@@ -48,6 +50,8 @@ bool HasStencilComponent(VkFormat format) {
 }
 
 void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat format, VkImageLayout old_layout, VkImageLayout new_layout, uint32_t mip_levels) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkCommandBuffer command_buffer = BeginSingleUseCommandBuffer(context);
 
   VkImageMemoryBarrier barrier { VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER };
@@ -101,6 +105,8 @@ void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat f
 }
 
 void CopyBufferToImage(VulkanContextData* context, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkCommandBuffer command_buffer = BeginSingleUseCommandBuffer(context);
 
   VkBufferImageCopy region { };
@@ -122,6 +128,8 @@ void CopyBufferToImage(VulkanContextData* context, VkBuffer buffer, VkImage imag
 }
 
 VkFormat FindSupportedFormat(VulkanContextData* context, const std::vector<VkFormat>& candidates, VkImageTiling tiling, VkFormatFeatureFlags features) {
+  CALCIUM_PROFILE_FUNCTION();
+
   for (VkFormat format : candidates) {
     VkFormatProperties props;
     vkGetPhysicalDeviceFormatProperties(context->physical_device, format, &props);
@@ -143,6 +151,8 @@ VkFormat FindDepthFormat(VulkanContextData* context) {
 }
 
 VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkFormat format, VkImageAspectFlags aspect_flags, uint32_t mip_levels) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkImageViewCreateInfo view_info { VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
   view_info.image = image;
   view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
@@ -159,6 +169,7 @@ VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkFormat 
 }
 
 void GenerateMipmaps(VulkanContextData* context, VkImage image, VkFormat image_format, uint32_t width, uint32_t height, uint32_t mip_levels) {
+  CALCIUM_PROFILE_FUNCTION();
 
 #ifdef CALCIUM_BUILD_DEBUG
   // Check whether image format supports linear blitting

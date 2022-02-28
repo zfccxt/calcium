@@ -1,5 +1,6 @@
 #include "vulkan_mesh.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_buffer_utils.hpp"
 #include "vulkan_check.hpp"
 #include "vulkan_window.hpp"
@@ -7,6 +8,8 @@
 namespace cl::Vulkan {
 
 VulkanMesh::VulkanMesh(VulkanContextData* context, const MeshCreateInfo& mesh_info) : context_(context) {
+  CALCIUM_PROFILE_FUNCTION();
+
   num_indices_ = mesh_info.num_indices;
 
   CreateVertexBuffer(mesh_info);
@@ -14,6 +17,8 @@ VulkanMesh::VulkanMesh(VulkanContextData* context, const MeshCreateInfo& mesh_in
 }
 
 void VulkanMesh::CreateVertexBuffer(const MeshCreateInfo& create_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VkDeviceSize buffer_size = sizeof(create_info.vertices[0]) * create_info.num_vertices;
 
   // GPU memory that is not visible or accessible by the CPU tends to be a lot faster, so we must use a staging buffer
@@ -45,6 +50,8 @@ void VulkanMesh::CreateVertexBuffer(const MeshCreateInfo& create_info) {
 }
 
 void VulkanMesh::CreateIndexBuffer(const MeshCreateInfo& create_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Almost a direct copy of CreateVertexBuffer except for a few differences
   // The buffer size is different
   VkDeviceSize buffer_size = sizeof(create_info.indices[0]) * create_info.num_indices;
@@ -80,6 +87,8 @@ VulkanMesh::~VulkanMesh() {
 }
 
 void VulkanMesh::Draw() {
+  CALCIUM_PROFILE_FUNCTION();
+
   constexpr VkDeviceSize offsets[] = { 0 };
   VkBuffer vertex_buffers[] = { vertex_buffer_ };
   auto render_target = context_->bound_render_target.lock();

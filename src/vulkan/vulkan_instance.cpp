@@ -5,6 +5,7 @@
 #include <GLFW/glfw3.h>
 
 #include "debug_call.hpp"
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
 namespace cl::Vulkan {
@@ -12,6 +13,8 @@ namespace cl::Vulkan {
 const std::vector<const char*> kValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 
 void CheckValidationLayerSupport() {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Get list of all available instance layers
   // First call to vkEnumerateInstanceLayerProperties gets count of supported layers
   uint32_t layer_count = 0;
@@ -38,6 +41,8 @@ void CheckValidationLayerSupport() {
 }
 
 std::vector<const char*> GetRequiredInstanceExtensions() {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Get list of extensions required by GLFW
   uint32_t glfw_extension_count = 0;
   const char** glfw_extensions = glfwGetRequiredInstanceExtensions(&glfw_extension_count);
@@ -56,6 +61,8 @@ std::vector<const char*> GetRequiredInstanceExtensions() {
 }
 
 VkInstance CreateInstance(VulkanContextData& context_data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   CALCIUM_DEBUG_CALL(CheckValidationLayerSupport());
 
   // VkApplicationinfo is optional, but can help graphics drivers to optimise for this application/engine

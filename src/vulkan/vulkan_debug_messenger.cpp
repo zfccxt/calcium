@@ -3,6 +3,8 @@
 #include <assert.h>
 #include <cstdio>
 
+#include "instrumentor.hpp"
+
 namespace cl::Vulkan {
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,

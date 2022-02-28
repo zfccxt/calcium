@@ -1,10 +1,13 @@
 #include "vulkan_pipeline_layout.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 
 namespace cl::Vulkan {
 
 VkPipelineLayout CreatePipelineLayout(VulkanContextData* context, VkDescriptorSetLayout descriptor_set_layout) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Here we let the graphics pipeline know ahead of time about any uniforms we intend to implement
   // We also use this to set up push constants
   VkPipelineLayoutCreateInfo pipeline_layout_info { VK_STRUCTURE_TYPE_PIPELINE_LAYOUT_CREATE_INFO };

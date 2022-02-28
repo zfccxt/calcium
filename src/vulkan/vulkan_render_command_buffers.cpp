@@ -1,5 +1,6 @@
 #include "vulkan_render_command_buffers.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
@@ -8,6 +9,8 @@
 namespace cl::Vulkan {
 
 void VulkanRenderCommandBuffers::CreateRenderCommandBuffers(const VulkanWindowData& window_data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   render_command_buffers.resize(kMaxFramesInFlight, VK_NULL_HANDLE);
 }
 
@@ -18,6 +21,8 @@ void VulkanRenderCommandBuffers::DestroyRenderCommandBuffers(const VulkanWindowD
 }
 
 VkCommandBuffer VulkanRenderCommandBuffers::BeginRenderCommandBuffer(VulkanWindowData& window_data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Move to next command buffer, along with its associated sync objects
   current_command_buffer_index = (current_command_buffer_index + 1) % kMaxFramesInFlight;
 
@@ -55,6 +60,8 @@ VkCommandBuffer VulkanRenderCommandBuffers::BeginRenderCommandBuffer(VulkanWindo
 }
 
 void VulkanRenderCommandBuffers::EndAndSubmitRenderCommandBuffer(VulkanWindowData& window_data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   RecordEndRenderPassCommand(render_command_buffers[current_command_buffer_index]);
 
   VK_CHECK(vkEndCommandBuffer(render_command_buffers[current_command_buffer_index]));

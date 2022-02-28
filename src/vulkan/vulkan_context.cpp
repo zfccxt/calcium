@@ -4,6 +4,7 @@
 
 #include "debug_call.hpp"
 #include "glfw_utils.hpp"
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_allocator.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_command_pool.hpp"
@@ -19,6 +20,8 @@
 namespace cl::Vulkan {
 
 VulkanContext::VulkanContext() {
+  CALCIUM_PROFILE_FUNCTION();
+
   GLFW::IncrementGLFWContextCount();
   context_data_.allocator       = CreateAllocator(context_data_);
   context_data_.instance        = CreateInstance(context_data_);

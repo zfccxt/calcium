@@ -6,6 +6,7 @@
 #include <set>
 #include <string>
 
+#include "instrumentor.hpp"
 #include "vulkan/vulkan_swapchain_support_details.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 
@@ -19,6 +20,8 @@ namespace cl::Vulkan {
 #endif
 
 bool CheckDeviceExtensionSupport(VkPhysicalDevice physical_device) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // We get a list of all extensions supported by the device and populate a vector with it
   uint32_t extension_count;
   vkEnumerateDeviceExtensionProperties(physical_device, nullptr, &extension_count, nullptr);
@@ -39,6 +42,8 @@ bool CheckDeviceExtensionSupport(VkPhysicalDevice physical_device) {
 
 
 int RateDeviceSuitability(VkPhysicalDevice physical_device, VkSurfaceKHR surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // TODO: Improve this function
 
   // Some systems might have more than one Vulkan capable GPU. Here we give devices a score based on their suitability.
@@ -102,6 +107,8 @@ int RateDeviceSuitability(VkPhysicalDevice physical_device, VkSurfaceKHR surface
 }
 
 VkPhysicalDevice ChoosePhysicalDevice(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // First call to vkEnumeratePhysicalDevices tells us how many devices are present
   uint32_t device_count = 0;
   vkEnumeratePhysicalDevices(context_data.instance, &device_count, nullptr);

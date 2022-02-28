@@ -1,5 +1,6 @@
 #include "vulkan_shader.hpp"
 
+#include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 #include "vulkan_descriptor_pool.hpp"
 #include "vulkan_descriptor_set_layout.hpp"
@@ -16,6 +17,7 @@ namespace cl::Vulkan {
 VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& shader_info, bool enable_depth_test,
     bool enable_backface_cull, WindingOrder front_face, VkExtent2D render_target_extent, VkRenderPass render_pass)
     : context_(context), enable_depth_test_(enable_depth_test), enable_backface_cull_(enable_backface_cull), front_face_(front_face) {
+  CALCIUM_PROFILE_FUNCTION();
 
   ShaderCodeMap code_map = ReadAllSpvFiles(shader_info);
   for (auto& code : code_map) {
@@ -38,6 +40,8 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
 }
 
 VulkanShader::~VulkanShader() {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkDeviceWaitIdle(context_->device);
 
   if (reflection_details_.HasUniformsOrTextures()) {
@@ -59,6 +63,8 @@ VulkanShader::~VulkanShader() {
 }
 
 void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass) {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkDeviceWaitIdle(context_->device);
 
   vkDestroyPipeline(context_->device, graphics_pipeline_, context_->allocator);
@@ -72,6 +78,8 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
 }
 
 void VulkanShader::CreateUniforms() {
+  CALCIUM_PROFILE_FUNCTION();
+
   // We only need descriptors if the shader actually contains any uniform buffers or texture samplers
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_set_layout_ = CreateDescriptorSetLayout(context_, reflection_details_);
@@ -82,6 +90,8 @@ void VulkanShader::CreateUniforms() {
 }
 
 void VulkanShader::DestroyUniforms() {
+  CALCIUM_PROFILE_FUNCTION();
+
   if (reflection_details_.HasUniformsOrTextures()) {
     vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
     vkDestroyDescriptorSetLayout(context_->device, descriptor_set_layout_, context_->allocator);
@@ -91,6 +101,8 @@ void VulkanShader::DestroyUniforms() {
 
 // TODO: cache pipelines
 void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // Create the graphics pipeline, setting up all stages explicitly
   std::vector<VkPipelineShaderStageCreateInfo> shader_stages;
   for (const auto& shader_module : shader_modules_) {
@@ -259,16 +271,22 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
 }
 
 void VulkanShader::Bind(VkCommandBuffer command_buffer) {
+  CALCIUM_PROFILE_FUNCTION();
+
   vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_);
   auto rt = context_->bound_render_target.lock();
   vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_layout_, 0, 1, &descriptor_sets_[rt->GetCurrentFrameIndex()], 0, nullptr);
 }
 
 void VulkanShader::UploadUniform(int binding, void* data) {
+  CALCIUM_PROFILE_FUNCTION();
+
   uniform_buffers_.at(binding)->UploadData(data);
 }
 
 void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
+  CALCIUM_PROFILE_FUNCTION();
+
   VulkanTexture* tex = (VulkanTexture*)texture.get();
   if (reflection_details_.HasUniformsOrTextures() && tex != bound_textures_[binding]) {
     bound_textures_[binding] = tex;

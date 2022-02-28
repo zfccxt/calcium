@@ -2,9 +2,13 @@
 
 #include <glad/glad.h>
 
+#include "instrumentor.hpp"
+
 namespace cl::OpenGL {
 
 void ApplyOpenGLCompileOptions(spirv_cross::CompilerGLSL& compiler) {
+  CALCIUM_PROFILE_FUNCTION();
+
 	spirv_cross::CompilerGLSL::Options options;
   
   // On emscripten, target GLES 3.0
