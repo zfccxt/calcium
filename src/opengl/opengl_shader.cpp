@@ -63,10 +63,12 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
     uniforms_.emplace(uniform.first, std::make_unique<OpenGLUniformBuffer>(program_id_, uniform.second.binding, uniform.second.size, uniform.second.uniform_block_name));
   }
 
+  glUseProgram(program_id_);
   // Store sampler bindings
   size_t i = 0;
   for (const auto& sampler : reflection_details_.textures) {
     samplers_.emplace(sampler.first, i);
+    glUniform1i(glGetUniformLocation(program_id_, sampler.second.name.c_str()), i);
     ++i;
   }
 }
@@ -86,7 +88,8 @@ void OpenGLShader::UploadUniform(int binding, void* data) {
 void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& texture) {
   CALCIUM_PROFILE_FUNCTION();
 
-  glActiveTexture(GL_TEXTURE0 + samplers_[binding]);
+  size_t slot = samplers_[binding];
+  glActiveTexture(GL_TEXTURE0 + slot);
   std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
 }
 
@@ -94,7 +97,7 @@ void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& textur
   CALCIUM_PROFILE_FUNCTION();
 
   for (const auto& sampler : samplers_) {
-    glActiveTexture(GL_TEXTURE0 + sampler.first);
+    glActiveTexture(GL_TEXTURE0 + sampler.second);
     std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
   }
 }
