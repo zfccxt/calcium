@@ -29,6 +29,7 @@ VkShaderStageFlagBits FindVulkanShaderStage(ShaderStage stage) {
     case ShaderStage::kTaskShader:        return VK_SHADER_STAGE_TASK_BIT_NV;
     case ShaderStage::kTesselationShader: return VK_SHADER_STAGE_TESSELLATION_CONTROL_BIT;
     case ShaderStage::kVertexShader:      return VK_SHADER_STAGE_VERTEX_BIT;
+    default:                              return VK_SHADER_STAGE_FLAG_BITS_MAX_ENUM;
   }
 }
 
