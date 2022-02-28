@@ -34,7 +34,9 @@ void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
 
   glfwSetWindowUserPointer(glfw_window_, this);
   glfwSetKeyCallback(glfw_window_, PerformKeyCallbacks);
-  glfwSetFramebufferSizeCallback(glfw_window_, PerformFramebufferSizeCallback);
+  glfwSetFramebufferSizeCallback(glfw_window_, PerformFramebufferSizeCallbacks);
+  glfwSetMouseButtonCallback(glfw_window_, PerformMouseButtonCallbacks);
+  glfwSetScrollCallback(glfw_window_, PerformMouseWheelCallbacks);
 }
 
 float GlfwWindow::GetAspectRatio() const {
@@ -140,11 +142,58 @@ void GlfwWindow::RemoveResizeCallback() {
   resize_callback_ = nullptr;
 }
 
-void GlfwWindow::PerformFramebufferSizeCallback(GLFWwindow* glfw_window, int width, int height) {
+void GlfwWindow::PerformFramebufferSizeCallbacks(GLFWwindow* glfw_window, int width, int height) {
   GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
   win->OnFramebufferResize(width, height);
   if (win->resize_callback_) {
     win->resize_callback_();
+  }
+}
+
+void GlfwWindow::SetMouseButtonPressCallback(MouseButton button, MouseButtonCallback callback) {
+  mouse_press_callbacks_.emplace(button, callback);
+}
+
+void GlfwWindow::RemoveMouseButtonPressCallback(MouseButton button) {
+  mouse_press_callbacks_.erase(button);
+}
+
+void GlfwWindow::SetMouseButtonReleaseCallback(MouseButton button, MouseButtonCallback callback) {
+  mouse_release_callbacks_.emplace(button, callback);
+}
+
+void GlfwWindow::RemoveMouseButtonReleaseCallback(MouseButton button) {
+  mouse_release_callbacks_.erase(button);
+}
+
+void GlfwWindow::PerformMouseButtonCallbacks(GLFWwindow* glfw_window, int button, int action, int mods) {
+  GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
+  if (action == GLFW_PRESS) {
+    auto it = win->mouse_press_callbacks_.find((MouseButton)button);
+    if (it != win->mouse_press_callbacks_.end()) {
+      it->second();
+    }
+  }
+  else {
+    auto it = win->mouse_release_callbacks_.find((MouseButton)button);
+    if (it != win->mouse_release_callbacks_.end()) {
+      it->second();
+    }
+  }
+}
+
+void GlfwWindow::SetMouseWheelCallback(MouseWheelCallback callback) {
+  mouse_wheel_callback_ = callback;
+}
+
+void GlfwWindow::RemoveMouseWheelCallback() {
+  mouse_wheel_callback_ = nullptr;
+}
+
+void GlfwWindow::PerformMouseWheelCallbacks(GLFWwindow* glfw_window, double xoffs, double yoffs) {
+  GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
+  if (win->mouse_wheel_callback_) {
+    win->mouse_wheel_callback_(xoffs, yoffs);
   }
 }
 

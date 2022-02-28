@@ -40,6 +40,13 @@ public:
 
   virtual void SetResizeCallback(ResizeCallback) = 0;
   virtual void RemoveResizeCallback() = 0;
+
+  virtual void SetMouseButtonPressCallback(MouseButton, MouseButtonCallback) = 0;
+  virtual void RemoveMouseButtonPressCallback(MouseButton) = 0;
+  virtual void SetMouseButtonReleaseCallback(MouseButton, MouseButtonCallback) = 0;
+  virtual void RemoveMouseButtonReleaseCallback(MouseButton) = 0;
+  virtual void SetMouseWheelCallback(MouseWheelCallback) = 0;
+  virtual void RemoveMouseWheelCallback() = 0;
 };
 
 }

@@ -5,6 +5,7 @@
 
 namespace cl {
 
+// TODO: support .obj quad faces as well as triangles
 MeshData Mesh::LoadObj(const std::string& file_path) {
   fastObjMesh* mesh = fast_obj_read(file_path.c_str());
   assert(mesh);

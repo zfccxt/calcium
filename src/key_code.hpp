@@ -127,4 +127,16 @@ enum class KeyCode {
   kMaxEnum = kMenu
 };
 
+enum class MouseButton {
+  kLeftClick   = 0,
+  kRightClick  = 1,
+  kMiddleClick = 2,
+  kButton4     = 3,
+  kButton5     = 4,
+  kButton6     = 5,
+  kButton7     = 6,
+  kButton8     = 7,
+  kButton9     = 8
+};
+
 }

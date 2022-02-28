@@ -44,12 +44,21 @@ public:
   virtual void SetResizeCallback(ResizeCallback) override;
   virtual void RemoveResizeCallback() override;
 
+  virtual void SetMouseButtonPressCallback(MouseButton, MouseButtonCallback) override;
+  virtual void RemoveMouseButtonPressCallback(MouseButton) override;
+  virtual void SetMouseButtonReleaseCallback(MouseButton, MouseButtonCallback) override;
+  virtual void RemoveMouseButtonReleaseCallback(MouseButton) override;
+  virtual void SetMouseWheelCallback(MouseWheelCallback) override;
+  virtual void RemoveMouseWheelCallback() override;
+
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
 
 private:
-  static void PerformKeyCallbacks(GLFWwindow* window, int key, int scancode, int action, int mods);
-  static void PerformFramebufferSizeCallback(GLFWwindow* window, int width, int height);
+  static void PerformKeyCallbacks(GLFWwindow* glfw_window, int key, int scancode, int action, int mods);
+  static void PerformFramebufferSizeCallbacks(GLFWwindow* glfw_window, int width, int height);
+  static void PerformMouseButtonCallbacks(GLFWwindow* glfw_window, int button, int action, int mods);
+  static void PerformMouseWheelCallbacks(GLFWwindow* glfw_window, double xoffset, double yoffset);
 
 protected:
   virtual void OnFramebufferResize(int width, int height) = 0;
@@ -65,7 +74,9 @@ private:
 
   std::unordered_map<KeyCode, KeyCallback> key_press_callbacks_;
   std::unordered_map<KeyCode, KeyCallback> key_release_callbacks_;
-
+  std::unordered_map<MouseButton, MouseButtonCallback> mouse_press_callbacks_;
+  std::unordered_map<MouseButton, MouseButtonCallback> mouse_release_callbacks_;
+  MouseWheelCallback mouse_wheel_callback_ = nullptr;
   ResizeCallback resize_callback_ = nullptr;
 };
 
