@@ -26,8 +26,6 @@ public:
   virtual void UnlockCursor() = 0;
   virtual void ToggleCursorLock() = 0;
 
-  virtual float CursorDeltaX() = 0;
-  virtual float CursorDeltaY() = 0;
   virtual float CursorX() = 0;
   virtual float CursorY() = 0;
 
@@ -47,6 +45,8 @@ public:
   virtual void RemoveMouseButtonReleaseCallback(MouseButton) = 0;
   virtual void SetMouseWheelCallback(MouseWheelCallback) = 0;
   virtual void RemoveMouseWheelCallback() = 0;
+  virtual void SetMouseMoveCallback(MouseMoveCallback) = 0;
+  virtual void RemoveMouseMoveCallback() = 0;
 };
 
 }

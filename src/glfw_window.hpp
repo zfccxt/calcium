@@ -29,8 +29,6 @@ public:
   virtual void UnlockCursor() override;
   virtual void ToggleCursorLock() override;
 
-  virtual float CursorDeltaX() override;
-  virtual float CursorDeltaY() override;
   virtual float CursorX() override;
   virtual float CursorY() override;
 
@@ -50,6 +48,8 @@ public:
   virtual void RemoveMouseButtonReleaseCallback(MouseButton) override;
   virtual void SetMouseWheelCallback(MouseWheelCallback) override;
   virtual void RemoveMouseWheelCallback() override;
+  virtual void SetMouseMoveCallback(MouseMoveCallback) override;
+  virtual void RemoveMouseMoveCallback() override;
 
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
@@ -59,6 +59,7 @@ private:
   static void PerformFramebufferSizeCallbacks(GLFWwindow* glfw_window, int width, int height);
   static void PerformMouseButtonCallbacks(GLFWwindow* glfw_window, int button, int action, int mods);
   static void PerformMouseWheelCallbacks(GLFWwindow* glfw_window, double xoffset, double yoffset);
+  static void PerformMouseMoveCallbacks(GLFWwindow* glfw_window, double xoffset, double yoffset);
 
 protected:
   virtual void OnFramebufferResize(int width, int height) = 0;
@@ -69,7 +70,6 @@ protected:
 private:
   static size_t num_glfw_windows_;
 
-  double cursor_x_      = 0.0, cursor_y_      = 0.0;
   double cursor_last_x_ = 0.0, cursor_last_y_ = 0.0;
 
   std::unordered_map<KeyCode, KeyCallback> key_press_callbacks_;
@@ -78,6 +78,7 @@ private:
   std::unordered_map<MouseButton, MouseButtonCallback> mouse_release_callbacks_;
   MouseWheelCallback mouse_wheel_callback_ = nullptr;
   ResizeCallback resize_callback_ = nullptr;
+  MouseMoveCallback mouse_move_callback_ = nullptr;
 };
 
 }

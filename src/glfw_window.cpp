@@ -37,6 +37,7 @@ void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
   glfwSetFramebufferSizeCallback(glfw_window_, PerformFramebufferSizeCallbacks);
   glfwSetMouseButtonCallback(glfw_window_, PerformMouseButtonCallbacks);
   glfwSetScrollCallback(glfw_window_, PerformMouseWheelCallbacks);
+  glfwSetCursorPosCallback(glfw_window_, PerformMouseMoveCallbacks);
 }
 
 float GlfwWindow::GetAspectRatio() const {
@@ -59,10 +60,6 @@ void GlfwWindow::Center(bool center_horizontal, bool center_vertical) {
 
 void GlfwWindow::PollEvents() {
   glfwPollEvents();
-
-  cursor_last_x_ = cursor_x_;
-  cursor_last_y_ = cursor_y_;
-  glfwGetCursorPos(glfw_window_, &cursor_x_, &cursor_y_);
 }
 
 bool GlfwWindow::IsCursorLocked() {
@@ -82,20 +79,16 @@ void GlfwWindow::ToggleCursorLock() {
   glfwSetInputMode(glfw_window_, GLFW_CURSOR, mode == GLFW_CURSOR_DISABLED ? GLFW_CURSOR_NORMAL : GLFW_CURSOR_DISABLED);
 }
 
-float GlfwWindow::CursorDeltaX() {
-  return (float)(cursor_x_ - cursor_last_x_);
-}
-
-float GlfwWindow::CursorDeltaY() {
-  return (float)(cursor_y_ - cursor_last_y_);
-}
-
 float GlfwWindow::CursorX() {
-  return cursor_x_;
+  double x, y;
+  glfwGetCursorPos(glfw_window_, &x, &y);
+  return x;
 }
 
 float GlfwWindow::CursorY() {
-  return cursor_y_;
+  double x, y;
+  glfwGetCursorPos(glfw_window_, &x, &y);
+  return y;
 }
 
 bool GlfwWindow::IsKeyDown(KeyCode key) {
@@ -196,5 +189,23 @@ void GlfwWindow::PerformMouseWheelCallbacks(GLFWwindow* glfw_window, double xoff
     win->mouse_wheel_callback_(xoffs, yoffs);
   }
 }
+
+void GlfwWindow::PerformMouseMoveCallbacks(GLFWwindow* glfw_window, double xoffs, double yoffs) {
+  GlfwWindow* win = (GlfwWindow*)glfwGetWindowUserPointer(glfw_window);
+  if (win->mouse_move_callback_) {
+    win->mouse_move_callback_(xoffs - win->cursor_last_x_, yoffs - win->cursor_last_y_);
+  }
+  win->cursor_last_x_ = xoffs;
+  win->cursor_last_y_ = yoffs;
+}
+
+void GlfwWindow::SetMouseMoveCallback(MouseMoveCallback callback) {
+  mouse_move_callback_ = callback;
+}
+
+void GlfwWindow::RemoveMouseMoveCallback() {
+  mouse_move_callback_ = nullptr;
+}
+
 
 }
