@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "backend.hpp"
+#include "context_create_info.hpp"
 #include "mesh.hpp"
 #include "mesh_create_info.hpp"
 #include "mesh_data.hpp"
@@ -39,6 +40,7 @@ public:
   virtual void EndRenderPass() = 0;
 };
 
+std::shared_ptr<Context> CreateContext(const ContextCreateInfo& context_info);
 std::shared_ptr<Context> CreateContext(Backend backend = Backend::kVulkan);
 
 }

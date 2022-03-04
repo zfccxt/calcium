@@ -54,16 +54,23 @@ std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
   return CreateTexture(texture_info);
 }
 
-std::shared_ptr<Context> CreateContext(Backend backend) {
+std::shared_ptr<Context> CreateContext(const ContextCreateInfo& context_info) {
   CALCIUM_PROFILE_BEGIN("profile_results.json");
 
 #ifdef CALCIUM_VULKAN_SDK_FOUND
-  if (backend == Backend::kVulkan) {
+  if (context_info.backend == Backend::kVulkan) {
     return std::make_shared<vulkan::VulkanContext>();
   }
 #endif
 
   return std::make_shared<opengl::OpenGLContext>();
+}
+
+
+std::shared_ptr<Context> CreateContext(Backend backend) {
+  ContextCreateInfo context_info;
+  context_info.backend = backend;
+  return CreateContext(context_info);
 }
 
 Context::~Context() {
