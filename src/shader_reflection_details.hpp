@@ -37,11 +37,11 @@ struct ShaderReflectionDetails {
   std::unordered_map<size_t, TextureData> textures;
 
 public:
-  bool HasVertexInputs() const {
+  inline bool HasVertexInputs() const {
     return vertex_input_layout.GetNumElements() > 0;
   }
 
-  bool HasUniformsOrTextures() const {
+  inline bool HasUniformsOrTextures() const {
     return !uniforms.empty() || !textures.empty();
   }
 };

@@ -275,7 +275,10 @@ void VulkanShader::Bind(VkCommandBuffer command_buffer) {
 
   vkCmdBindPipeline(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_);
   auto rt = context_->bound_render_target.lock();
-  vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_layout_, 0, 1, &descriptor_sets_[rt->GetCurrentFrameIndex()], 0, nullptr);
+
+  if (reflection_details_.HasUniformsOrTextures()) {
+    vkCmdBindDescriptorSets(command_buffer, VK_PIPELINE_BIND_POINT_GRAPHICS, graphics_pipeline_layout_, 0, 1, &descriptor_sets_[rt->GetCurrentFrameIndex()], 0, nullptr);
+  }
 }
 
 void VulkanShader::UploadUniform(int binding, void* data) {
