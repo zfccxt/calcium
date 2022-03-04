@@ -8,7 +8,7 @@
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 const std::vector<const char*> kValidationLayers = { "VK_LAYER_KHRONOS_validation" };
 

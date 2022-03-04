@@ -6,7 +6,7 @@
 #include "vulkan_check.hpp"
 #include "vulkan_shader_module.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkDescriptorSetLayout CreateDescriptorSetLayout(VulkanContextData* context, const ShaderReflectionDetails& reflection_details) {
   CALCIUM_PROFILE_FUNCTION();

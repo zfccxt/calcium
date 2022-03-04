@@ -8,7 +8,7 @@
 #include "mesh_create_info.hpp"
 #include "vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 class VulkanMesh : public Mesh {
 public:

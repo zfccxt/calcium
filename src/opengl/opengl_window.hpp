@@ -4,7 +4,7 @@
 
 #include "glfw_window.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 class OpenGLWindow : public GlfwWindow {
 public:

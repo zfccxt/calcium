@@ -3,7 +3,7 @@
 #include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkCommandBuffer BeginSingleUseCommandBuffer(VulkanContextData* context) {
   CALCIUM_PROFILE_FUNCTION();

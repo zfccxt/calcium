@@ -4,7 +4,7 @@
 
 #include "buffer_layout.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkVertexInputBindingDescription CreateInputBindingDescription(const BufferLayout& layout);
 std::vector<VkVertexInputAttributeDescription>CreateInputAttribDescriptions(const BufferLayout& layout);

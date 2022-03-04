@@ -6,7 +6,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 GLenum FindOpenGLShaderStage(ShaderStage type) {
   switch (type) {

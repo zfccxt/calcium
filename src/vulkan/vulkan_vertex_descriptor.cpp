@@ -5,7 +5,7 @@
 #include "instrumentor.hpp"
 #include "shader_data_type.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkVertexInputBindingDescription CreateInputBindingDescription(const BufferLayout& layout) {
   CALCIUM_PROFILE_FUNCTION();

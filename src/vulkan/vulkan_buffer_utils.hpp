@@ -4,7 +4,7 @@
 
 #include "vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 uint32_t FindMemoryType(VulkanContextData* context, uint32_t type_filter, VkMemoryPropertyFlags props);
 VkBuffer CreateBuffer(VulkanContextData* context, VkDeviceSize size, VkBufferUsageFlags usage, VkMemoryPropertyFlags properties, VkBuffer& buffer, VkDeviceMemory& buffer_memory);

@@ -9,7 +9,7 @@
 #include "vulkan/vulkan_queue_family_indices.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 #pragma warning(push)
 #pragma warning(disable: 26812)

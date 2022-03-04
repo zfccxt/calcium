@@ -10,7 +10,7 @@
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 class OpenGLShader : public Shader {
 public:

@@ -4,7 +4,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 void ApplyOpenGLCompileOptions(spirv_cross::CompilerGLSL& compiler) {
   CALCIUM_PROFILE_FUNCTION();

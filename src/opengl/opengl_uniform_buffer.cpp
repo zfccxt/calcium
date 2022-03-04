@@ -2,7 +2,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 OpenGLUniformBuffer::OpenGLUniformBuffer(GLuint program_id, size_t binding, size_t size, const std::string& uniform_block_name) : size_(size) {
   CALCIUM_PROFILE_FUNCTION();

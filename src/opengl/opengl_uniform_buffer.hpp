@@ -7,7 +7,7 @@
 
 // TODO: uniform buffers should be able to be shared between shaders
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 class OpenGLUniformBuffer {
 public:

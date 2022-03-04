@@ -6,7 +6,7 @@
 #include "shader_stage.hpp"
 #include "vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkShaderModule CreateShaderModule(VulkanContextData* context, const SpvCode& code);
 VkShaderStageFlagBits FindVulkanShaderStage(ShaderStage stage);

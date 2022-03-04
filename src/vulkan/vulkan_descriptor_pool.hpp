@@ -10,7 +10,7 @@
 #include "vulkan_texture.hpp"
 #include "vulkan_uniform_buffer.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderReflectionDetails& reflection_details);
 std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, const VulkanUniformMap& uniform_buffers,

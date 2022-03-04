@@ -5,7 +5,7 @@
 #include "vulkan_check.hpp"
 #include "vulkan_window.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VulkanMesh::VulkanMesh(VulkanContextData* context, const MeshCreateInfo& mesh_info) : context_(context) {
   CALCIUM_PROFILE_FUNCTION();

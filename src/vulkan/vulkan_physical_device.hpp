@@ -4,7 +4,7 @@
 
 #include "vulkan/vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkPhysicalDevice ChoosePhysicalDevice(const VulkanContextData& window_data, VkSurfaceKHR temp_surface);
 

@@ -1,6 +1,6 @@
 #include "vulkan_allocator.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkAllocationCallbacks* CreateAllocator(const VulkanContextData& context_data) {
   // Unused

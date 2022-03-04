@@ -11,7 +11,7 @@
 #include "opengl_texture.hpp"
 #include "shader_reflection_details.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
   CALCIUM_PROFILE_FUNCTION();

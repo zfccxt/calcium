@@ -7,14 +7,14 @@
 #include "opengl/opengl_texture.hpp"
 #include "opengl/opengl_window.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 OpenGLContext::OpenGLContext() {
-  GLFW::IncrementGLFWContextCount();
+  glfw::IncrementGLFWContextCount();
 }
 
 OpenGLContext::~OpenGLContext() {
-  GLFW::DecrementGLFWContextCount();
+  glfw::DecrementGLFWContextCount();
 }
 
 std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& window_info) {

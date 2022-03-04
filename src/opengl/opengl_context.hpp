@@ -6,7 +6,7 @@
 #include "opengl/opengl_texture.hpp"
 #include "opengl/opengl_window.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 class OpenGLContext : public Context {
 public:

@@ -7,7 +7,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::GLFW {
+namespace cl::glfw {
 
 GLFWmonitor* FindBestMonitor(GLFWwindow* glfw_window) {
   CALCIUM_PROFILE_FUNCTION();

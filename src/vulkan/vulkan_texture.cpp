@@ -10,7 +10,7 @@
 #include "vulkan_check.hpp"
 #include "vulkan_image_utils.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 #pragma warning(push)
 #pragma warning(disable : 26812)

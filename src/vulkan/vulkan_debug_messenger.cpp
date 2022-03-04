@@ -5,7 +5,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 static VKAPI_ATTR VkBool32 VKAPI_CALL DebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT message_severity,
     VkDebugUtilsMessageTypeFlagsEXT message_type, const VkDebugUtilsMessengerCallbackDataEXT* callback_data, void* user_data) {

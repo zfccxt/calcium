@@ -7,7 +7,7 @@
 #include "vulkan/vulkan_shader.hpp"
 #include "vulkan/vulkan_swapchain.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 class VulkanWindow : public GlfwWindow {
 public:

@@ -7,7 +7,7 @@
 #include "vulkan_constants.hpp"
 #include "vulkan_texture.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderReflectionDetails& reflection_details) {
   CALCIUM_PROFILE_FUNCTION();

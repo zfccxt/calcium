@@ -4,7 +4,7 @@
 
 #include "vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 struct VulkanDepthBuffer {
   VulkanDepthBuffer(VulkanContextData* context, VkExtent2D swapchain_extent);

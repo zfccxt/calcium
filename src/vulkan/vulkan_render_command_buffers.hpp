@@ -5,7 +5,7 @@
 
 #include <vulkan/vulkan.h>
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 struct VulkanWindowData;
 

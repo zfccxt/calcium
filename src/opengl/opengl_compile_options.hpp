@@ -4,7 +4,7 @@
 // cause mismatched header and cpp files and you will end up with linker errors
 #include <spirv_glsl.hpp>
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 void ApplyOpenGLCompileOptions(spirv_cross::CompilerGLSL& compiler);
 

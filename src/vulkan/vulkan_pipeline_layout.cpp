@@ -3,7 +3,7 @@
 #include "instrumentor.hpp"
 #include "vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkPipelineLayout CreatePipelineLayout(VulkanContextData* context, VkDescriptorSetLayout descriptor_set_layout) {
   CALCIUM_PROFILE_FUNCTION();

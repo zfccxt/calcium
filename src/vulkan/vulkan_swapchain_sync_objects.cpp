@@ -5,7 +5,7 @@
 #include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 void VulkanSwapchainSyncObjects::CreateSwapchainSyncObjects(const VulkanWindowData& window_data) {
   CALCIUM_PROFILE_FUNCTION();

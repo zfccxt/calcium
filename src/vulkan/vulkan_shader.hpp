@@ -14,7 +14,7 @@
 #include "vulkan_uniform_buffer.hpp"
 #include "winding_order.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 class VulkanShader : public Shader {
 public:

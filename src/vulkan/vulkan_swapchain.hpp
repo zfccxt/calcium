@@ -8,7 +8,7 @@
 #include "vulkan/vulkan_depth_buffer.hpp"
 #include "vulkan/vulkan_swapchain_sync_objects.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 struct VulkanWindowData;
 

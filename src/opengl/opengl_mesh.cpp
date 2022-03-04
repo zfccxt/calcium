@@ -4,7 +4,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 GLenum OpenGLTypeOf(ShaderDataType type) {
   switch (type) {

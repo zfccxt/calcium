@@ -7,7 +7,7 @@
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo create_info) {
   CALCIUM_PROFILE_FUNCTION();

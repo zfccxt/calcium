@@ -4,7 +4,7 @@
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkCommandPool CreateCommandPool(const VulkanContextData& context_data, VkSurfaceKHR temp_surface) {
   CALCIUM_PROFILE_FUNCTION();

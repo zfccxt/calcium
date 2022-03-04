@@ -5,7 +5,7 @@
 #include "texture.hpp"
 #include "texture_create_info.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 class OpenGLTexture : public Texture {
 public:

@@ -5,7 +5,7 @@
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkSurfaceKHR CreateWindowSurface(const VulkanWindowData& window_data) {
   CALCIUM_PROFILE_FUNCTION();

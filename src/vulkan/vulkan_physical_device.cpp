@@ -10,9 +10,9 @@
 #include "vulkan/vulkan_swapchain_support_details.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
-// We required VK_KHR_portability_subset for MoltenVK
+// We require VK_KHR_portability_subset for MoltenVK
 #ifdef CALCIUM_PLATFORM_MACOS
   const std::vector<const char*> kDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_KHR_portability_subset" };
 #else

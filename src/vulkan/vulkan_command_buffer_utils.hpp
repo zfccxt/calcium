@@ -4,7 +4,7 @@
 
 #include "vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkCommandBuffer BeginSingleUseCommandBuffer(VulkanContextData* context);
 void EndAndSubmitSingleUseCommandBuffer(VulkanContextData* context, VkCommandBuffer command_buffer);

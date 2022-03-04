@@ -9,7 +9,7 @@
 #include "vulkan_vertex_descriptor.hpp"
 #include "vulkan_window.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 #pragma warning(push)
 #pragma warning(disable : 26812)

@@ -2,7 +2,7 @@
 
 #include "vulkan/vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkDevice CreateDevice(const VulkanContextData& window_data, VkSurfaceKHR temp_surface);
 void DestroyDevice(const VulkanContextData& window_data, VkDevice device);

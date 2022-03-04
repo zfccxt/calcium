@@ -6,7 +6,7 @@
 #include "vulkan_command_buffer_utils.hpp"
 #include "vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 uint32_t FindMemoryType(VulkanContextData* context, uint32_t type_filter, VkMemoryPropertyFlags props) {
   // Make sure the physical device can provide memory that suits our needs

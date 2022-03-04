@@ -6,7 +6,7 @@
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 void VulkanRenderCommandBuffers::CreateRenderCommandBuffers(const VulkanWindowData& window_data) {
   CALCIUM_PROFILE_FUNCTION();

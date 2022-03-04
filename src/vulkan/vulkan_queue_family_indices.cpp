@@ -5,7 +5,7 @@
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VulkanQueueFamilyIndices::VulkanQueueFamilyIndices(VkPhysicalDevice physical_device, VkSurfaceKHR surface) {
   CALCIUM_PROFILE_FUNCTION();

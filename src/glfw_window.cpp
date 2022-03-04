@@ -58,7 +58,7 @@ void GlfwWindow::Close() {
 }
 
 void GlfwWindow::Center(bool center_horizontal, bool center_vertical) {
-  GLFW::CenterWindow(glfw_window_, center_horizontal, center_vertical);
+  glfw::CenterWindow(glfw_window_, center_horizontal, center_vertical);
 }
 
 void GlfwWindow::PollEvents() {

@@ -5,7 +5,7 @@
 #include "vulkan/vulkan_image_utils.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   CALCIUM_PROFILE_FUNCTION();

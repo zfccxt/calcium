@@ -4,7 +4,7 @@
 #include "vulkan/vulkan_context_data.hpp"
 #include "vulkan/vulkan_window.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 class VulkanContext : public Context {
 public:

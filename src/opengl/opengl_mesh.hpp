@@ -5,7 +5,7 @@
 #include "mesh.hpp"
 #include "mesh_create_info.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 class OpenGLMesh : public Mesh {
 public:

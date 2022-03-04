@@ -17,12 +17,12 @@
 #include "vulkan/vulkan_texture.hpp"
 #include "vulkan/vulkan_window.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VulkanContext::VulkanContext() {
   CALCIUM_PROFILE_FUNCTION();
 
-  GLFW::IncrementGLFWContextCount();
+  glfw::IncrementGLFWContextCount();
   context_data_.allocator       = CreateAllocator(context_data_);
   context_data_.instance        = CreateInstance(context_data_);
 #ifdef CALCIUM_BUILD_DEBUG
@@ -65,7 +65,8 @@ VulkanContext::~VulkanContext() {
 #endif
   DestroyInstance(context_data_, context_data_.instance);
   DestroyAllocator(context_data_, context_data_.allocator);
-  GLFW::DecrementGLFWContextCount();
+
+  glfw::DecrementGLFWContextCount();
 }
 
 

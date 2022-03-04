@@ -10,7 +10,7 @@
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 #pragma warning(push)
 #pragma warning(disable : 26812)

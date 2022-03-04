@@ -5,7 +5,7 @@
 #include "vulkan_constants.hpp"
 #include "vulkan_window.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VulkanUniformBuffer::VulkanUniformBuffer(VulkanContextData* context, const ShaderReflectionDetails::UniformData& descriptor) : context_(context) {
   CALCIUM_PROFILE_FUNCTION();

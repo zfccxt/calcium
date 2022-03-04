@@ -59,11 +59,11 @@ std::shared_ptr<Context> CreateContext(Backend backend) {
 
 #ifdef CALCIUM_VULKAN_SDK_FOUND
   if (backend == Backend::kVulkan) {
-    return std::make_shared<Vulkan::VulkanContext>();
+    return std::make_shared<vulkan::VulkanContext>();
   }
 #endif
 
-  return std::make_shared<OpenGL::OpenGLContext>();
+  return std::make_shared<opengl::OpenGLContext>();
 }
 
 Context::~Context() {

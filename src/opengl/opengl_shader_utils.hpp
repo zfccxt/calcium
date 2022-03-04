@@ -6,7 +6,7 @@
 
 #include "shader_stage.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 GLenum GetOpenGLShaderType(ShaderStage type);
 GLuint CreateShaderModule(const std::string& glsl_code, ShaderStage shader_type);

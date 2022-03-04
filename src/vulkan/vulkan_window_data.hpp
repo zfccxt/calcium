@@ -7,7 +7,7 @@
 
 struct GLFWwindow;
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 struct VulkanWindowData {
   VulkanContextData* context_data;

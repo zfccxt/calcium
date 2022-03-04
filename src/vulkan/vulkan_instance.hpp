@@ -4,7 +4,7 @@
 
 #include "vulkan/vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 VkInstance CreateInstance(VulkanContextData& context_data);
 void DestroyInstance(VulkanContextData& context_data, VkInstance instance);

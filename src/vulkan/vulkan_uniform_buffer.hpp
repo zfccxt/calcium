@@ -9,7 +9,7 @@
 #include "shader_reflection_details.hpp"
 #include "vulkan_context_data.hpp"
 
-namespace cl::Vulkan {
+namespace cl::vulkan {
 
 struct VulkanUniformBuffer {
 public:

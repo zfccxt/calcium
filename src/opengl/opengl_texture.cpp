@@ -7,7 +7,7 @@
 
 #include "instrumentor.hpp"
 
-namespace cl::OpenGL {
+namespace cl::opengl {
 
 static GLenum TextureFilterToGLMinFilter(TextureFilter filter) {
   switch (filter) {
