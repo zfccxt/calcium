@@ -34,10 +34,13 @@ set_target_properties(${PROJECT_NAME} PROPERTIES LINKER_LANGUAGE CXX)
 
 add_subdirectory(test)
 
+# TODO: Expose glfw and glad only when requested?
 add_subdirectory(depend/glfw)
 target_link_libraries(${PROJECT_NAME} PRIVATE glfw)
+target_include_directories(${PROJECT_NAME} PUBLIC depend/glfw/include)
 add_subdirectory(depend/glad)
 target_link_libraries(${PROJECT_NAME} PRIVATE glad)
+target_include_directories(${PROJECT_NAME} PUBLIC depend/glad/include)
 add_subdirectory(depend/fast_obj)
 target_link_libraries(${PROJECT_NAME} PRIVATE fast_obj_lib)
 add_subdirectory(depend/meshoptimizer)
