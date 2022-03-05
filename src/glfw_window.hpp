@@ -51,6 +51,9 @@ public:
   virtual void SetMouseMoveCallback(MouseMoveCallback) override;
   virtual void RemoveMouseMoveCallback() override;
 
+public:
+  inline GLFWwindow* GetGlfwWindow() const { return glfw_window_; }
+
 protected:
   void CreateGlfwWindow(const WindowCreateInfo& create_info);
 
