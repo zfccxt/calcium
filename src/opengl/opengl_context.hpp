@@ -20,7 +20,7 @@ public:
 
   virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) override;
   
-  virtual void BeginRenderPass(const std::shared_ptr<Shader>& shader) override;
+  virtual void BeginRenderPass() override;
   virtual void EndRenderPass() override;
 
 private:

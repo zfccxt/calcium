@@ -69,13 +69,12 @@ VulkanContext::~VulkanContext() {
   glfw::DecrementGLFWContextCount();
 }
 
-
 std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& window_info) {
   auto window = std::make_shared<VulkanWindow>(&context_data_, window_info);
 
   // For convenience if there is not yet a bound render target and the library user creates a window, we bind it
   if (!context_data_.bound_render_target.lock()) {
-    context_data_.bound_render_target = window;
+    BindRendertarget(window);
   }
 
   return window;
@@ -102,17 +101,21 @@ std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& t
 }
 
 void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
+  CALCIUM_PROFILE_FUNCTION();
+
   // TODO: When we support rendering to framebuffers, check which type this render target is and dynamic_pointer_cast
   // as appropriate
   // For now we only support windows as render targets, so this is guaranteed to be valid unless it was created with
   // another context
   context_data_.bound_render_target = std::dynamic_pointer_cast<VulkanWindow>(render_target);
+
+  ClxOnBindRenderTarget(render_target);
 }
 
-void VulkanContext::BeginRenderPass(const std::shared_ptr<Shader>& shader) {
+void VulkanContext::BeginRenderPass() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
-  window->BeginRenderCommandBuffer(std::dynamic_pointer_cast<VulkanShader>(shader));
+  window->BeginRenderCommandBuffer();
 }
 
 void VulkanContext::EndRenderPass() {

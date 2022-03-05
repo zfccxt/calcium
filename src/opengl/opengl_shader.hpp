@@ -24,7 +24,7 @@ public:
   void BindAllTextureSamplers(const std::shared_ptr<Texture>& texture);
 
 public:
-  void Bind();
+  virtual void Bind() override;
 
 private:
   GLuint program_id_;

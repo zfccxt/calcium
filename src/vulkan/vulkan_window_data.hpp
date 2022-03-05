@@ -13,9 +13,9 @@ struct VulkanWindowData {
   VulkanContextData* context_data;
   GLFWwindow* glfw_window;
 
-  bool enable_vsync;
-  bool enable_depth_test;
-  bool enable_backface_cull;
+  bool enable_vsync = false;
+  bool enable_depth_test = false;
+  bool enable_backface_cull = false;
   WindingOrder front_face;
 
   VkSurfaceKHR surface;

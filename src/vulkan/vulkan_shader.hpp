@@ -25,10 +25,10 @@ public:
   virtual void UploadUniform(int binding, void* data) override;
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
 
+  virtual void Bind() override;
+
 public:
   void Recreate(VkExtent2D render_target_extent, VkRenderPass render_pass);
-
-  void Bind(VkCommandBuffer command_buffer);
 
 private:
   void CreatePipeline(VkExtent2D render_target_extent, VkRenderPass render_pass);

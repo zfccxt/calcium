@@ -54,27 +54,63 @@ std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
   return CreateTexture(texture_info);
 }
 
-std::shared_ptr<Context> CreateContext(const ContextCreateInfo& context_info) {
+std::shared_ptr<Context> Context::CreateContext(const ContextCreateInfo& context_info) {
   CALCIUM_PROFILE_BEGIN("profile_results.json");
+
+  std::shared_ptr<Context> context;
 
 #ifdef CALCIUM_VULKAN_SDK_FOUND
   if (context_info.backend == Backend::kVulkan) {
-    return std::make_shared<vulkan::VulkanContext>();
+    context = std::make_shared<vulkan::VulkanContext>();
   }
 #endif
 
-  return std::make_shared<opengl::OpenGLContext>();
+  if (context_info.backend == Backend::kOpenGL) {
+    context = std::make_shared<opengl::OpenGLContext>();
+  }
+
+  context->backend_ = context_info.backend;
+  context->extensions_ = context_info.extensions;
+
+  context->ClxOnCreate(context);
+
+  return context;
 }
 
-
-std::shared_ptr<Context> CreateContext(Backend backend) {
+std::shared_ptr<Context> Context::CreateContext(Backend backend) {
   ContextCreateInfo context_info;
   context_info.backend = backend;
   return CreateContext(context_info);
 }
 
 Context::~Context() {
+  ClxOnDestroy();
+
   CALCIUM_PROFILE_END();
+}
+
+void Context::ClxOnCreate(const std::shared_ptr<Context>& context) {
+  for (auto& extension : extensions_) {
+    if (extension.on_create) {
+      extension.on_create(context);
+    }
+  }
+}
+
+void Context::ClxOnDestroy() {
+  for (auto& extension : extensions_) {
+    if (extension.on_destroy) {
+      extension.on_destroy();
+    }
+  }
+}
+
+void Context::ClxOnBindRenderTarget(const std::shared_ptr<RenderTarget>& render_target) {
+  for (auto& extension : extensions_) {
+    if (extension.on_bind_render_target) {
+      extension.on_bind_render_target(render_target);
+    }
+  }
 }
 
 }

@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::CreateContext(cl::Backend::kVulkan);
+  auto context = cl::Context::CreateContext(cl::Backend::kVulkan);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
@@ -44,7 +44,8 @@ int main() {
     
     shader->BindTexture("u_diffuse_texture", texture);
 
-    context->BeginRenderPass(shader);
+    context->BeginRenderPass();
+    shader->Bind();
     mesh->Draw();
     context->EndRenderPass();
   }

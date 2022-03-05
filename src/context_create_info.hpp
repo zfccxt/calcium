@@ -8,7 +8,7 @@
 namespace cl {
 
 struct ContextCreateInfo {
-  Backend backend;
+  Backend backend = Backend::kVulkan;
   std::vector<ExtensionDetails> extensions;
 };
 

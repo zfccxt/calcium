@@ -21,7 +21,9 @@ public:
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) = 0;
   virtual void BindTexture(const std::string& name, const std::shared_ptr<Texture>& texture);
 
-  BufferLayout GetInputLayout();
+  virtual void Bind() = 0;
+
+  inline BufferLayout GetInputLayout() const { return reflection_details_.vertex_input_layout; };
   
   static SpvCode ReadSpv(const char* file_path);
   static ShaderCodeMap ReadAllSpvFiles(const ShaderCreateInfo& shader_info);

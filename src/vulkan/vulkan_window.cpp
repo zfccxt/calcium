@@ -3,8 +3,9 @@
 #include <GLFW/glfw3.h>
 
 #include "instrumentor.hpp"
-#include "vulkan/vulkan_constants.hpp"
 #include "vulkan/vulkan_swapchain_render_pass.hpp"
+#include "vulkan/vulkan_swapchain_support_details.hpp"
+#include "vulkan/vulkan_queue_family_indices.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
 
 namespace cl::vulkan {
@@ -58,46 +59,22 @@ void VulkanWindow::SetClearColour(const Colour& colour) {
   // TODO
 }
 
-VkExtent2D VulkanWindow::GetFramebufferExtent() {
-  return window_data_.swapchain.extent;
+uint32_t VulkanWindow::GetGraphicsQueueFamily() const {
+  VulkanQueueFamilyIndices queue_families(window_data_.context_data->physical_device, window_data_.surface);
+  return queue_families.graphics_family;
 }
 
-VkRenderPass VulkanWindow::GetRenderPass() {
-  return window_data_.swapchain.render_pass;
+uint32_t VulkanWindow::GetMinImageCount() const {
+  VulkanSwapchainSupportDetails swapchain_support(window_data_.context_data->physical_device, window_data_.surface);
+  return swapchain_support.surface_capabilities.minImageCount;
 }
 
-bool VulkanWindow::IsDepthTestEnabled() const {
-  return window_data_.swapchain.enable_depth_test;
-}
-
-bool VulkanWindow::IsBackfaceCullingEnabled() const {
-  return window_data_.enable_backface_cull;
-}
-
-WindingOrder VulkanWindow::GetPolygonFrontFace() const {
-  return window_data_.front_face;
-}
-
-size_t VulkanWindow::GetCurrentFrameIndex() const {
-  return window_data_.render_command_buffers.current_command_buffer_index;
-}
-
-size_t VulkanWindow::GetNextFrameIndex() const {
-  return (window_data_.render_command_buffers.current_command_buffer_index + 1) % kMaxFramesInFlight;
-}
-
-void VulkanWindow::BeginRenderCommandBuffer(const std::shared_ptr<VulkanShader>& shader) {
+void VulkanWindow::BeginRenderCommandBuffer() {
   window_data_.render_command_buffers.BeginRenderCommandBuffer(window_data_);
-
-  shader->Bind(window_data_.render_command_buffers.current_command_buffer);
 }
 
 void VulkanWindow::EndAndSubmitRenderCommandBuffer() {
   window_data_.render_command_buffers.EndAndSubmitRenderCommandBuffer(window_data_);
-}
-
-VkCommandBuffer VulkanWindow::GetCurrentRenderCommandBuffer() {
-  return window_data_.render_command_buffers.current_command_buffer;
 }
 
 void VulkanWindow::OnFramebufferResize(int width, int height) {
