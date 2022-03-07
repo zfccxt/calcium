@@ -55,6 +55,8 @@ VulkanContext::VulkanContext() {
 }
 
 VulkanContext::~VulkanContext() {
+  ClxOnDestroy();
+
   delete context_data_.blank_texture;
  
   DestroyCommandPool(context_data_, context_data_.command_pool);

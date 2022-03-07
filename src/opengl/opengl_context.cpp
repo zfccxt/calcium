@@ -14,6 +14,8 @@ OpenGLContext::OpenGLContext() {
 }
 
 OpenGLContext::~OpenGLContext() {
+  ClxOnDestroy();
+
   glfw::DecrementGLFWContextCount();
 }
 

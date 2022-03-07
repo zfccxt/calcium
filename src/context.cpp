@@ -84,8 +84,6 @@ std::shared_ptr<Context> Context::CreateContext(Backend backend) {
 }
 
 Context::~Context() {
-  ClxOnDestroy();
-
   CALCIUM_PROFILE_END();
 }
 
