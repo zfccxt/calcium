@@ -41,15 +41,40 @@ VulkanSwapchainSupportDetails::VulkanSwapchainSupportDetails(VkPhysicalDevice ph
 VkSurfaceFormatKHR VulkanSwapchainSupportDetails::ChooseBestSurfaceFormat() const {
   CALCIUM_PROFILE_FUNCTION();
 
-  // TODO: Rank available surface formats and pick the best
-  for (const auto& format : surface_formats) {
-    if (format.format == VK_FORMAT_R8G8B8A8_UNORM) {
-      return format;
+  const std::vector<VkFormat> request_formats = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
+  const VkColorSpaceKHR request_colour_space = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
+
+  // Per Spec Format and View Format are expected to be the same unless VK_IMAGE_CREATE_MUTABLE_BIT was set at image creation
+  // Assuming that the default behavior is without setting this bit, there is no need for separate Swapchain image and image view format
+  // Additionally several new color spaces were introduced with Vulkan Spec v1.0.40,
+  // hence we must make sure that a format with the mostly available color space, VK_COLOR_SPACE_SRGB_NONLINEAR_KHR, is found and used.
+  
+  // First check if only one format, VK_FORMAT_UNDEFINED, is available, which would imply that any format is available
+  if (surface_formats.size() == 1) {
+    if (surface_formats[0].format == VK_FORMAT_UNDEFINED) {
+      VkSurfaceFormatKHR ret;
+      ret.format = request_formats[0];
+      ret.colorSpace = request_colour_space;
+      return ret;
+    }
+    else {
+      // No point in searching another format
+      return surface_formats[0];
     }
   }
-
-  // Otherwise just pick the first available surface format
-  return surface_formats[0];
+  else {
+    // Request several formats, the first found will be used
+    for (int request_i = 0; request_i < request_formats.size(); ++request_i) {
+      for (uint32_t avail_i = 0; avail_i < surface_formats.size(); ++avail_i) {
+        if (surface_formats[avail_i].format == request_formats[request_i] && surface_formats[avail_i].colorSpace == request_colour_space) {
+          return surface_formats[avail_i];
+        }
+      }
+    }
+    
+    // If none of the requested image formats could be found, use the first available
+    return surface_formats[0];
+  }
 }
 
 VkPresentModeKHR VulkanSwapchainSupportDetails::ChooseBestPresentMode(bool enable_vsync) const {
