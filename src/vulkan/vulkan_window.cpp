@@ -98,4 +98,18 @@ void VulkanWindow::OnFramebufferResize(int width, int height) {
   }
 }
 
+VkExtent2D VulkanWindow::GetFramebufferExtent() const { return window_data_.swapchain.extent; }
+VkRenderPass VulkanWindow::GetRenderPass() const { return window_data_.swapchain.render_pass; }
+bool VulkanWindow::IsDepthTestEnabled() const { return window_data_.swapchain.enable_depth_test; }
+bool VulkanWindow::IsBackfaceCullingEnabled() const { return window_data_.enable_backface_cull; }
+WindingOrder VulkanWindow::GetPolygonFrontFace() const { return window_data_.front_face; }
+size_t VulkanWindow::GetCurrentFrameIndex() const { return window_data_.render_command_buffers.current_command_buffer_index; }
+size_t VulkanWindow::GetNextFrameIndex() const { return (window_data_.render_command_buffers.current_command_buffer_index + 1) % kMaxFramesInFlight; }
+VkCommandBuffer VulkanWindow::GetCurrentRenderCommandBuffer() const { return window_data_.render_command_buffers.current_command_buffer; }
+VkPhysicalDevice VulkanWindow::GetPhysicalDevice() const { return window_data_.context_data->physical_device; }
+VkDevice VulkanWindow::GetDevice() const { return window_data_.context_data->device; }
+VkAllocationCallbacks* VulkanWindow::GetAllocator() const { return window_data_.context_data->allocator; }
+VkQueue VulkanWindow::GetGraphicsQueue() const { return window_data_.context_data->graphics_queue; }
+uint32_t VulkanWindow::GetImageCount() const { return window_data_.swapchain.image_count; }
+
 }

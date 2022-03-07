@@ -17,25 +17,25 @@ public:
 
   virtual void SetClearColour(const Colour& colour) override;
 
-public:
-  inline VkExtent2D GetFramebufferExtent() const { return window_data_.swapchain.extent; }
-  inline VkRenderPass GetRenderPass() const { return window_data_.swapchain.render_pass; }
-  inline bool IsDepthTestEnabled() const { return window_data_.swapchain.enable_depth_test; }
-  inline bool IsBackfaceCullingEnabled() const { return window_data_.enable_backface_cull; }
-  inline WindingOrder GetPolygonFrontFace() const { return window_data_.front_face; }
-  inline size_t GetCurrentFrameIndex() const { return window_data_.render_command_buffers.current_command_buffer_index; }
-  inline size_t GetNextFrameIndex() const { return (window_data_.render_command_buffers.current_command_buffer_index + 1) % kMaxFramesInFlight; }
-  inline VkCommandBuffer GetCurrentRenderCommandBuffer() const { return window_data_.render_command_buffers.current_command_buffer; }
-  inline VkPhysicalDevice GetPhysicalDevice() const { return window_data_.context_data->physical_device; }
-  inline VkDevice GetDevice() const { return window_data_.context_data->device; }
-  inline VkAllocationCallbacks* GetAllocator() const { return window_data_.context_data->allocator; }
-  inline VkQueue GetGraphicsQueue() const { return window_data_.context_data->graphics_queue; }
-  inline uint32_t GetImageCount() const { return window_data_.swapchain.image_count; }
-
   uint32_t GetGraphicsQueueFamily() const;
   uint32_t GetMinImageCount() const;
 
   inline VulkanContextData* GetContextData() const { return window_data_.context_data; }
+
+public:
+  VkExtent2D GetFramebufferExtent() const;
+  VkRenderPass GetRenderPass() const;
+  bool IsDepthTestEnabled() const;
+  bool IsBackfaceCullingEnabled() const;
+  WindingOrder GetPolygonFrontFace() const;
+  size_t GetCurrentFrameIndex() const;
+  size_t GetNextFrameIndex() const;
+  VkCommandBuffer GetCurrentRenderCommandBuffer() const;
+  VkPhysicalDevice GetPhysicalDevice() const;
+  VkDevice GetDevice() const;
+  VkAllocationCallbacks* GetAllocator() const;
+  VkQueue GetGraphicsQueue() const;
+  uint32_t GetImageCount() const;
 
 public:
   void BeginRenderCommandBuffer();
