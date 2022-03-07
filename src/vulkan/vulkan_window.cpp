@@ -112,5 +112,6 @@ VkDevice VulkanWindow::GetDevice() const { return window_data_.context_data->dev
 VkAllocationCallbacks* VulkanWindow::GetAllocator() const { return window_data_.context_data->allocator; }
 VkQueue VulkanWindow::GetGraphicsQueue() const { return window_data_.context_data->graphics_queue; }
 uint32_t VulkanWindow::GetImageCount() const { return window_data_.swapchain.image_count; }
+VkFormat VulkanWindow::GetSurfaceFormat() const { return window_data_.swapchain.image_format; }
 
 }

@@ -21,6 +21,7 @@ public:
   uint32_t GetMinImageCount() const;
 
   inline VulkanContextData* GetContextData() const { return window_data_.context_data; }
+  VulkanSwapchain* GetSwapchain() { return &(window_data_.swapchain); };
 
 public:
   VkExtent2D GetFramebufferExtent() const;
@@ -36,6 +37,7 @@ public:
   VkAllocationCallbacks* GetAllocator() const;
   VkQueue GetGraphicsQueue() const;
   uint32_t GetImageCount() const;
+  VkFormat GetSurfaceFormat() const;
 
 public:
   void BeginRenderCommandBuffer();
