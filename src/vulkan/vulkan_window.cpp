@@ -57,7 +57,7 @@ VulkanWindow::~VulkanWindow() {
 }
 
 void VulkanWindow::SetClearColour(const Colour& colour) {
-  // TODO
+  window_data_.swapchain.SetClearValue(colour);
 }
 
 uint32_t VulkanWindow::GetGraphicsQueueFamily() const {
