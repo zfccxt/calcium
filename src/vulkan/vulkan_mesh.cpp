@@ -10,7 +10,7 @@ namespace cl::vulkan {
 VulkanMesh::VulkanMesh(VulkanContextData* context, const MeshCreateInfo& mesh_info) : context_(context) {
   CALCIUM_PROFILE_FUNCTION();
 
-  num_indices_ = mesh_info.num_indices;
+  num_indices_ = mesh_info.indices.size();
 
   CreateVertexBuffer(mesh_info);
   CreateIndexBuffer(mesh_info);
@@ -19,7 +19,7 @@ VulkanMesh::VulkanMesh(VulkanContextData* context, const MeshCreateInfo& mesh_in
 void VulkanMesh::CreateVertexBuffer(const MeshCreateInfo& create_info) {
   CALCIUM_PROFILE_FUNCTION();
 
-  VkDeviceSize buffer_size = sizeof(create_info.vertices[0]) * create_info.num_vertices;
+  VkDeviceSize buffer_size = sizeof(create_info.vertices[0]) * create_info.vertices.size();
 
   // GPU memory that is not visible or accessible by the CPU tends to be a lot faster, so we must use a staging buffer
   // to transfer vertex data to the GPU
@@ -34,7 +34,7 @@ void VulkanMesh::CreateVertexBuffer(const MeshCreateInfo& create_info) {
   // We map the allocated memory to be accessible by the cpu and simply use memcpy to copy the vertex data into it
   void* data;
   VK_CHECK(vkMapMemory(context_->device, staging_buffer_memory, 0, buffer_size, 0, &data));
-  memcpy(data, create_info.vertices, (size_t)buffer_size);
+  memcpy(data, create_info.vertices.data(), (size_t)buffer_size);
   vkUnmapMemory(context_->device, staging_buffer_memory);
 
   // Create and allocate memory for the vertex buffer - this time we want a device local memory buffer
@@ -54,7 +54,7 @@ void VulkanMesh::CreateIndexBuffer(const MeshCreateInfo& create_info) {
 
   // Almost a direct copy of CreateVertexBuffer except for a few differences
   // The buffer size is different
-  VkDeviceSize buffer_size = sizeof(create_info.indices[0]) * create_info.num_indices;
+  VkDeviceSize buffer_size = sizeof(create_info.indices[0]) * create_info.indices.size();
 
   VkBuffer staging_buffer;
   VkDeviceMemory staging_buffer_memory;
@@ -64,7 +64,7 @@ void VulkanMesh::CreateIndexBuffer(const MeshCreateInfo& create_info) {
   
   void* data;
   VK_CHECK(vkMapMemory(context_->device, staging_buffer_memory, 0, buffer_size, 0, &data));
-  memcpy(data, create_info.indices, (size_t) buffer_size);
+  memcpy(data, create_info.indices.data(), (size_t)buffer_size);
   vkUnmapMemory(context_->device, staging_buffer_memory);
   
   // The buffer usage is now VK_BUFFER_USAGE_INDEX_BUFFER_BIT

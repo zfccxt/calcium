@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <vector>
 
 #include "buffer_layout.hpp"
 
@@ -8,12 +9,8 @@ namespace cl {
 
 struct MeshCreateInfo {
   BufferLayout vertex_input_layout;
-
-  const float* vertices = nullptr;
-  size_t num_vertices = 0;
-
-  const uint32_t* indices = nullptr;
-  size_t num_indices = 0;
+  std::vector<float> vertices;
+  std::vector<uint32_t> indices;
 };
 
 }

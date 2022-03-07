@@ -28,22 +28,12 @@ std::shared_ptr<Shader> Context::CreateShader(const std::string& vert_path, cons
   return CreateShader(shader_info);
 }
 
-std::shared_ptr<Mesh> Context::CreateMesh(const MeshData& mesh_data) {
-  MeshCreateInfo mesh_info;
-  mesh_info.vertex_input_layout = mesh_data.vertex_input_layout;
-  mesh_info.vertices = mesh_data.vertices.data();
-  mesh_info.num_vertices = mesh_data.vertices.size();
-  mesh_info.indices = mesh_data.indices.data();
-  mesh_info.num_indices = mesh_data.indices.size();
-  return CreateMesh(mesh_info);
-}
-
 std::shared_ptr<Mesh> Context::CreateMesh(const std::string& file_path) {
   // TODO: Support more mesh file types
   // TODO: switch (file extension)
   // case .obj
-  MeshData mesh_data = Mesh::LoadObj(file_path);
-  return CreateMesh(mesh_data);
+  MeshCreateInfo mesh_info = Mesh::LoadObj(file_path);
+  return CreateMesh(mesh_info);
 }
 
 std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {

@@ -36,7 +36,7 @@ OpenGLMesh::OpenGLMesh(const MeshCreateInfo& mesh_info) {
   // Calcium uses interleaved vertex data rather than separate buffers for positions, tex coords, normals, etc
   glGenBuffers(1, &vertex_buffer_id_);
   glBindBuffer(GL_ARRAY_BUFFER, vertex_buffer_id_);
-  glBufferData(GL_ARRAY_BUFFER, mesh_info.num_vertices * sizeof(float), mesh_info.vertices, GL_STATIC_DRAW);
+  glBufferData(GL_ARRAY_BUFFER, mesh_info.vertices.size() * sizeof(float), mesh_info.vertices.data(), GL_STATIC_DRAW);
 
   // For each element in the buffer layout, tell OpenGL how to interpret that data
   for (int i = 0; i < mesh_info.vertex_input_layout.GetNumElements(); ++i) {
@@ -51,8 +51,8 @@ OpenGLMesh::OpenGLMesh(const MeshCreateInfo& mesh_info) {
   // Create index buffer
   glGenBuffers(1, &index_buffer_id_);
   glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, index_buffer_id_);
-  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_info.num_indices * sizeof(uint32_t), mesh_info.indices, GL_STATIC_DRAW);
-  num_indices_ = mesh_info.num_indices;
+  glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_info.indices.size() * sizeof(uint32_t), mesh_info.indices.data(), GL_STATIC_DRAW);
+  num_indices_ = mesh_info.indices.size();
 
   // Unbind vao
   glBindVertexArray(0);

@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "mesh_data.hpp"
+#include "mesh_create_info.hpp"
 
 namespace cl {
 
@@ -11,7 +11,7 @@ public:
   virtual void Draw() = 0;
 
 public:
-  static MeshData LoadObj(const std::string& file_path);
+  static MeshCreateInfo LoadObj(const std::string& file_path);
 };
 
 }

@@ -8,7 +8,7 @@
 namespace cl {
 
 // TODO: support .obj quad faces as well as triangles
-MeshData Mesh::LoadObj(const std::string& file_path) {
+MeshCreateInfo Mesh::LoadObj(const std::string& file_path) {
   CALCIUM_PROFILE_FUNCTION();
 
   fastObjMesh* mesh = fast_obj_read(file_path.c_str());
@@ -17,7 +17,7 @@ MeshData Mesh::LoadObj(const std::string& file_path) {
   bool has_texcoords = mesh->texcoord_count > 1;
   bool has_normals = mesh->normal_count > 1;
 
-  MeshData mesh_data;
+  MeshCreateInfo mesh_data;
   if (!has_texcoords && !has_normals) {
     mesh_data.vertex_input_layout = { ShaderDataType::kFloat3 };
   }
