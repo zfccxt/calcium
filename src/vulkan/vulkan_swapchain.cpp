@@ -4,7 +4,7 @@
 
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
-#include "vulkan/vulkan_swapchain_render_pass.hpp"
+#include "vulkan/vulkan_render_pass.hpp"
 #include "vulkan/vulkan_swapchain_support_details.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 #include "vulkan/vulkan_window_data.hpp"
@@ -151,7 +151,7 @@ void VulkanSwapchain::RecreateSwapchain() {
   vkDeviceWaitIdle(window_data->context_data->device);
 
   DestroySwapchainFramebuffers();
-  DestroySwapchainRenderPass(*this, render_pass);
+  vkDestroyRenderPass(window_data->context_data->device, window_data->swapchain.render_pass, window_data->context_data->allocator);
   DestroySwapchain();
 
   CreateSwapchain();

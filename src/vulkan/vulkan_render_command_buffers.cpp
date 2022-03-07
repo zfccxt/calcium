@@ -3,7 +3,7 @@
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
 #include "vulkan/vulkan_constants.hpp"
-#include "vulkan/vulkan_swapchain_render_pass.hpp"
+#include "vulkan/vulkan_render_pass.hpp"
 #include "vulkan/vulkan_window_data.hpp"
 
 namespace cl::vulkan {
@@ -53,7 +53,7 @@ VkCommandBuffer VulkanRenderCommandBuffers::BeginRenderCommandBuffer(VulkanWindo
   begin_info.flags = VK_COMMAND_BUFFER_USAGE_ONE_TIME_SUBMIT_BIT;
   VK_CHECK(vkBeginCommandBuffer(render_command_buffers[current_command_buffer_index], &begin_info));
 
-  RecordBeginRenderPassCommand(window_data.swapchain, render_command_buffers[current_command_buffer_index], swapchain_image_index);
+  RecordBeginSwapchainRenderPassCommand(window_data.swapchain, render_command_buffers[current_command_buffer_index], swapchain_image_index);
 
   current_command_buffer = render_command_buffers[current_command_buffer_index];
   return current_command_buffer;
@@ -62,7 +62,7 @@ VkCommandBuffer VulkanRenderCommandBuffers::BeginRenderCommandBuffer(VulkanWindo
 void VulkanRenderCommandBuffers::EndAndSubmitRenderCommandBuffer(VulkanWindowData& window_data) {
   CALCIUM_PROFILE_FUNCTION();
 
-  RecordEndRenderPassCommand(render_command_buffers[current_command_buffer_index]);
+  vkCmdEndRenderPass(render_command_buffers[current_command_buffer_index]);
 
   VK_CHECK(vkEndCommandBuffer(render_command_buffers[current_command_buffer_index]));
 

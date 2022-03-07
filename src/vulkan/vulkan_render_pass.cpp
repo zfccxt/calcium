@@ -1,4 +1,4 @@
-#include "vulkan_swapchain_render_pass.hpp"
+#include "vulkan_render_pass.hpp"
 
 #include "instrumentor.hpp"
 #include "vulkan/vulkan_check.hpp"
@@ -8,6 +8,11 @@
 namespace cl::vulkan {
 
 VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
+  return CreateRenderPass(swapchain.window_data->context_data->device, swapchain.window_data->context_data->allocator,
+    swapchain.image_format, FindDepthFormat(swapchain.window_data->context_data), swapchain.enable_depth_test);
+}
+
+VkRenderPass CreateRenderPass(VkDevice device, VkAllocationCallbacks* allocator, VkFormat format, VkFormat depth_format, bool enable_depth_test) {
   CALCIUM_PROFILE_FUNCTION();
 
   // Render pass objects describe framebuffer attachments - how many colour and depth buffers there are, how to use 
@@ -17,7 +22,7 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
 
   // We have either only a single colour attachment, or a colour attachment and a depth attachment
   VkAttachmentDescription colour_attachment { };
-  colour_attachment.format = swapchain.image_format;
+  colour_attachment.format = format;
   // If we were to set up MSAA we would need to change this
   colour_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
   // We can have the framebuffer preserve its contents between render passes if we like, however we will not do this
@@ -47,9 +52,9 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   depth_attachment_ref.layout = VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL;
 
   // No point using a depth buffer if depth testing is not enabled
-  if (swapchain.enable_depth_test) {
+  if (enable_depth_test) {
     VkAttachmentDescription depth_attachment { };
-    depth_attachment.format = FindDepthFormat(swapchain.window_data->context_data);
+    depth_attachment.format = depth_format;
     depth_attachment.samples = VK_SAMPLE_COUNT_1_BIT;
     depth_attachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
     depth_attachment.storeOp = VK_ATTACHMENT_STORE_OP_DONT_CARE;
@@ -70,7 +75,7 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   dependency.dstSubpass = 0;
   dependency.srcAccessMask = 0;
 
-  if (swapchain.enable_depth_test) {
+  if (enable_depth_test) {
     dependency.srcStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     dependency.dstStageMask = VK_PIPELINE_STAGE_COLOR_ATTACHMENT_OUTPUT_BIT;
     dependency.dstAccessMask = VK_ACCESS_COLOR_ATTACHMENT_WRITE_BIT;
@@ -90,17 +95,11 @@ VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   render_pass_info.pDependencies = &dependency;
   
   VkRenderPass render_pass;
-  VK_CHECK(vkCreateRenderPass(swapchain.window_data->context_data->device, &render_pass_info, swapchain.window_data->context_data->allocator, &render_pass));
+  VK_CHECK(vkCreateRenderPass(device, &render_pass_info, allocator, &render_pass));
   return render_pass;
 }
 
-void DestroySwapchainRenderPass(const VulkanSwapchain& swapchain, VkRenderPass render_pass) {
-  CALCIUM_PROFILE_FUNCTION();
-
-  vkDestroyRenderPass(swapchain.window_data->context_data->device, render_pass, swapchain.window_data->context_data->allocator);
-}
-
-void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer command_buffer, int swapchain_image_index) {
+void RecordBeginSwapchainRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer command_buffer, int swapchain_image_index) {
   CALCIUM_PROFILE_FUNCTION();
 
  VkRenderPassBeginInfo render_pass_info { VK_STRUCTURE_TYPE_RENDER_PASS_BEGIN_INFO };
@@ -112,12 +111,6 @@ void RecordBeginRenderPassCommand(VulkanSwapchain& swapchain, VkCommandBuffer co
   render_pass_info.pClearValues = swapchain.clear_values.data();
 
   vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
-}
-
-void RecordEndRenderPassCommand(VkCommandBuffer command_buffer) {
-  CALCIUM_PROFILE_FUNCTION();
-
-  vkCmdEndRenderPass(command_buffer);
 }
 
 }

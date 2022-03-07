@@ -3,7 +3,8 @@
 #include <GLFW/glfw3.h>
 
 #include "instrumentor.hpp"
-#include "vulkan/vulkan_swapchain_render_pass.hpp"
+#include "vulkan/vulkan_image_utils.hpp"
+#include "vulkan/vulkan_render_pass.hpp"
 #include "vulkan/vulkan_swapchain_support_details.hpp"
 #include "vulkan/vulkan_queue_family_indices.hpp"
 #include "vulkan/vulkan_window_surface.hpp"
@@ -49,7 +50,7 @@ VulkanWindow::~VulkanWindow() {
 
   window_data_.swapchain.sync_objects.DestroySwapchainSyncObjects(window_data_);
   window_data_.swapchain.DestroySwapchainFramebuffers();
-  DestroySwapchainRenderPass(window_data_.swapchain, window_data_.swapchain.render_pass);
+  vkDestroyRenderPass(window_data_.context_data->device, window_data_.swapchain.render_pass, window_data_.context_data->allocator);
   window_data_.swapchain.DestroySwapchain();
 
   DestroyWindowSurface(window_data_, window_data_.surface);
