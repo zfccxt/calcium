@@ -85,21 +85,21 @@ void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFi
   uint32_t mip_levels = static_cast<uint32_t>(std::floor(std::log2(std::max(width, height)))) + 1;
   
   // Create image to store texture data
-  CreateImage(context_, width, height, VK_FORMAT_R8G8B8A8_SRGB,
+  CreateImage(context_, width, height, VK_FORMAT_R8G8B8A8_UNORM,
     VK_IMAGE_TILING_OPTIMAL, VK_IMAGE_USAGE_TRANSFER_SRC_BIT | VK_IMAGE_USAGE_TRANSFER_DST_BIT | VK_IMAGE_USAGE_SAMPLED_BIT,
     VK_MEMORY_PROPERTY_DEVICE_LOCAL_BIT, texture_image_, texture_image_memory_, mip_levels);
   
   // Copy texture data from staging buffer to image
-  TransitionImageLayout(context_, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mip_levels);
+  TransitionImageLayout(context_, texture_image_, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_LAYOUT_UNDEFINED, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, mip_levels);
   CopyBufferToImage(context_, staging_buffer, texture_image_, (uint32_t)width, (uint32_t)height);
   // GenerateMipmaps implicitly performs a layout transition to VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL
-  GenerateMipmaps(context_, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, width, height, mip_levels);
+  GenerateMipmaps(context_, texture_image_, VK_FORMAT_R8G8B8A8_UNORM, width, height, mip_levels);
 
   // Destroy staging buffer
   vkDestroyBuffer(context_->device, staging_buffer, context_->allocator);
   vkFreeMemory(context_->device, staging_buffer_memory, context_->allocator);
   
-  texture_image_view_ = CreateImageView(context_, texture_image_, VK_FORMAT_R8G8B8A8_SRGB, VK_IMAGE_ASPECT_COLOR_BIT, mip_levels);
+  texture_image_view_ = CreateImageView(context_, texture_image_, VK_FORMAT_R8G8B8A8_UNORM, VK_IMAGE_ASPECT_COLOR_BIT, mip_levels);
   
   // Create sampler
   VkSamplerCreateInfo sampler_info { VK_STRUCTURE_TYPE_SAMPLER_CREATE_INFO };

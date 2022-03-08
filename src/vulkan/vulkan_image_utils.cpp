@@ -119,7 +119,7 @@ void CopyBufferToImage(VulkanContextData* context, VkBuffer buffer, VkImage imag
   region.imageSubresource.baseArrayLayer = 0;
   region.imageSubresource.layerCount = 1;
 
-  region.imageOffset = {0, 0, 0};
+  region.imageOffset = { 0, 0, 0 };
   region.imageExtent = { width, height, 1 };
   
   vkCmdCopyBufferToImage(command_buffer, buffer, image, VK_IMAGE_LAYOUT_TRANSFER_DST_OPTIMAL, 1, &region);
