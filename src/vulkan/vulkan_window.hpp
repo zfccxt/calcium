@@ -16,6 +16,7 @@ public:
   virtual ~VulkanWindow();
 
   virtual void SetClearColour(const Colour& colour) override;
+  virtual void SwapBuffers() override;
 
   uint32_t GetGraphicsQueueFamily() const;
   uint32_t GetMinImageCount() const;

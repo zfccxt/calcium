@@ -21,19 +21,18 @@ std::shared_ptr<Window> Context::CreateWindow(size_t width, size_t height) {
   return CreateWindow(window_info);
 }
 
-std::shared_ptr<Shader> Context::CreateShader(const std::string& vert_path, const std::string& frag_path) {
-  ShaderCreateInfo shader_info;
-  shader_info.vert_path = vert_path;
-  shader_info.frag_path = frag_path;
-  return CreateShader(shader_info);
-}
-
 std::shared_ptr<Mesh> Context::CreateMesh(const std::string& file_path) {
   // TODO: Support more mesh file types
   // TODO: switch (file extension)
   // case .obj
   MeshCreateInfo mesh_info = Mesh::LoadObj(file_path);
   return CreateMesh(mesh_info);
+}
+
+std::shared_ptr<RenderPass> Context::CreateRenderPass(const std::shared_ptr<RenderTarget>& render_target) {
+  RenderPassCreateInfo render_pass_info;
+  render_pass_info.render_target = render_target;
+  return CreateRenderPass(render_pass_info);
 }
 
 std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
@@ -89,14 +88,6 @@ void Context::ClxOnDestroy() {
   for (auto& extension : extensions_) {
     if (extension.on_destroy) {
       extension.on_destroy();
-    }
-  }
-}
-
-void Context::ClxOnBindRenderTarget(const std::shared_ptr<RenderTarget>& render_target) {
-  for (auto& extension : extensions_) {
-    if (extension.on_bind_render_target) {
-      extension.on_bind_render_target(render_target);
     }
   }
 }

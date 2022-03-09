@@ -12,14 +12,12 @@ public:
   virtual ~VulkanContext();
 
   virtual std::shared_ptr<Window> CreateWindow(const WindowCreateInfo& window_info) override;
-  virtual std::shared_ptr<Shader> CreateShader(const ShaderCreateInfo& shader_info) override;
   virtual std::shared_ptr<Mesh> CreateMesh(const MeshCreateInfo& mesh_info) override;
+  virtual std::shared_ptr<RenderPass> CreateRenderPass(const RenderPassCreateInfo& render_pass_info) override;
   virtual std::shared_ptr<Texture> CreateTexture(const TextureCreateInfo& texture_info) override;
 
-  virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) override;
-
-  virtual void BeginRenderPass() override;
-  virtual void EndRenderPass() override;
+  virtual void BeginFrame() override;
+  virtual void EndFrame() override;
 
 private:
   VulkanContextData context_data_;

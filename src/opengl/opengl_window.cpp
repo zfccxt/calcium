@@ -6,12 +6,13 @@
 #include <GLFW/glfw3.h>
 
 #include "instrumentor.hpp"
+#include "opengl/opengl_context.hpp"
 
 namespace cl::opengl {
 
 const static int kSuitableOpenGLVersions[8][2] = { {4,6}, {4,5}, {4,4}, {4,3}, {4,2}, {4,1}, {4,0}, {3,3} };
 
-OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
+OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info, OpenGLContext* context) : context_(context) {
   CALCIUM_PROFILE_FUNCTION();
 
   glfwWindowHint(GLFW_CLIENT_API, GLFW_OPENGL_API);
@@ -70,14 +71,6 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   // Set vsync: 0 is unlimited framerate, 1 is default swap interval
   glfwSwapInterval(create_info.enable_vsync ? 1 : 0);
 
-  // Enable or disable depth test
-  if (create_info.enable_depth_test) {
-    glEnable(GL_DEPTH_TEST);
-    gl_clear_bits_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
-  }
-  else {
-    gl_clear_bits_ = GL_COLOR_BUFFER_BIT;
-  }
   SetClearColour(create_info.clear_colour);
 
   // Enable or disable backface culling
@@ -88,8 +81,8 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   }
 }
 
-void OpenGLWindow::Clear() {
-  glClear(gl_clear_bits_);
+void OpenGLWindow::Clear(unsigned int clear_bits) {
+  glClear(clear_bits);
 }
 
 void OpenGLWindow::SwapBuffers() {
@@ -102,6 +95,10 @@ void OpenGLWindow::SetClearColour(const Colour& colour) {
 
 void OpenGLWindow::MakeContextCurrent() {
   glfwMakeContextCurrent(glfw_window_);
+}
+
+OpenGLContext* OpenGLWindow::GetContext() const {
+  return context_;
 }
 
 void OpenGLWindow::OnFramebufferResize(int width, int height) {

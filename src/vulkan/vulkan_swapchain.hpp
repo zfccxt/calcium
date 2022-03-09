@@ -36,9 +36,7 @@ struct VulkanSwapchain {
 
   VulkanSwapchainSyncObjects sync_objects;
 
-  bool enable_depth_test;
-
-  // Managed w/ new and delete because order of destruction is important
+  // Managed with new and delete because order of destruction is important
   // basically a unique_ptr
   VulkanDepthBuffer* depth_buffer;
 };
