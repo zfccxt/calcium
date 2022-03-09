@@ -6,7 +6,7 @@
 #include <glm/gtc/matrix_transform.hpp>
 
 int main() {
-  auto context = cl::Context::CreateContext(cl::Backend::kOpenGL);
+  auto context = cl::Context::CreateContext(cl::Backend::kVulkan);
 
   cl::WindowCreateInfo window_info;
   window_info.clear_colour = 0x336699ff;
@@ -20,9 +20,7 @@ int main() {
   window->SetResizeCallback(calc_projection);
   calc_projection();
 
-  auto render_pass = context->CreateRenderPass(window);
-
-  auto shader = render_pass->CreateShader("res/shaders/shader.vert.spv", "res/shaders/shader.frag.spv");
+  auto shader = context->CreateShader("res/shaders/shader.vert.spv", "res/shaders/shader.frag.spv");
   
   auto mesh = context->CreateMesh("res/models/drill.obj");
   
@@ -30,7 +28,7 @@ int main() {
   texture_info.file_path = "res/models/drill_diffuse.png";
   texture_info.flip_vertical_on_load = true;
   auto texture = context->CreateTexture(texture_info);
-  glm::mat4 invert_y = glm::scale(glm::mat4(1), glm::vec3(1, -1, 1));
+  glm::mat4 invert = glm::scale(glm::mat4(1), glm::vec3(1, -1, 1));
   
   auto start_time = std::chrono::high_resolution_clock::now();
   while (window->IsOpen()) {
@@ -42,18 +40,15 @@ int main() {
     glm::mat4 viewprojection = projection * glm::translate(glm::mat4(1), glm::vec3(0, 0.1f, -0.4f));
     shader->UploadUniform("u_viewprojection", glm::value_ptr(viewprojection));
 
-    glm::mat4 model = invert_y * glm::rotate(glm::mat4(1), time, glm::vec3(0, 1, 0));
+    glm::mat4 model = invert * glm::rotate(glm::mat4(1), time, glm::vec3(0, 1, 0));
     shader->UploadUniform("u_model", glm::value_ptr(model));
     
     shader->BindTexture("u_diffuse_texture", texture);
 
-    context->BeginFrame();
-      render_pass->Begin();
-        shader->Bind();
-        mesh->Draw();
-      render_pass->End();
-    context->EndFrame();
-    window->SwapBuffers();
+    context->BeginRenderPass();
+      shader->Bind();
+      mesh->Draw();
+    context->EndRenderPass();
   }
 
 }

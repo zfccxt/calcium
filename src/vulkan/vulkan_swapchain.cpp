@@ -116,10 +116,9 @@ void VulkanSwapchain::CreateSwapchain() {
     VK_CHECK(vkCreateImageView(window_data->context_data->device, &create_info, window_data->context_data->allocator, &image_views[i]));
   }
 
-  // TODO: Allow the user to completely optimise out depth buffers when not needed?
-  // if (window_data->enable_depth_test) {
-  depth_buffer = new VulkanDepthBuffer(window_data->context_data, extent);
-  // }
+  if (window_data->enable_depth_test) {
+    depth_buffer = new VulkanDepthBuffer(window_data->context_data, extent);
+  }
 }
 
 void VulkanSwapchain::DestroySwapchain() {
@@ -127,9 +126,9 @@ void VulkanSwapchain::DestroySwapchain() {
 
   vkDeviceWaitIdle(window_data->context_data->device);
 
-  // if (window_data->enable_depth_test) {
-  delete depth_buffer;
-  // }
+  if (window_data->enable_depth_test) {
+    delete depth_buffer;
+  }
 
   for (auto image_view : image_views) {
     vkDestroyImageView(window_data->context_data->device, image_view, window_data->context_data->allocator);
@@ -169,9 +168,9 @@ void VulkanSwapchain::CreateSwapchainFramebuffers() {
   for (size_t i = 0; i < image_views.size(); ++i) {
     std::vector<VkImageView> attachments = { image_views[i] };
 
-    // if (enable_depth_test) {
-    attachments.push_back(depth_buffer->depth_image_view);
-    // }
+    if (enable_depth_test) {
+      attachments.push_back(depth_buffer->depth_image_view);
+    }
 
     VkFramebufferCreateInfo create_info { VK_STRUCTURE_TYPE_FRAMEBUFFER_CREATE_INFO };
     create_info.renderPass = render_pass;
@@ -205,11 +204,11 @@ void VulkanSwapchain::SetClearValue(const Colour& colour) {
   colour_clear_value.color.float32[3] = colour.a;
   clear_values.push_back(colour_clear_value);
 
-  // if (enable_depth_test) {
-  VkClearValue depth_clear_value { };
-  depth_clear_value.depthStencil = { 1.0f, 0 };
-  clear_values.push_back(depth_clear_value);
-  // }
+  if (enable_depth_test) {
+    VkClearValue depth_clear_value { };
+    depth_clear_value.depthStencil = { 1.0f, 0 };
+    clear_values.push_back(depth_clear_value);
+  }
 }
 
 #pragma warning(pop)

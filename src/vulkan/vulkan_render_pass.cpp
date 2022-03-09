@@ -9,14 +9,11 @@ namespace cl::vulkan {
 
 VkRenderPass CreateSwapchainRenderPass(const VulkanSwapchain& swapchain) {
   return CreateRenderPass(swapchain.window_data->context_data->device, swapchain.window_data->context_data->allocator,
-    swapchain.image_format, FindDepthFormat(swapchain.window_data->context_data));
+    swapchain.image_format, FindDepthFormat(swapchain.window_data->context_data), swapchain.enable_depth_test);
 }
 
-VkRenderPass CreateRenderPass(VkDevice device, VkAllocationCallbacks* allocator, VkFormat format, VkFormat depth_format) {
+VkRenderPass CreateRenderPass(VkDevice device, VkAllocationCallbacks* allocator, VkFormat format, VkFormat depth_format, bool enable_depth_test) {
   CALCIUM_PROFILE_FUNCTION();
-
-  // TODO: Depth buffers are always enabled, but in the future I might want to optimise this
-  constexpr bool enable_depth_test = true;
 
   // Render pass objects describe framebuffer attachments - how many colour and depth buffers there are, how to use 
   // them, how many samples, etc.
@@ -115,18 +112,5 @@ void RecordBeginSwapchainRenderPassCommand(VulkanSwapchain& swapchain, VkCommand
 
   vkCmdBeginRenderPass(command_buffer, &render_pass_info, VK_SUBPASS_CONTENTS_INLINE);
 }
-
-// std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shader_info) {
-//   auto window = context_data_.bound_render_target.lock();
-//   VkExtent2D framebuffer_extent = window->GetFramebufferExtent();
-//   VkRenderPass render_pass = window->GetRenderPass();
-//   bool enable_depth_test = window->IsDepthTestEnabled();
-//   bool enable_backface_cull = window->IsBackfaceCullingEnabled();
-//   WindingOrder front_face = window->GetPolygonFrontFace();
-//   auto shader = std::make_shared<VulkanShader>(&context_data_, shader_info, enable_depth_test, enable_backface_cull, front_face, framebuffer_extent, render_pass);
-//   context_data_.loaded_shaders_.push_back(shader);
-//   return shader;
-// }
-
 
 }

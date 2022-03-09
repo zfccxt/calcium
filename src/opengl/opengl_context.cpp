@@ -3,7 +3,7 @@
 #include "glfw_utils.hpp"
 #include "instrumentor.hpp"
 #include "opengl/opengl_mesh.hpp"
-#include "opengl/opengl_render_pass.hpp"
+#include "opengl/opengl_shader.hpp"
 #include "opengl/opengl_texture.hpp"
 #include "opengl/opengl_window.hpp"
 
@@ -22,13 +22,14 @@ OpenGLContext::~OpenGLContext() {
 std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& window_info) {
   CALCIUM_PROFILE_FUNCTION();
 
-  // We require a context to create the texture
-  auto window = std::make_shared<OpenGLWindow>(window_info, this);
+  // For convenience we automatically bind the first window the library user creates as the current render target
+  auto window = std::make_shared<OpenGLWindow>(window_info);
+  if (!bound_render_target_.lock()) {
+    BindRendertarget(window);
+  }
 
   // TODO: We should really create the blank texture on context creation, but we have to wait until there is a valid
   // OpenGL context, which requires waiting for a window to be created
-  // OpenGL is silly
-  // I think the normal way to get around this is to create an invisible window
   if (!blank_texture_) {
     BlankTextureCreateInfo texture_info;
     blank_texture_ = std::make_shared<OpenGLTexture>(texture_info);
@@ -37,16 +38,19 @@ std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& wind
   return window;
 }
 
+std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& shader_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
+  auto shader = std::make_shared<OpenGLShader>(shader_info);
+  shader->Bind();
+  shader->BindAllTextureSamplers(blank_texture_);
+  return shader;
+}
+
 std::shared_ptr<Mesh> OpenGLContext::CreateMesh(const MeshCreateInfo& mesh_info) {
   CALCIUM_PROFILE_FUNCTION();
 
   return std::make_shared<OpenGLMesh>(mesh_info);
-}
-
-std::shared_ptr<RenderPass> OpenGLContext::CreateRenderPass(const RenderPassCreateInfo& render_pass_info) {
-  CALCIUM_PROFILE_FUNCTION();
-
-  return std::make_shared<OpenGLRenderPass>(render_pass_info);
 }
 
 std::shared_ptr<Texture> OpenGLContext::CreateTexture(const TextureCreateInfo& texture_info) {
@@ -55,12 +59,37 @@ std::shared_ptr<Texture> OpenGLContext::CreateTexture(const TextureCreateInfo& t
   return std::make_shared<OpenGLTexture>(texture_info);
 }
 
-std::shared_ptr<OpenGLTexture> OpenGLContext::GetBlankTexture() const {
-  return blank_texture_;
+void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
+  CALCIUM_PROFILE_FUNCTION();
+
+  bound_render_target_ = std::dynamic_pointer_cast<OpenGLWindow>(render_target);
+
+  // TODO: figure out whether this is a window or a framebuffer and bind appropriately
+  // If render target is a window:
+  auto opengl_window = (OpenGLWindow*)(render_target.get());
+  opengl_window->MakeContextCurrent();
+
+  ClxOnBindRenderTarget(render_target);
 }
 
-void OpenGLContext::BeginFrame() { /* Intentionally empty */ }
+void OpenGLContext::BeginRenderPass() {
+  CALCIUM_PROFILE_FUNCTION();
 
-void OpenGLContext::EndFrame()   { /* Intentionally empty */ }
+  // TODO: Make this work with bound framebuffers
+
+  // If the bound render target is a window:
+  auto window = bound_render_target_.lock();
+  window->Clear();
+}
+
+void OpenGLContext::EndRenderPass() {
+  CALCIUM_PROFILE_FUNCTION();
+
+  auto window = bound_render_target_.lock();
+  // TODO: Make this work with bound framebuffers
+
+  // If the bound render target is a window:
+  window->SwapBuffers();
+}
 
 }

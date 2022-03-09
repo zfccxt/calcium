@@ -26,12 +26,14 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo cre
   window_data_.context_data = context_data;
   window_data_.glfw_window = glfw_window_;
   window_data_.enable_vsync = create_info.enable_vsync;
+  window_data_.enable_depth_test = create_info.enable_depth_test;
   window_data_.enable_backface_cull = create_info.enable_backface_cull;
   window_data_.front_face = create_info.front_face;
 
   window_data_.surface = CreateWindowSurface(window_data_);
 
   window_data_.swapchain.window_data = &window_data_;
+  window_data_.swapchain.enable_depth_test = create_info.enable_depth_test;
   window_data_.swapchain.CreateSwapchain();
   window_data_.swapchain.SetClearValue(create_info.clear_colour);
   window_data_.swapchain.render_pass = CreateSwapchainRenderPass(window_data_.swapchain);
@@ -56,10 +58,6 @@ VulkanWindow::~VulkanWindow() {
 
 void VulkanWindow::SetClearColour(const Colour& colour) {
   window_data_.swapchain.SetClearValue(colour);
-}
-
-void VulkanWindow::SwapBuffers() {
-  // TODO
 }
 
 uint32_t VulkanWindow::GetGraphicsQueueFamily() const {
@@ -103,6 +101,7 @@ void VulkanWindow::OnFramebufferResize(int width, int height) {
 
 VkExtent2D VulkanWindow::GetFramebufferExtent() const { return window_data_.swapchain.extent; }
 VkRenderPass VulkanWindow::GetRenderPass() const { return window_data_.swapchain.render_pass; }
+bool VulkanWindow::IsDepthTestEnabled() const { return window_data_.swapchain.enable_depth_test; }
 bool VulkanWindow::IsBackfaceCullingEnabled() const { return window_data_.enable_backface_cull; }
 WindingOrder VulkanWindow::GetPolygonFrontFace() const { return window_data_.front_face; }
 size_t VulkanWindow::GetCurrentFrameIndex() const { return window_data_.render_command_buffers.current_command_buffer_index; }

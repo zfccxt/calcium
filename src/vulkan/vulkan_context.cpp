@@ -72,29 +72,55 @@ VulkanContext::~VulkanContext() {
 }
 
 std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& window_info) {
-  return std::make_shared<VulkanWindow>(&context_data_, window_info);
+  auto window = std::make_shared<VulkanWindow>(&context_data_, window_info);
+
+  // For convenience if there is not yet a bound render target and the library user creates a window, we bind it
+  if (!context_data_.bound_render_target.lock()) {
+    BindRendertarget(window);
+  }
+
+  return window;
+}
+
+std::shared_ptr<Shader> VulkanContext::CreateShader(const ShaderCreateInfo& shader_info) {
+  auto window = context_data_.bound_render_target.lock();
+  VkExtent2D framebuffer_extent = window->GetFramebufferExtent();
+  VkRenderPass render_pass = window->GetRenderPass();
+  bool enable_depth_test = window->IsDepthTestEnabled();
+  bool enable_backface_cull = window->IsBackfaceCullingEnabled();
+  WindingOrder front_face = window->GetPolygonFrontFace();
+  auto shader = std::make_shared<VulkanShader>(&context_data_, shader_info, enable_depth_test, enable_backface_cull, front_face, framebuffer_extent, render_pass);
+  context_data_.loaded_shaders_.push_back(shader);
+  return shader;
 }
 
 std::shared_ptr<Mesh> VulkanContext::CreateMesh(const MeshCreateInfo& mesh_info) {
   return std::make_shared<VulkanMesh>(&context_data_, mesh_info);
 }
 
-std::shared_ptr<RenderPass> VulkanContext::CreateRenderPass(const RenderPassCreateInfo& render_pass_info) {
-  // TODO
-  return nullptr;
-}
-
 std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& texture_info) {
   return std::make_shared<VulkanTexture>(&context_data_, texture_info);
 }
 
-void VulkanContext::BeginFrame() {
+void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
+  CALCIUM_PROFILE_FUNCTION();
+
+  // TODO: When we support rendering to framebuffers, check which type this render target is and dynamic_pointer_cast
+  // as appropriate
+  // For now we only support windows as render targets, so this is guaranteed to be valid unless it was created with
+  // another context
+  context_data_.bound_render_target = std::dynamic_pointer_cast<VulkanWindow>(render_target);
+
+  ClxOnBindRenderTarget(render_target);
+}
+
+void VulkanContext::BeginRenderPass() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
   window->BeginRenderCommandBuffer();
 }
 
-void VulkanContext::EndFrame() {
+void VulkanContext::EndRenderPass() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
   window->EndAndSubmitRenderCommandBuffer();
