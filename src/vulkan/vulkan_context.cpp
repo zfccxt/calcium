@@ -118,6 +118,7 @@ void VulkanContext::BeginFrame() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
   window->BeginRenderCommandBuffer();
+  window->SetDepthTestEnable(window->IsDepthTestEnabled());
 }
 
 void VulkanContext::EndFrame() {

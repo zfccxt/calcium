@@ -68,10 +68,10 @@ void VulkanWindow::SetClearColour(const Colour& colour) {
 
 void VulkanWindow::SetDepthTestEnable(bool enable) {
   vkCmdSetDepthTestEnableEXT_(GetCurrentRenderCommandBuffer(), enable);
+  window_data_.swapchain.enable_depth_test = enable;
 }
 
 bool VulkanWindow::IsDepthTestEnabled() const {
-  // TODO
   return window_data_.swapchain.enable_depth_test;
 }
 
