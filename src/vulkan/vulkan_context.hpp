@@ -18,8 +18,8 @@ public:
 
   virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) override;
 
-  virtual void BeginRenderPass() override;
-  virtual void EndRenderPass() override;
+  virtual void BeginFrame() override;
+  virtual void EndFrame() override;
 
 private:
   VulkanContextData context_data_;

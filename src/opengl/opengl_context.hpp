@@ -20,8 +20,8 @@ public:
 
   virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) override;
   
-  virtual void BeginRenderPass() override;
-  virtual void EndRenderPass() override;
+  virtual void BeginFrame() override;
+  virtual void EndFrame() override;
 
 private:
   // TODO: We only support windows as render targets for now, so this is a pointer to an OpenGLWindow when it should

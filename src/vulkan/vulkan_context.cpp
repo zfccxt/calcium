@@ -114,13 +114,13 @@ void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render
   ClxOnBindRenderTarget(render_target);
 }
 
-void VulkanContext::BeginRenderPass() {
+void VulkanContext::BeginFrame() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
   window->BeginRenderCommandBuffer();
 }
 
-void VulkanContext::EndRenderPass() {
+void VulkanContext::EndFrame() {
   // TODO: Make this work with framebuffers
   auto window = context_data_.bound_render_target.lock();
   window->EndAndSubmitRenderCommandBuffer();

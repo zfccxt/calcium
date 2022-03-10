@@ -35,8 +35,8 @@ public:
   virtual std::shared_ptr<Texture> CreateTexture(const TextureCreateInfo& texture_info) = 0;
 
   virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) = 0;
-  virtual void BeginRenderPass() = 0;
-  virtual void EndRenderPass() = 0;
+  virtual void BeginFrame() = 0;
+  virtual void EndFrame() = 0;
 
   inline Backend GetBackend() const { return backend_; }  
 

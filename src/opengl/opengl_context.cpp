@@ -72,7 +72,7 @@ void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render
   ClxOnBindRenderTarget(render_target);
 }
 
-void OpenGLContext::BeginRenderPass() {
+void OpenGLContext::BeginFrame() {
   CALCIUM_PROFILE_FUNCTION();
 
   // TODO: Make this work with bound framebuffers
@@ -82,7 +82,7 @@ void OpenGLContext::BeginRenderPass() {
   window->Clear();
 }
 
-void OpenGLContext::EndRenderPass() {
+void OpenGLContext::EndFrame() {
   CALCIUM_PROFILE_FUNCTION();
 
   auto window = bound_render_target_.lock();
