@@ -12,6 +12,9 @@ public:
 
   virtual void SetClearColour(const Colour& colour) override;
 
+  virtual void SetDepthTestEnable(bool enable) override;
+  virtual bool IsDepthTestEnabled() const override;
+
 public:
   void Clear();
   void SwapBuffers();

@@ -100,6 +100,22 @@ void OpenGLWindow::SetClearColour(const Colour& colour) {
   glClearColor(colour.r, colour.g, colour.b, colour.a);
 }
 
+
+void OpenGLWindow::SetDepthTestEnable(bool enable) {
+  if (enable) {
+    glEnable(GL_DEPTH_TEST);
+    gl_clear_bits_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
+  }
+  else {
+    glDisable(GL_DEPTH_TEST);
+    gl_clear_bits_ = GL_COLOR_BUFFER_BIT;
+  }
+}
+
+bool OpenGLWindow::IsDepthTestEnabled() const {
+  return gl_clear_bits_ & GL_DEPTH_BUFFER_BIT;
+}
+
 void OpenGLWindow::MakeContextCurrent() {
   glfwMakeContextCurrent(glfw_window_);
 }

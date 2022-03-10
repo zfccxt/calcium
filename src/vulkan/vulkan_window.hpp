@@ -17,6 +17,9 @@ public:
 
   virtual void SetClearColour(const Colour& colour) override;
 
+  virtual void SetDepthTestEnable(bool enable) override;
+  virtual bool IsDepthTestEnabled() const override;
+
   uint32_t GetGraphicsQueueFamily() const;
   uint32_t GetMinImageCount() const;
 
@@ -26,7 +29,6 @@ public:
 public:
   VkExtent2D GetFramebufferExtent() const;
   VkRenderPass GetRenderPass() const;
-  bool IsDepthTestEnabled() const;
   bool IsBackfaceCullingEnabled() const;
   WindingOrder GetPolygonFrontFace() const;
   size_t GetCurrentFrameIndex() const;
@@ -51,6 +53,8 @@ protected:
 
 private:
   VulkanWindowData window_data_;
+
+  PFN_vkCmdSetDepthTestEnableEXT vkCmdSetDepthTestEnableEXT_;
 };
 
 }

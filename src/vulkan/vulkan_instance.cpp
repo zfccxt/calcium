@@ -52,10 +52,9 @@ std::vector<const char*> GetRequiredInstanceExtensions() {
   // If in debug mode, we need an extension to create a debug messenger
   CALCIUM_DEBUG_CALL(extensions.push_back(VK_EXT_DEBUG_UTILS_EXTENSION_NAME));
 
-#ifdef CALCIUM_PLATFORM_MACOS
-  // Required for VK_KHR_portability_subset, which should be requested for MoltenVK
+  // Required for VK_KHR_portability_subset which should be requested for MoltenVK
+  // Also required for VK_EXT_extended_dynamic_state
   extensions.push_back("VK_KHR_get_physical_device_properties2");
-#endif
 
   return extensions;
 }

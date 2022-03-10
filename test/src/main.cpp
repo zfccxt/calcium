@@ -46,6 +46,7 @@ int main() {
     shader->BindTexture("u_diffuse_texture", texture);
 
     context->BeginRenderPass();
+      window->SetDepthTestEnable(false);
       shader->Bind();
       mesh->Draw();
     context->EndRenderPass();

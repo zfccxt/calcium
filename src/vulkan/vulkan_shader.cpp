@@ -223,6 +223,11 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
   colour_blending.blendConstants[2] = 0.0f; // optional
   colour_blending.blendConstants[3] = 0.0f; // optional
 
+  VkDynamicState dynamic_depth_test_enable = VK_DYNAMIC_STATE_DEPTH_TEST_ENABLE_EXT;
+  VkPipelineDynamicStateCreateInfo dynamic_state { VK_STRUCTURE_TYPE_PIPELINE_DYNAMIC_STATE_CREATE_INFO };
+  dynamic_state.dynamicStateCount = 1;
+  dynamic_state.pDynamicStates = &dynamic_depth_test_enable;
+
   // Now we have enough information to create the pipeline
   VkGraphicsPipelineCreateInfo create_info { VK_STRUCTURE_TYPE_GRAPHICS_PIPELINE_CREATE_INFO };
   create_info.stageCount = shader_stages.size();
@@ -233,7 +238,7 @@ void VulkanShader::CreatePipeline(VkExtent2D render_target_extent, VkRenderPass 
   create_info.pRasterizationState = &rasterizer;
   create_info.pMultisampleState = &multisampling;
   create_info.pColorBlendState = &colour_blending;
-  create_info.pDynamicState = nullptr;      // optional
+  create_info.pDynamicState = &dynamic_state;
   create_info.layout = graphics_pipeline_layout_;
   // We have to reference the subpass where this pipeline will be used - that would be subpass 0 as specified in the
   // CreateRenderPass function

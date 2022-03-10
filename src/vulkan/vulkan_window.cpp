@@ -1,5 +1,7 @@
 #include "vulkan_window.hpp"
 
+#include <assert.h>
+
 #include <GLFW/glfw3.h>
 
 #include "instrumentor.hpp"
@@ -41,6 +43,10 @@ VulkanWindow::VulkanWindow(VulkanContextData* context_data, WindowCreateInfo cre
   window_data_.swapchain.sync_objects.CreateSwapchainSyncObjects(window_data_);
   
   window_data_.render_command_buffers.CreateRenderCommandBuffers(window_data_);
+
+  // Load function pointer for vkCmdSetDepthTestEnableEXT
+  vkCmdSetDepthTestEnableEXT_ = (PFN_vkCmdSetDepthTestEnableEXT)vkGetInstanceProcAddr(window_data_.context_data->instance, "vkCmdSetDepthTestEnableEXT");
+  assert(vkCmdSetDepthTestEnableEXT_);
 }
 
 VulkanWindow::~VulkanWindow() {
@@ -58,6 +64,15 @@ VulkanWindow::~VulkanWindow() {
 
 void VulkanWindow::SetClearColour(const Colour& colour) {
   window_data_.swapchain.SetClearValue(colour);
+}
+
+void VulkanWindow::SetDepthTestEnable(bool enable) {
+  vkCmdSetDepthTestEnableEXT_(GetCurrentRenderCommandBuffer(), enable);
+}
+
+bool VulkanWindow::IsDepthTestEnabled() const {
+  // TODO
+  return window_data_.swapchain.enable_depth_test;
 }
 
 uint32_t VulkanWindow::GetGraphicsQueueFamily() const {
@@ -101,7 +116,6 @@ void VulkanWindow::OnFramebufferResize(int width, int height) {
 
 VkExtent2D VulkanWindow::GetFramebufferExtent() const { return window_data_.swapchain.extent; }
 VkRenderPass VulkanWindow::GetRenderPass() const { return window_data_.swapchain.render_pass; }
-bool VulkanWindow::IsDepthTestEnabled() const { return window_data_.swapchain.enable_depth_test; }
 bool VulkanWindow::IsBackfaceCullingEnabled() const { return window_data_.enable_backface_cull; }
 WindingOrder VulkanWindow::GetPolygonFrontFace() const { return window_data_.front_face; }
 size_t VulkanWindow::GetCurrentFrameIndex() const { return window_data_.render_command_buffers.current_command_buffer_index; }

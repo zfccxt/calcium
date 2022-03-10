@@ -32,17 +32,22 @@ VkDevice CreateDevice(const VulkanContextData& context_data, VkSurfaceKHR temp_s
     queue_create_infos.push_back(queue_create_info);
   }
 
-  // Here we can specify the list of features we will be using
-  VkPhysicalDeviceFeatures device_features { };
-  device_features.samplerAnisotropy = VK_TRUE;
+  // Here we enable extended dynamic state
+  // This is a core feature as of Vulkan 1.3 (25th Jan 2022) but not widely supported yet
+  VkPhysicalDeviceExtendedDynamicStateFeaturesEXT dynamic_state { VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_EXTENDED_DYNAMIC_STATE_FEATURES_EXT };
+  dynamic_state.extendedDynamicState = true;
+
+  VkPhysicalDeviceFeatures2 device_features { VK_STRUCTURE_TYPE_PHYSICAL_DEVICE_FEATURES_2 };
+  device_features.features.samplerAnisotropy = VK_TRUE;
+  device_features.pNext = &dynamic_state;
 
   // Now we can create the device
   VkDeviceCreateInfo create_info { VK_STRUCTURE_TYPE_DEVICE_CREATE_INFO };
   create_info.queueCreateInfoCount = (uint32_t)queue_create_infos.size();
   create_info.pQueueCreateInfos = queue_create_infos.data();
-  create_info.pEnabledFeatures = &device_features;  
   create_info.enabledExtensionCount = (uint32_t)kDeviceExtensions.size();
   create_info.ppEnabledExtensionNames = kDeviceExtensions.data();
+  create_info.pNext = &device_features;
 
   // Vulkan no longer makes a distinction between instance and device validation layers, so the enabledLayerCount and
   // ppEnabledLayerNames fields are ignored by up to date Vulkan implementations. We might as well set them anyway to

@@ -14,9 +14,9 @@ namespace cl::vulkan {
 
 // We require VK_KHR_portability_subset for MoltenVK
 #ifdef CALCIUM_PLATFORM_MACOS
-  const std::vector<const char*> kDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_KHR_portability_subset" };
+  const std::vector<const char*> kDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, "VK_KHR_portability_subset", VK_EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME };
 #else
-  const std::vector<const char*> kDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME };
+  const std::vector<const char*> kDeviceExtensions = { VK_KHR_SWAPCHAIN_EXTENSION_NAME, VK_EXT_EXTENDED_DYNAMIC_STATE_EXTENSION_NAME };
 #endif
 
 bool CheckDeviceExtensionSupport(VkPhysicalDevice physical_device) {

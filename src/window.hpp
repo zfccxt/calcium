@@ -18,6 +18,9 @@ public:
 
   virtual void SetClearColour(const Colour& colour) = 0;
 
+  virtual void SetDepthTestEnable(bool enable) = 0;
+  virtual bool IsDepthTestEnabled() const = 0;
+
   virtual void PollEvents() = 0;
 
   virtual bool IsCursorLocked() = 0;
