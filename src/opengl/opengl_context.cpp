@@ -59,6 +59,13 @@ std::shared_ptr<Texture> OpenGLContext::CreateTexture(const TextureCreateInfo& t
   return std::make_shared<OpenGLTexture>(texture_info);
 }
 
+std::shared_ptr<TextureArray> OpenGLContext::CreateTextureArray(const TextureArrayCreateInfo& texture_array_info) {
+  CALCIUM_PROFILE_FUNCTION();
+
+  // TODO
+  return nullptr;
+}
+
 void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {
   CALCIUM_PROFILE_FUNCTION();
 

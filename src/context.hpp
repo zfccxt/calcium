@@ -10,6 +10,8 @@
 #include "render_target.hpp"
 #include "texture.hpp"
 #include "texture_create_info.hpp"
+#include "texture_array.hpp"
+#include "texture_array_create_info.hpp"
 #include "shader.hpp"
 #include "shader_create_info.hpp"
 #include "window.hpp"
@@ -33,6 +35,9 @@ public:
 
   std::shared_ptr<Texture> CreateTexture(const std::string& file_path);
   virtual std::shared_ptr<Texture> CreateTexture(const TextureCreateInfo& texture_info) = 0;
+
+  std::shared_ptr<TextureArray> CreateTextureArray(const std::vector<std::string>& file_paths);
+  virtual std::shared_ptr<TextureArray> CreateTextureArray(const TextureArrayCreateInfo& texture_array_info) = 0;
 
   virtual void BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) = 0;
   virtual void BeginFrame() = 0;

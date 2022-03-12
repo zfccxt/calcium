@@ -44,6 +44,14 @@ std::shared_ptr<Texture> Context::CreateTexture(const std::string& file_path) {
   return CreateTexture(texture_info);
 }
 
+std::shared_ptr<TextureArray> Context::CreateTextureArray(const std::vector<std::string>& file_paths) {
+  TextureArrayCreateInfo texture_array_info;
+  for (const auto& file : file_paths) {
+    texture_array_info.files.push_back({ file });
+  }
+  return CreateTextureArray(texture_array_info);
+}
+
 std::shared_ptr<Context> Context::CreateContext(const ContextCreateInfo& context_info) {
   CALCIUM_PROFILE_BEGIN("profile_results.json");
 
