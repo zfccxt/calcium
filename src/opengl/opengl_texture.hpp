@@ -15,8 +15,13 @@ public:
 
   void Bind();
 
+  virtual size_t GetWidth() const override;
+  virtual size_t GetHeight() const override;
+
 private:
   GLuint texture_id_;
+
+  size_t width_, height_;
 };
 
 }

@@ -17,6 +17,9 @@ public:
   VulkanTexture(VulkanContextData* context, const BlankTextureCreateInfo& texture_info);
   ~VulkanTexture();
 
+  virtual size_t GetWidth() const override;
+  virtual size_t GetHeight() const override;
+
 private:
   void CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap);
 
@@ -31,6 +34,8 @@ private:
   VkDeviceMemory texture_image_memory_;
   VkImageView texture_image_view_;
   VkSampler texture_sampler_;
+
+  size_t width_, height_;
 };
 
 typedef std::unordered_map<size_t, VulkanTexture*> VulkanTextureMap;

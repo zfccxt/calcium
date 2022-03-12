@@ -43,6 +43,9 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
   stbi_set_flip_vertically_on_load(texture_info.flip_vertical_on_load);
 	data = stbi_load(texture_info.file_path.c_str(), &width, &height, &channels, 0);
 
+  width_ = width;
+  height_ = height;
+
 	assert(data);
 
 	GLenum internal_format = 0, data_format = 0;
@@ -77,6 +80,9 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
 OpenGLTexture::OpenGLTexture(const BlankTextureCreateInfo& texture_info) {
   CALCIUM_PROFILE_FUNCTION();
 
+  width_ = texture_info.width;
+  height_ = texture_info.height;
+
   glGenTextures(1, &texture_id_);
   glBindTexture(GL_TEXTURE_2D, texture_id_);
 
@@ -109,6 +115,14 @@ void OpenGLTexture::Bind() {
   CALCIUM_PROFILE_FUNCTION();
 
   glBindTexture(GL_TEXTURE_2D, texture_id_);
+}
+
+size_t OpenGLTexture::GetWidth() const {
+  return width_;
+}
+
+size_t OpenGLTexture::GetHeight() const {
+  return height_;
 }
 
 }

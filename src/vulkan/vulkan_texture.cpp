@@ -67,6 +67,9 @@ VulkanTexture::VulkanTexture(VulkanContextData* context, const BlankTextureCreat
 void VulkanTexture::CreateTexture(void* pixels, int width, int height, TextureFilter filter, TextureWrap wrap) {
   CALCIUM_PROFILE_FUNCTION();
 
+  width_ = width;
+  height_ = height;
+
   VkDeviceSize image_size = (VkDeviceSize)width * height * sizeof(uint32_t);
 
   // Create staging buffer
@@ -155,6 +158,14 @@ VulkanTexture::~VulkanTexture() {
   vkDestroyImageView(context_->device, texture_image_view_, context_->allocator);
   vkDestroyImage(context_->device, texture_image_, context_->allocator);
   vkFreeMemory(context_->device, texture_image_memory_, context_->allocator);
+}
+
+size_t VulkanTexture::GetWidth() const {
+  return width_;
+}
+
+size_t VulkanTexture::GetHeight() const {
+  return height_;
 }
 
 #pragma warning(pop)
