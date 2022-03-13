@@ -22,6 +22,7 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
   for (const auto& shader : shader_code) {
     const ShaderStage current_stage = shader.first;
 
+    // TODO: This works but is not really best practice or how the library is intended to be used
     spirv_cross::CompilerGLSL* glsl = new spirv_cross::CompilerGLSL(shader.second);
 	  spirv_cross::ShaderResources* resources = new spirv_cross::ShaderResources(glsl->get_shader_resources());
 
@@ -50,11 +51,24 @@ void ShaderReflectionDetails::Reflect(const ShaderCodeMap& shader_code) {
 
     // Find texture samplers
     for (auto& texture : resources->sampled_images) {
-      TextureData texture_data;
-      texture_data.binding = glsl->get_decoration(texture.id, spv::DecorationBinding);
-      texture_data.stage = current_stage;
-      texture_data.name = glsl->get_name(texture.id);
-      textures.emplace(texture_data.binding, texture_data);
+      auto& type = glsl->get_type(texture.type_id);
+
+      if (!type.image.arrayed) {
+        // Single texture samplers (sampler2D)
+        TextureData texture_data;
+        texture_data.binding = glsl->get_decoration(texture.id, spv::DecorationBinding);
+        texture_data.stage = current_stage;
+        texture_data.name = glsl->get_name(texture.id);
+        textures.emplace(texture_data.binding, texture_data);
+      }
+      else {
+        // Texture sampler arrays (sampler2DArray)
+        TextureArrayData texture_array_data;
+        texture_array_data.binding = glsl->get_decoration(texture.id, spv::DecorationBinding);
+        texture_array_data.stage = current_stage;
+        texture_array_data.name = glsl->get_name(texture.id);
+        texture_arrays.emplace(texture_array_data.binding, texture_array_data);
+      }
     }
 
     delete resources;

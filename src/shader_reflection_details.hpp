@@ -36,13 +36,20 @@ struct ShaderReflectionDetails {
   };
   std::unordered_map<size_t, TextureData> textures;
 
+  struct TextureArrayData {
+    std::string name;
+    size_t binding;
+    ShaderStage stage;
+  };
+  std::unordered_map<size_t, TextureArrayData> texture_arrays;
+
 public:
   inline bool HasVertexInputs() const {
     return vertex_input_layout.GetNumElements() > 0;
   }
 
   inline bool HasUniformsOrTextures() const {
-    return !uniforms.empty() || !textures.empty();
+    return !uniforms.empty() || !textures.empty() || !texture_arrays.empty();
   }
 };
 
