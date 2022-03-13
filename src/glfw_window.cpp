@@ -41,6 +41,8 @@ void GlfwWindow::CreateGlfwWindow(const WindowCreateInfo& create_info) {
   glfwSetMouseButtonCallback(glfw_window_, PerformMouseButtonCallbacks);
   glfwSetScrollCallback(glfw_window_, PerformMouseWheelCallbacks);
   glfwSetCursorPosCallback(glfw_window_, PerformMouseMoveCallbacks);
+
+  // TODO: Expose joystick plugged in/unplugged events and multiple joysticks
 }
 
 float GlfwWindow::GetAspectRatio() const {
@@ -220,5 +222,62 @@ void GlfwWindow::RemoveMouseMoveCallback() {
   mouse_move_callback_ = nullptr;
 }
 
+bool GlfwWindow::IsControllerDetected() {
+  return glfwJoystickPresent(GLFW_JOYSTICK_1) && glfwJoystickIsGamepad(GLFW_JOYSTICK_1);
+}
+
+bool GlfwWindow::IsControllerButtonDown(ControllerButton button) {
+  GLFWgamepadstate state;
+  if (glfwGetGamepadState(GLFW_JOYSTICK_1, &state)) {
+    return state.buttons[(size_t)button];
+  }
+  else {
+    return false;
+  }
+}
+
+float GlfwWindow::ControllerLeftStickX() {
+  int count;
+  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+  if (count > 0) {
+    return axes[0];
+  }
+  else {
+    return 0.0f;
+  }
+}
+
+float GlfwWindow::ControllerLeftStickY() {
+  int count;
+  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+  if (count > 1) {
+    return axes[1];
+  }
+  else {
+    return 0.0f;
+  }
+}
+
+float GlfwWindow::ControllerRightStickX() {
+  int count;
+  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+  if (count > 2) {
+    return axes[2];
+  }
+  else {
+    return 0.0f;
+  }
+}
+
+float GlfwWindow::ControllerRightStickY() {
+  int count;
+  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
+  if (count > 3) {
+    return axes[3];
+  }
+  else {
+    return 0.0f;
+  }
+}
 
 }

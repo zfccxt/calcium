@@ -3,7 +3,6 @@
 namespace cl {
 
 enum class KeyCode {
-  kUnknown        = -1,
   kSpace          = 32,
   kApostrophe     = 39,  
   kComma          = 44,  
@@ -123,8 +122,7 @@ enum class KeyCode {
   kRightControl   = 345,
   kRightAlt       = 346,
   kRightSuper     = 347,
-  kMenu           = 348,
-  kMaxEnum = kMenu
+  kMenu           = 348
 };
 
 enum class MouseButton {
@@ -137,6 +135,25 @@ enum class MouseButton {
   kButton7     = 6,
   kButton8     = 7,
   kButton9     = 8
+};
+
+enum class ControllerButton {
+  kButtonA           = 0,
+  kButtonB           = 1,
+  kButtonX           = 2,
+  kButtonY           = 3,
+  kButtonLeftBumper  = 4,
+  kButtonRightBumper = 5,
+  kButtonBack        = 6,
+  kButtonStart       = 7,
+  kButtonGuide       = 8,
+  kButtonLeftStick   = 9,
+  kButtonRightStick  = 10,
+  kButtonDpadUp      = 11,
+  kButtonDpadRight   = 12,
+  kButtonDpadDown    = 13,
+  kButtonDpadLeft    = 14
+
 };
 
 }

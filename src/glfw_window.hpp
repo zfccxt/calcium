@@ -51,6 +51,14 @@ public:
   virtual void SetMouseMoveCallback(MouseMoveCallback) override;
   virtual void RemoveMouseMoveCallback() override;
 
+  virtual bool IsControllerDetected() override;
+  virtual bool IsControllerButtonDown(ControllerButton) override;
+
+  virtual float ControllerLeftStickX() override;
+  virtual float ControllerLeftStickY() override;
+  virtual float ControllerRightStickX() override;
+  virtual float ControllerRightStickY() override;
+
 public:
   inline GLFWwindow* GetGlfwWindow() const { return glfw_window_; }
 

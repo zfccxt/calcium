@@ -34,13 +34,13 @@ public:
 
   virtual bool IsKeyDown(KeyCode key) = 0;
 
+  virtual void SetResizeCallback(ResizeCallback) = 0;
+  virtual void RemoveResizeCallback() = 0;
+
   virtual void SetKeyPressCallback(KeyCode, KeyCallback) = 0;
   virtual void RemoveKeyPressCallback(KeyCode) = 0;
   virtual void SetKeyReleaseCallback(KeyCode, KeyCallback) = 0;
   virtual void RemoveKeyReleaseCallback(KeyCode) = 0;
-
-  virtual void SetResizeCallback(ResizeCallback) = 0;
-  virtual void RemoveResizeCallback() = 0;
 
   virtual void SetMouseButtonPressCallback(MouseButton, MouseButtonCallback) = 0;
   virtual void RemoveMouseButtonPressCallback(MouseButton) = 0;
@@ -50,6 +50,14 @@ public:
   virtual void RemoveMouseWheelCallback() = 0;
   virtual void SetMouseMoveCallback(MouseMoveCallback) = 0;
   virtual void RemoveMouseMoveCallback() = 0;
+
+  virtual bool IsControllerDetected() = 0;
+  virtual bool IsControllerButtonDown(ControllerButton) = 0;
+
+  virtual float ControllerLeftStickX() = 0;
+  virtual float ControllerLeftStickY() = 0;
+  virtual float ControllerRightStickX() = 0;
+  virtual float ControllerRightStickY() = 0;
 };
 
 }
