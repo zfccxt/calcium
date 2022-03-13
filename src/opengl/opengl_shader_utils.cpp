@@ -8,8 +8,8 @@
 
 namespace cl::opengl {
 
-GLenum FindOpenGLShaderStage(ShaderStage type) {
-  switch (type) {
+GLenum FindOpenGLShaderStage(ShaderStage stage) {
+  switch (stage) {
     case ShaderStage::kComputeShader:  return GL_COMPUTE_SHADER;
     case ShaderStage::kVertexShader:   return GL_VERTEX_SHADER;
     case ShaderStage::kFragmentShader: return GL_FRAGMENT_SHADER;
@@ -17,18 +17,37 @@ GLenum FindOpenGLShaderStage(ShaderStage type) {
     default: assert(false); return -1;
 
     /* TODO: figure this out
-    case ShaderType::kMeshShader:        return GL_MESH_SHADER ??
-    case ShaderType::kTaskShader:        return GL_TASK_SHADER ??
-    case ShaderType::kTesselationShader: return GL_TESSELATION_SHADER ??
+    case ShaderStage::kMeshShader:        return GL_MESH_SHADER ??
+    case ShaderStage::kTaskShader:        return GL_TASK_SHADER ??
+    case ShaderStage::kTesselationShader: return GL_TESSELATION_SHADER ??
     */
   }
 }
+
+#ifdef CALCIUM_BUILD_VERBOSE
+const char* GetShaderStageName(ShaderStage stage) {
+  switch (stage) {
+    case ShaderStage::kComputeShader:     return "Compute Shader";
+    case ShaderStage::kVertexShader:      return "Vertex Shader";
+    case ShaderStage::kFragmentShader:    return "Fragment Shader";
+    case ShaderStage::kGeometryShader:    return "Geometry Shader";
+    case ShaderStage::kMeshShader:        return "Mesh Shader";
+    case ShaderStage::kTaskShader:        return "Task Shader";
+    case ShaderStage::kTesselationShader: return "Tesselation Shader";
+  }
+}
+#endif
 
 GLuint CreateShaderModule(const std::string& glsl_code, ShaderStage shader_type) {
   CALCIUM_PROFILE_FUNCTION();
 
   GLuint shader = glCreateShader(FindOpenGLShaderStage(shader_type));
 	const GLchar* source_ptr = (const GLchar*)glsl_code.c_str();
+
+#ifdef CALCIUM_BUILD_VERBOSE
+  printf("Compiling %s:\n%s\n", GetShaderStageName(shader_type), source_ptr);
+#endif
+
   glShaderSource(shader, 1, &source_ptr, 0);
   glCompileShader(shader);
 
