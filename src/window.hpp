@@ -58,6 +58,8 @@ public:
   virtual float ControllerLeftStickY() = 0;
   virtual float ControllerRightStickX() = 0;
   virtual float ControllerRightStickY() = 0;
+
+  virtual void SetControllerDeadzone(float size) = 0;
 };
 
 }

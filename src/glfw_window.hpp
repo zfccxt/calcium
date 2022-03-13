@@ -59,6 +59,12 @@ public:
   virtual float ControllerRightStickX() override;
   virtual float ControllerRightStickY() override;
 
+private:
+  float GetControllerJoystickAxis(int axis);
+
+public:
+  virtual void SetControllerDeadzone(float size) override;
+
 public:
   inline GLFWwindow* GetGlfwWindow() const { return glfw_window_; }
 
@@ -90,6 +96,8 @@ private:
   MouseWheelCallback mouse_wheel_callback_ = nullptr;
   ResizeCallback resize_callback_ = nullptr;
   MouseMoveCallback mouse_move_callback_ = nullptr;
+
+  float controller_deadzone_ = 0.0f;
 };
 
 }

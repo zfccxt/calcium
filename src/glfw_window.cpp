@@ -236,48 +236,41 @@ bool GlfwWindow::IsControllerButtonDown(ControllerButton button) {
   }
 }
 
-float GlfwWindow::ControllerLeftStickX() {
+float GlfwWindow::GetControllerJoystickAxis(int axis) {
   int count;
   const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-  if (count > 0) {
-    return axes[0];
+  if (count > axis) {
+    float val = axes[axis];
+    if (abs(val) > controller_deadzone_) {
+      return val;
+    }
+    else {
+      return 0.0f;
+    }
   }
   else {
     return 0.0f;
   }
+}
+
+float GlfwWindow::ControllerLeftStickX() {
+  return GetControllerJoystickAxis(0);
 }
 
 float GlfwWindow::ControllerLeftStickY() {
-  int count;
-  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-  if (count > 1) {
-    return axes[1];
-  }
-  else {
-    return 0.0f;
-  }
+  return GetControllerJoystickAxis(1);
 }
 
 float GlfwWindow::ControllerRightStickX() {
-  int count;
-  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-  if (count > 2) {
-    return axes[2];
-  }
-  else {
-    return 0.0f;
-  }
+  return GetControllerJoystickAxis(2);
 }
 
 float GlfwWindow::ControllerRightStickY() {
-  int count;
-  const float* axes = glfwGetJoystickAxes(GLFW_JOYSTICK_1, &count);
-  if (count > 3) {
-    return axes[3];
-  }
-  else {
-    return 0.0f;
-  }
+  return GetControllerJoystickAxis(3);
+}
+
+void GlfwWindow::SetControllerDeadzone(float size) {
+  controller_deadzone_ = size;
 }
 
 }
