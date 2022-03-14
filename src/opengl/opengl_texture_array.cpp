@@ -66,19 +66,11 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
     stbi_image_free(next_tex_data);
   }
 
-  // TODO: Figure out what the mip level count should be
-  GLsizei mip_level_count = 1;
-
   // Texture array data is loaded - now upload it to the GPU
   GL_CHECK(glGenTextures(1, &texture_id_));
   GL_CHECK(glBindTexture(GL_TEXTURE_2D_ARRAY, texture_id_));
-  GL_CHECK(glTexStorage3D(GL_TEXTURE_2D_ARRAY, mip_level_count, internal_format, width, height, num_layers));
   // Upload pixel data.
-  // The first 0 refers to the mipmap level (level 0, since there's only 1)
-  // The following 2 zeroes refers to the x and y offsets in case you only want to specify a subrectangle.
-  // The final 0 refers to the layer index offset (we start from index 0 and have 2 levels).
-  // Altogether you can specify a 3D box subset of the overall texture, but only one mip level at a time.
-  GL_CHECK(glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, num_layers, data_format, GL_UNSIGNED_BYTE, data));
+  GL_CHECK(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, internal_format, width, height, num_layers, 0, data_format, GL_UNSIGNED_BYTE, data));
   
   // Always set reasonable texture parameters
 	GLenum wrap = OpenGLTexture::TextureWrapModeToGLEnum(texture_array_info.wrap);

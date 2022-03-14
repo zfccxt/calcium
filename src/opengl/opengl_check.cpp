@@ -26,8 +26,8 @@ static const char* GetGlErrorString(GLenum err) {
 void PrintOpenGLError(const char* stmt, const char* fname, int line) {
   GLenum err = glGetError();
   if (err != GL_NO_ERROR) {
-      fprintf(stderr, "OpenGL error %08x (%s) at %s:%i - for %s\n", err, GetGlErrorString(err), fname, line, stmt);
-      assert(false);
+    fprintf(stderr, "OpenGL error %08x (%s) at %s:%i - for %s\n", err, GetGlErrorString(err), fname, line, stmt);
+    assert(false);
   }
 }
 
