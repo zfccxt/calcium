@@ -12,7 +12,7 @@ namespace cl::vulkan {
 VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderReflectionDetails& reflection_details) {
   CALCIUM_PROFILE_FUNCTION();
 
-  std::vector<VkDescriptorPoolSize> pool_sizes(reflection_details.uniforms.size() + reflection_details.textures.size());
+  std::vector<VkDescriptorPoolSize> pool_sizes(reflection_details.uniforms.size() + reflection_details.textures.size() + reflection_details.texture_arrays.size());
 
   size_t i = 0;
   for (const auto& uniform : reflection_details.uniforms) {
@@ -21,11 +21,15 @@ VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderRe
     ++i;
   }
 
-  for (const auto& uniform : reflection_details.textures) {
+  // Lambda used to avoid repeating code
+  auto add_texture_descriptor = [&](){
     pool_sizes[i].type = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER; 
     pool_sizes[i].descriptorCount = kMaxFramesInFlight;
     ++i;
-  }
+  };
+ 
+  for (const auto& sampler : reflection_details.textures)       { add_texture_descriptor(); }
+  for (const auto& sampler : reflection_details.texture_arrays) { add_texture_descriptor(); }
 
   VkDescriptorPoolCreateInfo pool_info { VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO };
   pool_info.poolSizeCount = pool_sizes.size();
@@ -38,7 +42,8 @@ VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderRe
 }
 
 std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, const VulkanUniformMap& uniform_buffers,
-    const VulkanTextureMap& texture_samplers, VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool) {
+    const VulkanTextureMap& texture_samplers, const VulkanTextureMap& texture_array_samplers, 
+    VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool) {
   CALCIUM_PROFILE_FUNCTION();
 
   std::vector<VkDescriptorSet> descriptor_sets(kMaxFramesInFlight);
@@ -70,23 +75,31 @@ std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, 
       vkUpdateDescriptorSets(context->device, 1, &write, 0, nullptr);
     }
 
-    for (const auto& sampler : texture_samplers) {
+    // Lambda used here to avoid repeating myself
+    auto add_sampler = [&](uint32_t binding, VulkanTexture* sampler){
       VkDescriptorImageInfo image_info { };
       image_info.imageLayout = VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL;
-      image_info.imageView = sampler.second->GetImageView();
-      image_info.sampler = sampler.second->GetSampler();
+      image_info.imageView = sampler->GetImageView();
+      image_info.sampler = sampler->GetSampler();
 
       VkWriteDescriptorSet write { VK_STRUCTURE_TYPE_WRITE_DESCRIPTOR_SET };
       write.dstSet = descriptor_sets[i];
-      write.dstBinding = sampler.first;
+      write.dstBinding = binding;
       write.dstArrayElement = 0;
       write.descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
       write.descriptorCount = 1;
       write.pImageInfo = &image_info;
 
       vkUpdateDescriptorSets(context->device, 1, &write, 0, nullptr);
+    };
+
+    for (const auto& sampler : texture_samplers) {
+      add_sampler(sampler.first, sampler.second);
     }
 
+    for (const auto& sampler : texture_array_samplers) {
+      add_sampler(sampler.first, sampler.second);
+    }
   }
 
   return descriptor_sets;

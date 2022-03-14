@@ -52,7 +52,8 @@ VulkanContext::VulkanContext() {
   glfwWindowHint(GLFW_VISIBLE, GLFW_TRUE);
 
   BlankTextureCreateInfo texture_info;
-  context_data_.blank_texture = new VulkanTexture(&context_data_, texture_info);
+  context_data_.blank_texture       = new VulkanTexture(&context_data_, texture_info, false);
+  context_data_.blank_texture_array = new VulkanTexture(&context_data_, texture_info, true);
 }
 
 VulkanContext::~VulkanContext() {
@@ -102,12 +103,11 @@ std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& t
 }
 
 std::shared_ptr<Texture> VulkanContext::CreateTexture(const BlankTextureCreateInfo& texture_info) {
-  return std::make_shared<VulkanTexture>(&context_data_, texture_info);
+  return std::make_shared<VulkanTexture>(&context_data_, texture_info, 1);
 }
 
 std::shared_ptr<TextureArray> VulkanContext::CreateTextureArray(const TextureArrayCreateInfo& texture_array_info) {
-  // TODO
-  return nullptr;
+  return std::make_shared<VulkanTexture>(&context_data_, texture_array_info);
 }
 
 void VulkanContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {

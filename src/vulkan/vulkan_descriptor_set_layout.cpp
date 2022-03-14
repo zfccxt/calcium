@@ -11,7 +11,7 @@ namespace cl::vulkan {
 VkDescriptorSetLayout CreateDescriptorSetLayout(VulkanContextData* context, const ShaderReflectionDetails& reflection_details) {
   CALCIUM_PROFILE_FUNCTION();
 
-  std::vector<VkDescriptorSetLayoutBinding> layouts(reflection_details.uniforms.size() + reflection_details.textures.size());
+  std::vector<VkDescriptorSetLayoutBinding> layouts(reflection_details.uniforms.size() + reflection_details.textures.size() + reflection_details.texture_arrays.size());
 
   size_t i = 0;
   for (const auto& uniform : reflection_details.uniforms) {
@@ -25,11 +25,21 @@ VkDescriptorSetLayout CreateDescriptorSetLayout(VulkanContextData* context, cons
     ++i;
   }
 
-  for (const auto& uniform : reflection_details.textures) {
-    layouts[i].binding = (uint32_t)uniform.first;
+  for (const auto& texture : reflection_details.textures) {
+    layouts[i].binding = (uint32_t)texture.first;
     layouts[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
     layouts[i].descriptorCount = 1;
-    layouts[i].stageFlags = FindVulkanShaderStage(uniform.second.stage);
+    layouts[i].stageFlags = FindVulkanShaderStage(texture.second.stage);
+    layouts[i].pImmutableSamplers = nullptr;
+
+    ++i;
+  }
+
+  for (const auto& texture_array : reflection_details.texture_arrays) {
+    layouts[i].binding = (uint32_t)texture_array.first;
+    layouts[i].descriptorType = VK_DESCRIPTOR_TYPE_COMBINED_IMAGE_SAMPLER;
+    layouts[i].descriptorCount = 1;
+    layouts[i].stageFlags = FindVulkanShaderStage(texture_array.second.stage);
     layouts[i].pImmutableSamplers = nullptr;
 
     ++i;

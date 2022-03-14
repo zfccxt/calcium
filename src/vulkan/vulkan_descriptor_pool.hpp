@@ -14,6 +14,7 @@ namespace cl::vulkan {
 
 VkDescriptorPool CreateDescriptorPool(VulkanContextData* context, const ShaderReflectionDetails& reflection_details);
 std::vector<VkDescriptorSet> AllocateDescriptorSets(VulkanContextData* context, const VulkanUniformMap& uniform_buffers,
-    const VulkanTextureMap& texture_samplers, VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool);
+    const VulkanTextureMap& texture_samplers, const VulkanTextureMap& texture_array_samplers,
+    VkDescriptorSetLayout descriptor_set_layout, VkDescriptorPool descriptor_pool);
 
 }

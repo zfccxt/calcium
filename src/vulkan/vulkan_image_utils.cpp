@@ -12,18 +12,18 @@ namespace cl::vulkan {
 #pragma warning(push)
 #pragma warning(disable : 26812)
 
-void CreateImage(VulkanContextData* context, uint32_t width, uint32_t height, VkFormat format, VkImageTiling tiling,
+void CreateImage(VulkanContextData* context, uint32_t width, uint32_t height, uint32_t layers, VkImageType type, VkFormat format, VkImageTiling tiling,
     VkImageUsageFlags usage, VkMemoryPropertyFlags properties, VkImage& image, VkDeviceMemory& image_memory, uint32_t mip_levels) {
   CALCIUM_PROFILE_FUNCTION();
 
   // Create texture image
   VkImageCreateInfo image_info { VK_STRUCTURE_TYPE_IMAGE_CREATE_INFO };
-  image_info.imageType = VK_IMAGE_TYPE_2D;
-  image_info.extent.width = (uint32_t)width;
-  image_info.extent.height = (uint32_t)height;
+  image_info.imageType = type;
+  image_info.extent.width = width;
+  image_info.extent.height = height;
   image_info.extent.depth = 1;
   image_info.mipLevels = mip_levels;
-  image_info.arrayLayers = 1;
+  image_info.arrayLayers = layers;
   // TODO: Implement list of fallbacks. VK_FORMAT_R8G8B8A8_SRGB is widely supported but not guaranteed on all platforms.
   image_info.format = format;
   image_info.tiling = tiling;
@@ -49,7 +49,7 @@ bool HasStencilComponent(VkFormat format) {
   return format == VK_FORMAT_D32_SFLOAT_S8_UINT || format == VK_FORMAT_D24_UNORM_S8_UINT;
 }
 
-void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat format, VkImageLayout old_layout, VkImageLayout new_layout, uint32_t mip_levels) {
+void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat format, VkImageLayout old_layout, VkImageLayout new_layout, uint32_t mip_levels, uint32_t layers) {
   CALCIUM_PROFILE_FUNCTION();
 
   VkCommandBuffer command_buffer = BeginSingleUseCommandBuffer(context);
@@ -63,7 +63,7 @@ void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat f
   barrier.subresourceRange.baseMipLevel = 0;
   barrier.subresourceRange.levelCount = mip_levels;
   barrier.subresourceRange.baseArrayLayer = 0;
-  barrier.subresourceRange.layerCount = 1;
+  barrier.subresourceRange.layerCount = layers;
 
   if (new_layout == VK_IMAGE_LAYOUT_DEPTH_STENCIL_ATTACHMENT_OPTIMAL) {
     barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_DEPTH_BIT;
@@ -104,7 +104,7 @@ void TransitionImageLayout(VulkanContextData* context, VkImage image, VkFormat f
   EndAndSubmitSingleUseCommandBuffer(context, command_buffer);
 }
 
-void CopyBufferToImage(VulkanContextData* context, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height) {
+void CopyBufferToImage(VulkanContextData* context, VkBuffer buffer, VkImage image, uint32_t width, uint32_t height, uint32_t layers) {
   CALCIUM_PROFILE_FUNCTION();
 
   VkCommandBuffer command_buffer = BeginSingleUseCommandBuffer(context);
@@ -117,7 +117,7 @@ void CopyBufferToImage(VulkanContextData* context, VkBuffer buffer, VkImage imag
   region.imageSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
   region.imageSubresource.mipLevel = 0;
   region.imageSubresource.baseArrayLayer = 0;
-  region.imageSubresource.layerCount = 1;
+  region.imageSubresource.layerCount = layers;
 
   region.imageOffset = { 0, 0, 0 };
   region.imageExtent = { width, height, 1 };
@@ -150,25 +150,25 @@ VkFormat FindDepthFormat(VulkanContextData* context) {
                                VK_IMAGE_TILING_OPTIMAL, VK_FORMAT_FEATURE_DEPTH_STENCIL_ATTACHMENT_BIT);
 }
 
-VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkFormat format, VkImageAspectFlags aspect_flags, uint32_t mip_levels) {
+VkImageView CreateImageView(VulkanContextData* context, VkImage image, VkImageViewType type, VkFormat format, VkImageAspectFlags aspect_flags, uint32_t mip_levels, uint32_t layers) {
   CALCIUM_PROFILE_FUNCTION();
 
   VkImageViewCreateInfo view_info { VK_STRUCTURE_TYPE_IMAGE_VIEW_CREATE_INFO };
   view_info.image = image;
-  view_info.viewType = VK_IMAGE_VIEW_TYPE_2D;
+  view_info.viewType = type;
   view_info.format = format;
   view_info.subresourceRange.aspectMask = aspect_flags;
   view_info.subresourceRange.baseMipLevel = 0;
   view_info.subresourceRange.levelCount = mip_levels;
   view_info.subresourceRange.baseArrayLayer = 0;
-  view_info.subresourceRange.layerCount = 1;
+  view_info.subresourceRange.layerCount = layers;
   
   VkImageView image_view;
   VK_CHECK(vkCreateImageView(context->device, &view_info, context->allocator, &image_view));
   return image_view;
 }
 
-void GenerateMipmaps(VulkanContextData* context, VkImage image, VkFormat image_format, uint32_t width, uint32_t height, uint32_t mip_levels) {
+void GenerateMipmaps(VulkanContextData* context, VkImage image, VkFormat image_format, uint32_t width, uint32_t height, uint32_t mip_levels, uint32_t layers) {
   CALCIUM_PROFILE_FUNCTION();
 
 #ifdef CALCIUM_BUILD_DEBUG
@@ -186,7 +186,7 @@ void GenerateMipmaps(VulkanContextData* context, VkImage image, VkFormat image_f
   barrier.dstQueueFamilyIndex = VK_QUEUE_FAMILY_IGNORED;
   barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
   barrier.subresourceRange.baseArrayLayer = 0;
-  barrier.subresourceRange.layerCount = 1;
+  barrier.subresourceRange.layerCount = layers;
   barrier.subresourceRange.levelCount = 1;
 
   int32_t mip_width = width;
@@ -210,13 +210,13 @@ void GenerateMipmaps(VulkanContextData* context, VkImage image, VkFormat image_f
     blit.srcSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit.srcSubresource.mipLevel = i - 1;
     blit.srcSubresource.baseArrayLayer = 0;
-    blit.srcSubresource.layerCount = 1;
+    blit.srcSubresource.layerCount = layers;
     blit.dstOffsets[0] = { 0, 0, 0 };
     blit.dstOffsets[1] = { mip_width > 1 ? mip_width / 2 : 1, mip_height > 1 ? mip_height / 2 : 1, 1 };
     blit.dstSubresource.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
     blit.dstSubresource.mipLevel = i;
     blit.dstSubresource.baseArrayLayer = 0;
-    blit.dstSubresource.layerCount = 1;
+    blit.dstSubresource.layerCount = layers;
 
     vkCmdBlitImage(command_buffer,
       image, VK_IMAGE_LAYOUT_TRANSFER_SRC_OPTIMAL,

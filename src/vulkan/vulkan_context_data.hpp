@@ -30,6 +30,7 @@ struct VulkanContextData {
   // Explicitly managed w/ new and delete because order of destruction matters
   // Probably should be a unique_ptr
   VulkanTexture* blank_texture;
+  VulkanTexture* blank_texture_array;
 
   // Shaders must be destroyed and recreated on window or framebuffer resize
   std::vector<std::weak_ptr<VulkanShader>> loaded_shaders_;

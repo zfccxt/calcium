@@ -26,8 +26,13 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
 
   reflection_details_.Reflect(code_map);
   CreateUniforms();
+
+  // Initially bind blank textures
   for (const auto& sampler : reflection_details_.textures) {
     bound_textures_.emplace(sampler.first, context->blank_texture);
+  }
+  for (const auto& sampler : reflection_details_.texture_arrays) {
+    bound_texture_arrays_.emplace(sampler.first, context->blank_texture_array);
   }
 
   graphics_pipeline_layout_ = CreatePipelineLayout(context, descriptor_set_layout_);
@@ -35,7 +40,7 @@ VulkanShader::VulkanShader(VulkanContextData* context, const ShaderCreateInfo& s
 
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, bound_textures_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context, uniform_buffers_, bound_textures_, bound_texture_arrays_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
@@ -73,7 +78,7 @@ void VulkanShader::Recreate(VkExtent2D render_target_extent, VkRenderPass render
   CreatePipeline(render_target_extent, render_pass);
   if (reflection_details_.HasUniformsOrTextures()) {
     descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, bound_texture_arrays_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
@@ -303,12 +308,22 @@ void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& text
     vkDeviceWaitIdle(context_->device);
     vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
     descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
-    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, descriptor_set_layout_, descriptor_pool_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, bound_texture_arrays_, descriptor_set_layout_, descriptor_pool_);
   }
 }
 
 void VulkanShader::BindTextureArray(int binding, const std::shared_ptr<TextureArray>& texture) {
-  // TODO
+  CALCIUM_PROFILE_FUNCTION();
+
+  VulkanTexture* tex = (VulkanTexture*)texture.get();
+  if (reflection_details_.HasUniformsOrTextures() && tex != bound_texture_arrays_[binding]) {
+    bound_texture_arrays_[binding] = tex;
+
+    vkDeviceWaitIdle(context_->device);
+    vkDestroyDescriptorPool(context_->device, descriptor_pool_, context_->allocator);
+    descriptor_pool_ = CreateDescriptorPool(context_, reflection_details_);
+    descriptor_sets_ = AllocateDescriptorSets(context_, uniform_buffers_, bound_textures_, bound_texture_arrays_, descriptor_set_layout_, descriptor_pool_);
+  }
 }
 
 #pragma warning(pop)

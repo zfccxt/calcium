@@ -53,6 +53,7 @@ private:
   std::vector<VkDescriptorSet> descriptor_sets_;
   VulkanUniformMap uniform_buffers_;
   VulkanTextureMap bound_textures_;
+  VulkanTextureMap bound_texture_arrays_;
 };
 
 }
