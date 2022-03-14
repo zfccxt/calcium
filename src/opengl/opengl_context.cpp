@@ -2,6 +2,7 @@
 
 #include "glfw_utils.hpp"
 #include "instrumentor.hpp"
+#include "opengl/opengl_check.hpp"
 #include "opengl/opengl_error.hpp"
 #include "opengl/opengl_mesh.hpp"
 #include "opengl/opengl_shader.hpp"
@@ -30,8 +31,8 @@ std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& wind
     BindRendertarget(window);
 
 #ifdef CALCIUM_BUILD_DEBUG
-    glEnable(GL_DEBUG_OUTPUT);
-    glDebugMessageCallback(GlErrorCallback, 0);
+    GL_CHECK(glEnable(GL_DEBUG_OUTPUT));
+    GL_CHECK(glDebugMessageCallback(GlErrorCallback, 0));
 #endif
   }
 

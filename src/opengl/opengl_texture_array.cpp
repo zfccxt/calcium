@@ -5,6 +5,7 @@
 #include <stb_image.h>
 
 #include "instrumentor.hpp"
+#include "opengl/opengl_check.hpp"
 #include "opengl/opengl_texture.hpp"
 
 namespace cl::opengl {
@@ -62,30 +63,31 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
   // TODO: Figure out what the mip level count should be
   GLsizei mip_level_count = 1;
 
+  // TODO: Fix
   // Texture array data is loaded - now upload it to the GPU
-  glGenTextures(1, &texture_id_);
-  glBindTexture(GL_TEXTURE_2D_ARRAY, texture_id_);
-  glTexStorage3D(GL_TEXTURE_2D_ARRAY, mip_level_count, internal_format, width, height, num_layers);
+  GL_CHECK(glGenTextures(1, &texture_id_));
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D_ARRAY, texture_id_));
+  GL_CHECK(glTexStorage3D(GL_TEXTURE_2D_ARRAY, mip_level_count, internal_format, width, height, num_layers));
   // Upload pixel data.
   // The first 0 refers to the mipmap level (level 0, since there's only 1)
   // The following 2 zeroes refers to the x and y offsets in case you only want to specify a subrectangle.
   // The final 0 refers to the layer index offset (we start from index 0 and have 2 levels).
   // Altogether you can specify a 3D box subset of the overall texture, but only one mip level at a time.
-  glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, num_layers, data_format, GL_UNSIGNED_BYTE, data);
+  GL_CHECK(glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, num_layers, data_format, GL_UNSIGNED_BYTE, data));
   
   // Always set reasonable texture parameters
 	GLenum wrap = OpenGLTexture::TextureWrapModeToGLEnum(texture_array_info.wrap);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, wrap);
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, wrap);
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, wrap));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, wrap));
 
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, OpenGLTexture::TextureFilterToGLMinFilter(texture_array_info.filter));
-	glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, OpenGLTexture::TextureFilterToGLMagFilter(texture_array_info.filter));	
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, OpenGLTexture::TextureFilterToGLMinFilter(texture_array_info.filter)));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, OpenGLTexture::TextureFilterToGLMagFilter(texture_array_info.filter)));	
 
   delete[] data;
 }
 
 OpenGLTextureArray::~OpenGLTextureArray() {
-
+  // TODO
 }
 
 size_t OpenGLTextureArray::GetWidth() const {

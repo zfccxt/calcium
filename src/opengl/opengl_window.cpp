@@ -6,6 +6,7 @@
 #include <GLFW/glfw3.h>
 
 #include "instrumentor.hpp"
+#include "opengl/opengl_check.hpp"
 
 namespace cl::opengl {
 
@@ -65,14 +66,14 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
   // Set the viewport to the size of the whole window framebuffer
   int width, height;
   glfwGetFramebufferSize(glfw_window_, &width, &height);
-  glViewport(0, 0, width, height);
+  GL_CHECK(glViewport(0, 0, width, height));
 
   // Set vsync: 0 is unlimited framerate, 1 is default swap interval
   glfwSwapInterval(create_info.enable_vsync ? 1 : 0);
 
   // Enable or disable depth test
   if (create_info.enable_depth_test) {
-    glEnable(GL_DEPTH_TEST);
+    GL_CHECK(glEnable(GL_DEPTH_TEST));
     gl_clear_bits_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
   }
   else {
@@ -82,14 +83,14 @@ OpenGLWindow::OpenGLWindow(WindowCreateInfo create_info) {
 
   // Enable or disable backface culling
   if (create_info.enable_backface_cull) {
-    glFrontFace(create_info.front_face == WindingOrder::kClockwise ? GL_CW : GL_CCW);
-    glEnable(GL_CULL_FACE);
-    glCullFace(GL_BACK);
+    GL_CHECK(glFrontFace(create_info.front_face == WindingOrder::kClockwise ? GL_CW : GL_CCW));
+    GL_CHECK(glEnable(GL_CULL_FACE));
+    GL_CHECK(glCullFace(GL_BACK));
   }
 }
 
 void OpenGLWindow::Clear() {
-  glClear(gl_clear_bits_);
+  GL_CHECK(glClear(gl_clear_bits_));
 }
 
 void OpenGLWindow::SwapBuffers() {
@@ -97,16 +98,16 @@ void OpenGLWindow::SwapBuffers() {
 }
 
 void OpenGLWindow::SetClearColour(const Colour& colour) {
-  glClearColor(colour.r, colour.g, colour.b, colour.a);
+  GL_CHECK(glClearColor(colour.r, colour.g, colour.b, colour.a));
 }
 
 void OpenGLWindow::SetDepthTestEnable(bool enable) {
   if (enable) {
-    glEnable(GL_DEPTH_TEST);
+    GL_CHECK(glEnable(GL_DEPTH_TEST));
     gl_clear_bits_ = GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT;
   }
   else {
-    glDisable(GL_DEPTH_TEST);
+    GL_CHECK(glDisable(GL_DEPTH_TEST));
     gl_clear_bits_ = GL_COLOR_BUFFER_BIT;
   }
 }
@@ -120,7 +121,7 @@ void OpenGLWindow::MakeContextCurrent() {
 }
 
 void OpenGLWindow::OnFramebufferResize(int width, int height) {
-  glViewport(0, 0, width, height);
+  GL_CHECK(glViewport(0, 0, width, height));
 }
 
 }
