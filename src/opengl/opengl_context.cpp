@@ -2,6 +2,7 @@
 
 #include "glfw_utils.hpp"
 #include "instrumentor.hpp"
+#include "opengl/opengl_error.hpp"
 #include "opengl/opengl_mesh.hpp"
 #include "opengl/opengl_shader.hpp"
 #include "opengl/opengl_texture.hpp"
@@ -27,6 +28,11 @@ std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& wind
   auto window = std::make_shared<OpenGLWindow>(window_info);
   if (!bound_render_target_.lock()) {
     BindRendertarget(window);
+
+#ifdef CALCIUM_BUILD_DEBUG
+    glEnable(GL_DEBUG_OUTPUT);
+    glDebugMessageCallback(GlErrorCallback, 0);
+#endif
   }
 
   // TODO: We should really create the blank texture on context creation, but we have to wait until there is a valid

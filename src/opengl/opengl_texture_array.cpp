@@ -72,7 +72,6 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
   // The final 0 refers to the layer index offset (we start from index 0 and have 2 levels).
   // Altogether you can specify a 3D box subset of the overall texture, but only one mip level at a time.
   glTexSubImage3D(GL_TEXTURE_2D_ARRAY, 0, 0, 0, 0, width, height, num_layers, data_format, GL_UNSIGNED_BYTE, data);
-  err = glGetError();
   
   // Always set reasonable texture parameters
 	GLenum wrap = OpenGLTexture::TextureWrapModeToGLEnum(texture_array_info.wrap);
