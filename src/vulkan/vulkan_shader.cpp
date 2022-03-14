@@ -307,6 +307,10 @@ void VulkanShader::BindTexture(int binding, const std::shared_ptr<Texture>& text
   }
 }
 
+void VulkanShader::BindTextureArray(int binding, const std::shared_ptr<TextureArray>& texture) {
+  // TODO
+}
+
 #pragma warning(pop)
 
 }

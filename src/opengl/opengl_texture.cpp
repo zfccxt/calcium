@@ -114,7 +114,7 @@ OpenGLTexture::~OpenGLTexture() {
   GL_CHECK(glDeleteTextures(1, &texture_id_));
 }
 
-void OpenGLTexture::Bind() {
+void OpenGLTexture::Bind() const {
   CALCIUM_PROFILE_FUNCTION();
 
   GL_CHECK(glBindTexture(GL_TEXTURE_2D, texture_id_));

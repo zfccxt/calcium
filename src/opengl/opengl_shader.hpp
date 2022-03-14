@@ -19,6 +19,7 @@ public:
 
   virtual void UploadUniform(int binding, void* data) override;
   virtual void BindTexture(int binding, const std::shared_ptr<Texture>& texture) override;
+  virtual void BindTextureArray(int binding, const std::shared_ptr<TextureArray>& texture) override;
 
 public:
   void BindAllTextureSamplers(const std::shared_ptr<Texture>& texture);

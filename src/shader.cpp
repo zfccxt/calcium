@@ -52,4 +52,14 @@ void Shader::BindTexture(const std::string& name, const std::shared_ptr<Texture>
     }
   }
 }
+
+void Shader::BindTextureArray(const std::string& name, const std::shared_ptr<TextureArray>& texture_array) {
+  for (const auto& arr : reflection_details_.texture_arrays) {
+    if (arr.second.name == name) {
+      BindTextureArray(arr.second.binding, texture_array);
+      break;
+    }
+  }
+}
+
 }

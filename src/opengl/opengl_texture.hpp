@@ -13,10 +13,11 @@ public:
   OpenGLTexture(const BlankTextureCreateInfo& texture_info);
   ~OpenGLTexture();
 
-  void Bind();
-
   virtual size_t GetWidth() const override;
   virtual size_t GetHeight() const override;
+
+public:
+  void Bind() const;
 
 public:
   static GLenum TextureFilterToGLMinFilter(TextureFilter filter);

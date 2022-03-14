@@ -26,6 +26,7 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
 
   width_ = width;
   height_ = height;
+  GLsizei texture_size_bytes = (width_ * height_ * channels);
 
   // Determine storage format based on loaded texture properties
 	GLenum internal_format = 0, data_format = 0;
@@ -42,28 +43,32 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
 	assert(internal_format & data_format);
 
   // Assign temporary cpu side storage buffer for textures
-  stbi_uc* data = new stbi_uc[width * height * channels * texture_array_info.files.size()];
+  stbi_uc* data = new stbi_uc[texture_size_bytes * num_layers];
   // Copy first loaded texture into buffer
-  memcpy(data, first_tex_data, width_ * height_);
+  memcpy(data, first_tex_data, texture_size_bytes);
 
   // First texture has been copied into the buffer that we will upload to the GPU, so it can now be freed
   stbi_image_free(first_tex_data);
 
-  // For each texture after the first, load it into memory and copy it into the buffer
+  // For each texture after the first
   for (size_t i = 1; i < num_layers; ++i) {
+    // Load the texture into cpu memory
     stbi_uc* next_tex_data = nullptr;
-    stbi_set_flip_vertically_on_load(texture_array_info.files[0].flip_vertical_on_load);
+    stbi_set_flip_vertically_on_load(texture_array_info.files[i].flip_vertical_on_load);
+
+    // Unused
     int w, h, c;
-	  next_tex_data = stbi_load(texture_array_info.files[0].file_path.c_str(), &w, &h, &c, 0);
+	  next_tex_data = stbi_load(texture_array_info.files[i].file_path.c_str(), &w, &h, &c, 0);
 	  assert(next_tex_data);
-    memcpy(data + i * (width_ * height_ * channels), next_tex_data, width_ * height_);
+
+    // Copy it into the buffer with the other textures in this array
+    memcpy(data + i * texture_size_bytes, next_tex_data, texture_size_bytes);
     stbi_image_free(next_tex_data);
   }
 
   // TODO: Figure out what the mip level count should be
   GLsizei mip_level_count = 1;
 
-  // TODO: Fix
   // Texture array data is loaded - now upload it to the GPU
   GL_CHECK(glGenTextures(1, &texture_id_));
   GL_CHECK(glBindTexture(GL_TEXTURE_2D_ARRAY, texture_id_));
@@ -84,10 +89,19 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
 	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, OpenGLTexture::TextureFilterToGLMagFilter(texture_array_info.filter)));	
 
   delete[] data;
+	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D_ARRAY));
 }
 
 OpenGLTextureArray::~OpenGLTextureArray() {
-  // TODO
+  CALCIUM_PROFILE_FUNCTION();
+
+  GL_CHECK(glDeleteTextures(1, &texture_id_));
+}
+
+void OpenGLTextureArray::Bind() const {
+  CALCIUM_PROFILE_FUNCTION();
+
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D_ARRAY, texture_id_));
 }
 
 size_t OpenGLTextureArray::GetWidth() const {

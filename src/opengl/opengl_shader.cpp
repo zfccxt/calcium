@@ -10,6 +10,7 @@
 #include "opengl_compile_options.hpp"
 #include "opengl_shader_utils.hpp"
 #include "opengl_texture.hpp"
+#include "opengl_texture_array.hpp"
 #include "shader_reflection_details.hpp"
 
 namespace cl::opengl {
@@ -72,6 +73,11 @@ OpenGLShader::OpenGLShader(const ShaderCreateInfo& shader_info) {
     GL_CHECK(glUniform1i(glGetUniformLocation(program_id_, sampler.second.name.c_str()), i));
     ++i;
   }
+  for (const auto& sampler : reflection_details_.texture_arrays) {
+    samplers_.emplace(sampler.first, i);
+    GL_CHECK(glUniform1i(glGetUniformLocation(program_id_, sampler.second.name.c_str()), i));
+    ++i;
+  }
 }
 
 OpenGLShader::~OpenGLShader() {
@@ -92,6 +98,14 @@ void OpenGLShader::BindTexture(int binding, const std::shared_ptr<Texture>& text
   size_t slot = samplers_[binding];
   GL_CHECK(glActiveTexture(GL_TEXTURE0 + slot));
   std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
+}
+
+void OpenGLShader::BindTextureArray(int binding, const std::shared_ptr<TextureArray>& texture) {
+  CALCIUM_PROFILE_FUNCTION();
+
+  size_t slot = samplers_[binding];
+  GL_CHECK(glActiveTexture(GL_TEXTURE0 + slot));
+  std::dynamic_pointer_cast<OpenGLTextureArray>(texture)->Bind();
 }
 
 void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& texture) {
