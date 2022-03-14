@@ -40,6 +40,10 @@ std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& wind
     BlankTextureCreateInfo texture_info;
     blank_texture_ = std::make_shared<OpenGLTexture>(texture_info);
   }
+  if (!blank_texture_array_) {
+    BlankTextureCreateInfo texture_info;
+    blank_texture_array_ = std::make_shared<OpenGLTextureArray>(texture_info);
+  }
 
   return window;
 }
@@ -50,6 +54,7 @@ std::shared_ptr<Shader> OpenGLContext::CreateShader(const ShaderCreateInfo& shad
   auto shader = std::make_shared<OpenGLShader>(shader_info);
   shader->Bind();
   shader->BindAllTextureSamplers(blank_texture_);
+  shader->BindAllTextureArraySamplers(blank_texture_array_);
   return shader;
 }
 

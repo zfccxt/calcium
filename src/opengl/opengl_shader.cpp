@@ -112,8 +112,23 @@ void OpenGLShader::BindAllTextureSamplers(const std::shared_ptr<Texture>& textur
   CALCIUM_PROFILE_FUNCTION();
 
   for (const auto& sampler : samplers_) {
-    GL_CHECK(glActiveTexture(GL_TEXTURE0 + sampler.second));
-    std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
+    // If sampler binding point is a sampler2D
+    if (reflection_details_.textures.find(sampler.first) != reflection_details_.textures.end()) {
+      GL_CHECK(glActiveTexture(GL_TEXTURE0 + sampler.second));
+      std::dynamic_pointer_cast<OpenGLTexture>(texture)->Bind();
+    }
+  }
+}
+
+void OpenGLShader::BindAllTextureArraySamplers(const std::shared_ptr<TextureArray>& texture_array) {
+  CALCIUM_PROFILE_FUNCTION();
+
+  for (const auto& sampler : samplers_) {
+    // If sampler binding point is a sampler2D
+    if (reflection_details_.texture_arrays.find(sampler.first) != reflection_details_.texture_arrays.end()) {
+      GL_CHECK(glActiveTexture(GL_TEXTURE0 + sampler.second));
+      std::dynamic_pointer_cast<OpenGLTextureArray>(texture_array)->Bind();
+    }
   }
 }
 

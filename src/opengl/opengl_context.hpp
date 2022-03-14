@@ -4,6 +4,7 @@
 
 #include "context.hpp"
 #include "opengl/opengl_texture.hpp"
+#include "opengl/opengl_texture_array.hpp"
 #include "opengl/opengl_window.hpp"
 
 namespace cl::opengl {
@@ -31,6 +32,7 @@ private:
   std::weak_ptr<OpenGLWindow> bound_render_target_;
 
   std::shared_ptr<OpenGLTexture> blank_texture_;
+  std::shared_ptr<OpenGLTextureArray> blank_texture_array_;
 };
 
 }

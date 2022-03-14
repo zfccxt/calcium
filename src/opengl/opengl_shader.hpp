@@ -23,6 +23,7 @@ public:
 
 public:
   void BindAllTextureSamplers(const std::shared_ptr<Texture>& texture);
+  void BindAllTextureArraySamplers(const std::shared_ptr<TextureArray>& texture_array);
 
 public:
   virtual void Bind() override;

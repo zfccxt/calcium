@@ -4,12 +4,14 @@
 
 #include "texture_array.hpp"
 #include "texture_array_create_info.hpp"
+#include "texture_create_info.hpp"
 
 namespace cl::opengl {
 
 class OpenGLTextureArray : public TextureArray {
 public:
   OpenGLTextureArray(const TextureArrayCreateInfo& texture_array_info);
+  OpenGLTextureArray(const BlankTextureCreateInfo& blank_texture_info);
   ~OpenGLTextureArray();
 
   virtual size_t GetWidth() const override;

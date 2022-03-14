@@ -84,6 +84,36 @@ OpenGLTextureArray::OpenGLTextureArray(const TextureArrayCreateInfo& texture_arr
 	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D_ARRAY));
 }
 
+OpenGLTextureArray::OpenGLTextureArray(const BlankTextureCreateInfo& blank_texture_info) {
+  size_t data_size = (size_t)blank_texture_info.width * blank_texture_info.height;
+	uint32_t* data = new uint32_t[data_size];
+	// TODO: Why is this backwards?
+	uint32_t colour = blank_texture_info.colour.UintABGR();
+	for (size_t i = 0; i < data_size; ++i) {
+		data[i] = colour;
+	}
+
+  width_ = blank_texture_info.width;
+  height_ = blank_texture_info.height;
+
+  // Texture array data is loaded - now upload it to the GPU
+  GL_CHECK(glGenTextures(1, &texture_id_));
+  GL_CHECK(glBindTexture(GL_TEXTURE_2D_ARRAY, texture_id_));
+  // Upload pixel data.
+  GL_CHECK(glTexImage3D(GL_TEXTURE_2D_ARRAY, 0, GL_RGBA8, blank_texture_info.width, blank_texture_info.height, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
+  
+  // Always set reasonable texture parameters
+	GLenum wrap = OpenGLTexture::TextureWrapModeToGLEnum(blank_texture_info.wrap);
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_S, wrap));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_WRAP_T, wrap));
+
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MIN_FILTER, OpenGLTexture::TextureFilterToGLMinFilter(blank_texture_info.filter)));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D_ARRAY, GL_TEXTURE_MAG_FILTER, OpenGLTexture::TextureFilterToGLMagFilter(blank_texture_info.filter)));	
+
+  delete[] data;
+	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D_ARRAY));
+}
+
 OpenGLTextureArray::~OpenGLTextureArray() {
   CALCIUM_PROFILE_FUNCTION();
 
