@@ -70,12 +70,12 @@ OpenGLTexture::OpenGLTexture(const TextureCreateInfo& texture_info) {
 	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap));
 
 	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGLMinFilter(texture_info.filter)));
-	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter)));	
-	
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter)));
+
 	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, internal_format, width, height, 0, data_format, GL_UNSIGNED_BYTE, data));
-	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
-	
 	stbi_image_free(data);
+
+	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
 }
 
 OpenGLTexture::OpenGLTexture(const BlankTextureCreateInfo& texture_info) {
@@ -87,13 +87,13 @@ OpenGLTexture::OpenGLTexture(const BlankTextureCreateInfo& texture_info) {
   GL_CHECK(glGenTextures(1, &texture_id_));
   GL_CHECK(glBindTexture(GL_TEXTURE_2D, texture_id_));
 
-	GL_CHECK(glTexParameteri(texture_id_, GL_TEXTURE_MIN_FILTER, TextureFilterToGLMinFilter(texture_info.filter)));
-	GL_CHECK(glTexParameteri(texture_id_, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter)));
-	
 	GLenum wrap = TextureWrapModeToGLEnum(texture_info.wrap);
-	GL_CHECK(glTexParameteri(texture_id_, GL_TEXTURE_WRAP_S, wrap));
-	GL_CHECK(glTexParameteri(texture_id_, GL_TEXTURE_WRAP_T, wrap));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, wrap));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, wrap));
 
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, TextureFilterToGLMinFilter(texture_info.filter)));
+	GL_CHECK(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, TextureFilterToGLMagFilter(texture_info.filter)));
+	
 	size_t data_size = (size_t)texture_info.width * texture_info.height;
 	uint32_t* data = new uint32_t[data_size];
 	// TODO: Why is this backwards?
@@ -104,6 +104,8 @@ OpenGLTexture::OpenGLTexture(const BlankTextureCreateInfo& texture_info) {
 	
 	GL_CHECK(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, texture_info.width, texture_info.height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data));
 	delete[] data;
+
+	GL_CHECK(glGenerateMipmap(GL_TEXTURE_2D));
 }
 
 OpenGLTexture::~OpenGLTexture() {
