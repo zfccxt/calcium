@@ -75,20 +75,18 @@ void CenterWindow(GLFWwindow* glfw_window, bool center_horizontal, bool center_v
   glfwSetWindowPos(glfw_window, window_x, window_y);
 }
 
-size_t num_glfw_contexts_ = 0;
+bool is_glfw_inited_ = false;
 
-void IncrementGLFWContextCount() {
-  if (num_glfw_contexts_ == 0) {
+void GlfwInit() {
+  if (!is_glfw_inited_) {
     glfwInit();
+    is_glfw_inited_ = true;
   }
-  ++num_glfw_contexts_;
 }
 
-void DecrementGLFWContextCount() {
-  --num_glfw_contexts_;
-  if (num_glfw_contexts_ == 0) {
-    glfwTerminate();
-  }
+// TODO: This is never called, but maybe it doesn't have to be
+void GlfwShutdown() {
+  glfwTerminate();
 }
 
 }

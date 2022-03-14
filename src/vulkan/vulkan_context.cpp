@@ -22,7 +22,8 @@ namespace cl::vulkan {
 VulkanContext::VulkanContext() {
   CALCIUM_PROFILE_FUNCTION();
 
-  glfw::IncrementGLFWContextCount();
+  glfw::GlfwInit();
+
   context_data_.allocator       = CreateAllocator(context_data_);
   context_data_.instance        = CreateInstance(context_data_);
 #ifdef CALCIUM_BUILD_DEBUG
@@ -67,8 +68,6 @@ VulkanContext::~VulkanContext() {
 #endif
   DestroyInstance(context_data_, context_data_.instance);
   DestroyAllocator(context_data_, context_data_.allocator);
-
-  glfw::DecrementGLFWContextCount();
 }
 
 std::shared_ptr<Window> VulkanContext::CreateWindow(const WindowCreateInfo& window_info) {

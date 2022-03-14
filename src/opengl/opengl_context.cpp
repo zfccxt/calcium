@@ -13,13 +13,11 @@
 namespace cl::opengl {
 
 OpenGLContext::OpenGLContext() {
-  glfw::IncrementGLFWContextCount();
+  glfw::GlfwInit();
 }
 
 OpenGLContext::~OpenGLContext() {
   ClxOnDestroy();
-
-  glfw::DecrementGLFWContextCount();
 }
 
 std::shared_ptr<Window> OpenGLContext::CreateWindow(const WindowCreateInfo& window_info) {
