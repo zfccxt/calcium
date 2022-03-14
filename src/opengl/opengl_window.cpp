@@ -100,7 +100,6 @@ void OpenGLWindow::SetClearColour(const Colour& colour) {
   glClearColor(colour.r, colour.g, colour.b, colour.a);
 }
 
-
 void OpenGLWindow::SetDepthTestEnable(bool enable) {
   if (enable) {
     glEnable(GL_DEPTH_TEST);

@@ -18,6 +18,11 @@ public:
   virtual size_t GetWidth() const override;
   virtual size_t GetHeight() const override;
 
+public:
+  static GLenum TextureFilterToGLMinFilter(TextureFilter filter);
+  static GLenum TextureFilterToGLMagFilter(TextureFilter filter);
+  static GLenum TextureWrapModeToGLEnum(TextureWrap wrap_mode);
+
 private:
   GLuint texture_id_;
 

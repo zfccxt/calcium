@@ -5,6 +5,7 @@
 #include "opengl/opengl_mesh.hpp"
 #include "opengl/opengl_shader.hpp"
 #include "opengl/opengl_texture.hpp"
+#include "opengl/opengl_texture_array.hpp"
 #include "opengl/opengl_window.hpp"
 
 namespace cl::opengl {
@@ -62,8 +63,7 @@ std::shared_ptr<Texture> OpenGLContext::CreateTexture(const TextureCreateInfo& t
 std::shared_ptr<TextureArray> OpenGLContext::CreateTextureArray(const TextureArrayCreateInfo& texture_array_info) {
   CALCIUM_PROFILE_FUNCTION();
 
-  // TODO
-  return nullptr;
+  return std::make_shared<OpenGLTextureArray>(texture_array_info);
 }
 
 void OpenGLContext::BindRendertarget(const std::shared_ptr<RenderTarget>& render_target) {

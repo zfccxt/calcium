@@ -9,14 +9,14 @@
 
 namespace cl::opengl {
 
-static GLenum TextureFilterToGLMinFilter(TextureFilter filter) {
+GLenum OpenGLTexture::TextureFilterToGLMinFilter(TextureFilter filter) {
   switch (filter) {
     case TextureFilter::kLinear:  return GL_LINEAR_MIPMAP_LINEAR;
     case TextureFilter::kNearest: return GL_NEAREST;
     default:                      return GL_DONT_CARE;
   } 
 }
-static GLenum TextureFilterToGLMagFilter(TextureFilter filter) {
+GLenum OpenGLTexture::TextureFilterToGLMagFilter(TextureFilter filter) {
   switch (filter) {
     case TextureFilter::kLinear:  return GL_LINEAR;
     case TextureFilter::kNearest: return GL_NEAREST;
@@ -24,7 +24,7 @@ static GLenum TextureFilterToGLMagFilter(TextureFilter filter) {
   }
 }
 
-static GLenum TextureWrapModeToGLEnum(TextureWrap wrap_mode) {
+GLenum OpenGLTexture::TextureWrapModeToGLEnum(TextureWrap wrap_mode) {
   switch (wrap_mode) {
     case TextureWrap::kRepeat:         return GL_REPEAT;
     case TextureWrap::kMirroredRepeat: return GL_MIRRORED_REPEAT;
