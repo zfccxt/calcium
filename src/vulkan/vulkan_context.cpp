@@ -60,6 +60,7 @@ VulkanContext::~VulkanContext() {
   ClxOnDestroy();
 
   delete context_data_.blank_texture;
+  delete context_data_.blank_texture_array;
  
   DestroyCommandPool(context_data_, context_data_.command_pool);
   DestroyDevice(context_data_, context_data_.device);
