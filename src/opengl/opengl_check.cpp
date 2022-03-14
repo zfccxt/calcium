@@ -4,6 +4,8 @@
 
 #include <assert.h>
 #include <cstdio>
+#include <string>
+#include <vector>
 
 #include <glad/glad.h>
 

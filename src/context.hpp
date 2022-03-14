@@ -35,6 +35,7 @@ public:
 
   std::shared_ptr<Texture> CreateTexture(const std::string& file_path);
   virtual std::shared_ptr<Texture> CreateTexture(const TextureCreateInfo& texture_info) = 0;
+  virtual std::shared_ptr<Texture> CreateTexture(const BlankTextureCreateInfo& texture_info) = 0;
 
   std::shared_ptr<TextureArray> CreateTextureArray(const std::vector<std::string>& file_paths);
   virtual std::shared_ptr<TextureArray> CreateTextureArray(const TextureArrayCreateInfo& texture_array_info) = 0;

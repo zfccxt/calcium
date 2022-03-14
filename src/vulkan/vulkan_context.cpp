@@ -102,6 +102,10 @@ std::shared_ptr<Texture> VulkanContext::CreateTexture(const TextureCreateInfo& t
   return std::make_shared<VulkanTexture>(&context_data_, texture_info);
 }
 
+std::shared_ptr<Texture> VulkanContext::CreateTexture(const BlankTextureCreateInfo& texture_info) {
+  return std::make_shared<VulkanTexture>(&context_data_, texture_info);
+}
+
 std::shared_ptr<TextureArray> VulkanContext::CreateTextureArray(const TextureArrayCreateInfo& texture_array_info) {
   // TODO
   return nullptr;
